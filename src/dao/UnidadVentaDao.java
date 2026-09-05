@@ -82,6 +82,33 @@ public class UnidadVentaDao {
 		}
 		return lista;
 	}
+	
+	//Metodo Total facturado por cada FoodTruck de un festival  
+	// Por Federico Acosta Rosales 
+	
+	public List<UnidadVenta> traerFoodTrucksConPedidosDeFestival(long idFestival) {
+	    List<UnidadVenta> lista = null;
+	    try {
+	        iniciaOperacion();
+
+	        String hql = "select distinct ft from FoodTruck ft "
+	                + "left join fetch ft.pedidosRealizados p "
+	                + "left join fetch p.detalles d "
+	                + "left join fetch d.plato "
+	                + "where ft.festival.idFestival = :idFestival "
+	                + "order by ft.nombre asc";
+
+	        Query<UnidadVenta> query = session.createQuery(hql, UnidadVenta.class);
+	        query.setParameter("idFestival", idFestival);
+
+	        lista = query.getResultList();
+
+	    } finally {
+	        session.close();
+	    }
+	    return lista;
+	}
+	
 	/**
 	 * Caso de Uso: Puestos Desarmables de un festival junto con la cantidad de
 	 * platos que ofrece cada uno. Combina Herencia (PuestoDesarmable) + Uno a

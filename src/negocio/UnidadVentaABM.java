@@ -42,6 +42,11 @@ public class UnidadVentaABM {
 		return dao.traerFoodTrucksDeFestival(idFestival);
 	}
 	
+	// Metodo por Federico Acosta Rosales
+	public List<UnidadVenta> traerFoodTrucksConPedidosDeFestival(long idFestival) {
+	    return dao.traerFoodTrucksConPedidosDeFestival(idFestival);
+	}
+	
 	/**
 	 * Caso de Uso: Puestos Desarmables de un festival junto con la cantidad de
 	 * platos que ofrece cada uno (Herencia: PuestoDesarmable · Uno a Muchos:
