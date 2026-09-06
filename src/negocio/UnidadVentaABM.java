@@ -35,13 +35,21 @@ public class UnidadVentaABM {
 	}
 
 	/**
-	 * Caso de Uso ejemplo (Herencia + Uno a Muchos): FoodTrucks de un festival
-	 * con la cantidad de platos que ofrece cada uno.
+	 * Caso de Uso (Herencia + Uno a Muchos): FoodTrucks de un festival con la
+	 * cantidad de platos que ofrece cada uno.
 	 */
-	public List<UnidadVenta> traerFoodTrucksDeFestival(long idFestival) {
-		return dao.traerFoodTrucksDeFestival(idFestival);
+	public List<UnidadVenta> traerFoodTrucksDeFestival(Festival festival) {
+		return dao.traerFoodTrucksDeFestival(festival);
 	}
-	
+
+	/**
+	 * Caso de Uso: precio de venta promedio de los platos de los FoodTrucks
+	 * de un festival (agregado resuelto en HQL).
+	 */
+	public Double traerPrecioPromedioPlatosFoodTrucksDeFestival(Festival festival) {
+		return dao.traerPrecioPromedioPlatosFoodTrucksDeFestival(festival);
+	}
+
 	// Metodo por Federico Acosta Rosales
 	public List<UnidadVenta> traerFoodTrucksConPedidosDeFestival(long idFestival) {
 	    return dao.traerFoodTrucksConPedidosDeFestival(idFestival);

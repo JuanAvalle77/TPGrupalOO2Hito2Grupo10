@@ -7,6 +7,7 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
+import datos.Festival;
 import datos.UnidadVenta;
 
 public class UnidadVentaDao {
@@ -62,27 +63,48 @@ public class UnidadVentaDao {
 	}
 
 	/**
-	 * Caso de Uso ejemplo: FoodTrucks de un festival junto con la cantidad de
-	 * platos que ofrece cada uno. Combina Herencia (FoodTruck) + Uno a Muchos
+	 * Caso de Uso: FoodTrucks de un festival junto con la cantidad de platos
+	 * que ofrece cada uno. Combina Herencia (FoodTruck) + Uno a Muchos
 	 * (UnidadVenta -> Plato).
 	 */
-	public List<UnidadVenta> traerFoodTrucksDeFestival(long idFestival) {
+	public List<UnidadVenta> traerFoodTrucksDeFestival(Festival festival) {
 		List<UnidadVenta> lista = null;
 		try {
 			iniciaOperacion();
 			String hql = "select distinct ft from FoodTruck ft "
 					+ "left join fetch ft.platos "
-					+ "where ft.festival.idFestival = :idFestival "
+					+ "where ft.festival = :festival "
 					+ "order by ft.nombre asc";
 			Query<UnidadVenta> query = session.createQuery(hql, UnidadVenta.class);
-			query.setParameter("idFestival", idFestival);
+			query.setParameter("festival", festival);
 			lista = query.getResultList();
 		} finally {
 			session.close();
 		}
 		return lista;
 	}
-	
+
+	/**
+	 * Caso de Uso: precio de venta promedio de los platos que ofrecen los
+	 * FoodTrucks de un festival. Combina Herencia (FoodTruck) + Uno a Muchos
+	 * (UnidadVenta -> Plato), esta vez con un agregado (avg) resuelto en HQL
+	 * en vez de calcularlo en Java.
+	 */
+	public Double traerPrecioPromedioPlatosFoodTrucksDeFestival(Festival festival) {
+		Double promedio = null;
+		try {
+			iniciaOperacion();
+			String hql = "select avg(p.precioVenta) from FoodTruck ft join ft.platos p "
+					+ "where ft.festival = :festival";
+			Query<Double> query = session.createQuery(hql, Double.class);
+			query.setParameter("festival", festival);
+			promedio = query.uniqueResult();
+		} finally {
+			session.close();
+		}
+		return promedio;
+	}
+
 	//Metodo Total facturado por cada FoodTruck de un festival  
 	// Por Federico Acosta Rosales 
 	

@@ -13,6 +13,97 @@ Trabajo práctico grupal de la materia Orientación a Objetos II (UNLa) - Hito 1
 | Franco Joaquín Luzardo | FJLuzardo |
 | Federico Acosta Rosales | FederAcosta |
 
+## Diagrama de Clases
+
+Fuente editable: [`diagrama/oo2UML.dia`](diagrama/oo2UML.dia) (abrir con [Dia](https://sourceforge.net/projects/dia-installer/)).
+
+```mermaid
+classDiagram
+    class Festival {
+        -nombre: string
+        -temporada: string
+        -fechaInicio: date
+        -fechaFin: date
+        -unidadesVenta: Set~UnidadVenta~
+        -platos: Set~Plato~
+    }
+    class UnidadVenta {
+        <<abstracta>>
+        -nombre: string
+        -superficie: float
+        -codigo: string
+        -festival: Festival
+        -responsable: Personal
+        -platos: Set~Plato~
+        -pedidosRealizados: Set~Pedido~
+        -personal: Set~Personal~
+        +calcularCostoTotal() double
+    }
+    class FoodTruck {
+        -requiereElectricidad: boolean
+        -patente: String
+        +calcularCostoTotal() double
+    }
+    class PuestoDesarmable {
+        -cantidadCarpas: int
+        -tiempoMontaje: int
+        +calcularCostoTotal() double
+    }
+    class Personal {
+        <<abstracta>>
+        -nombre: String
+        -apellido: String
+        -dni: int
+        -fechaNacimiento: Date
+        -fechaIngreso: Date
+        -sueldoBase: double
+        -unidadVenta: UnidadVenta
+        -contacto: String
+        +calcularSueldo() double
+    }
+    class Cajero {
+        -turno: String
+        -plus: int
+        +calcularSueldo() double
+    }
+    class Cocinero {
+        -especialidad: String
+        -plusEspecialidad: double
+        +calcularSueldo() double
+    }
+    class Plato {
+        -nombre: String
+        -precioVenta: double
+        -costoProduccion: double
+        -unidadVenta: UnidadVenta
+        +calcularGanancia() double
+    }
+    class Pedido {
+        -fecha: Date
+        -festival: Festival
+        -unidadVenta: UnidadVenta
+        -detalles: Set~DetallesPedido~
+        +calcularTotal() double
+    }
+    class DetallesPedido {
+        -cantidad: int
+        -plato: Plato
+        -pedido: Pedido
+    }
+
+    UnidadVenta <|-- FoodTruck
+    UnidadVenta <|-- PuestoDesarmable
+    Personal <|-- Cajero
+    Personal <|-- Cocinero
+
+    Festival "1" --> "0..*" UnidadVenta
+    UnidadVenta "1" --> "1..*" Plato
+    UnidadVenta "1" --> "0..*" Pedido
+    UnidadVenta "1" --> "1..*" Personal : personal
+    Pedido "1" --> "1..*" DetallesPedido
+    DetallesPedido "0..*" --> "1" Plato
+```
+
 ## Casos de Uso (Hito 1)
 
 | Caso de Uso | Responsable | Estado |

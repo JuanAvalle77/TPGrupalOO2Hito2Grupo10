@@ -31,9 +31,9 @@
             <one-to-many class="datos.Pedido"/>
         </set>
 
-        <!-- Relacion Uno a Muchos: una UnidadVenta administra su propio staff (lado inverso de Personal.unidadVenta) -->
+        <!-- Relacion Uno a Muchos: una UnidadVenta administra su propio personal (lado inverso de Personal.unidadVenta) -->
         <!-- key sin not-null: coincide con Personal.hbm.xml, donde unidadVenta es opcional (personal recien ingresado puede no estar asignado aun) -->
-        <set name="staff" table="personal" inverse="true" lazy="true" fetch="select">
+        <set name="personal" table="personal" inverse="true" lazy="true" fetch="select">
             <key column="idUnidadVenta"/>
             <one-to-many class="datos.Personal"/>
         </set>

@@ -16,7 +16,7 @@ public abstract class UnidadVenta {
 	protected Personal responsable;
 	protected Set<Plato> platos = new HashSet<>();
 	protected Set<Pedido> pedidosRealizados = new HashSet<>();
-	protected Set<Personal> staff = new HashSet<>();
+	protected Set<Personal> personal = new HashSet<>();
 
 	public UnidadVenta() {
 	}
@@ -104,12 +104,12 @@ public abstract class UnidadVenta {
 		this.pedidosRealizados = pedidosRealizados;
 	}
 
-	public Set<Personal> getStaff() {
-		return staff;
+	public Set<Personal> getPersonal() {
+		return personal;
 	}
 
-	public void setStaff(Set<Personal> staff) {
-		this.staff = staff;
+	public void setPersonal(Set<Personal> personal) {
+		this.personal = personal;
 	}
 
 	@Override
