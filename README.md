@@ -20,7 +20,7 @@ Trabajo práctico grupal de la materia Orientación a Objetos II (UNLa) - Hito 1
 | FoodTrucks de un festival con la cantidad de platos que ofrece cada uno (Herencia: FoodTruck · Uno a Muchos: UnidadVenta→Plato) | Juan Avalle | ✅ |
 | Staff (Cocineros/Cajeros) asignado a una Unidad de Venta, con sueldo calculado (Herencia: Cocinero/Cajero · Uno a Muchos: UnidadVenta→Personal) | Santiago Agarzúa | pendiente |
 | Puestos Desarmables de un festival, con cantidad de carpas y superficie total (Herencia: PuestoDesarmable · Uno a Muchos: Festival→UnidadVenta) | Franco Luzardo | ✅ |
-| Total facturado por cada FoodTruck de un festival (Herencia: FoodTruck · Uno a Muchos: Pedido→DetallesPedido) | Federico Acosta Rosales | pendiente |
+| Total facturado por cada FoodTruck de un festival (Herencia: FoodTruck · Uno a Muchos: Pedido→DetallesPedido) | Federico Acosta Rosales | ✅ |
 
 ## Stack
 
