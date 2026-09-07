@@ -51,8 +51,12 @@ public class UnidadVentaABM {
 	}
 
 	// Metodo por Federico Acosta Rosales
-	public List<UnidadVenta> traerFoodTrucksConPedidosDeFestival(long idFestival) {
-	    return dao.traerFoodTrucksConPedidosDeFestival(idFestival);
+	public List<UnidadVenta> traerFoodTrucksConPedidosDeFestival(Festival festival) {
+	    return dao.traerFoodTrucksConPedidosDeFestival(festival);
+	}
+	
+	public List<Object[]> facturacionFoodTrucksDeFestival(Festival festival) {
+	    return dao.facturacionFoodTrucksDeFestival(festival);
 	}
 	
 	/**

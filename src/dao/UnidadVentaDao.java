@@ -108,7 +108,7 @@ public class UnidadVentaDao {
 	//Metodo Total facturado por cada FoodTruck de un festival  
 	// Por Federico Acosta Rosales 
 	
-	public List<UnidadVenta> traerFoodTrucksConPedidosDeFestival(long idFestival) {
+	public List<UnidadVenta> traerFoodTrucksConPedidosDeFestival(Festival festival) {
 	    List<UnidadVenta> lista = null;
 	    try {
 	        iniciaOperacion();
@@ -117,17 +117,42 @@ public class UnidadVentaDao {
 	                + "left join fetch ft.pedidosRealizados p "
 	                + "left join fetch p.detalles d "
 	                + "left join fetch d.plato "
-	                + "where ft.festival.idFestival = :idFestival "
+	                + "where ft.festival = :festival "
 	                + "order by ft.nombre asc";
 
 	        Query<UnidadVenta> query = session.createQuery(hql, UnidadVenta.class);
-	        query.setParameter("idFestival", idFestival);
+	        query.setParameter("festival", festival);
 
 	        lista = query.getResultList();
 
 	    } finally {
 	        session.close();
 	    }
+	    return lista;
+	}
+	
+	// Segunda consulta: obtiene la facturación total de cada FoodTruck de un Festival mediante HQL.
+	public List<Object[]> facturacionFoodTrucksDeFestival(Festival festival) {
+	    
+	    List<Object[]> lista = null;
+
+	    try {
+	        iniciaOperacion();
+	        String hql = "select ft, sum(d.cantidad * d.plato.precioVenta) "
+	                + "from FoodTruck ft "
+	                + "join ft.pedidosRealizados p "
+	                + "join p.detalles d "
+	                + "where ft.festival = :festival "
+	                + "group by ft "
+	                + "order by ft.nombre asc";
+	        Query<Object[]> query = session.createQuery(hql, Object[].class);
+	        query.setParameter("festival", festival);
+	        lista = query.getResultList();
+
+	    } finally {
+	        session.close();
+	    }
+
 	    return lista;
 	}
 	
