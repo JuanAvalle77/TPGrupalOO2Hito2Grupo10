@@ -9,15 +9,13 @@ import negocio.FestivalABM;
 public class TestCasoDeUsoFacturacionFoodTrucks {
 
     public static void main(String[] args) {
-    	
-    	FestivalABM festivalABM = new FestivalABM();
-    	Festival festival = festivalABM.traer(1);
 
-        long idFestival = 1; // ajustar según el ID del festival
+        FestivalABM festivalABM = new FestivalABM();
+        Festival festival = festivalABM.traer(1);
 
         UnidadVentaABM abm = new UnidadVentaABM();
 
-        System.out.printf("Facturación de FoodTrucks del festival id=%d%n", idFestival);
+        System.out.println("Facturación de FoodTrucks del festival:");
 
         for (UnidadVenta u : abm.traerFoodTrucksConPedidosDeFestival(festival)) {
 
@@ -35,7 +33,7 @@ public class TestCasoDeUsoFacturacionFoodTrucks {
                     ft.getPatente(),
                     facturacion);
         }
-        
+
         System.out.println("\nFacturación calculada mediante HQL:");
 
         for (Object[] resultado : abm.facturacionFoodTrucksDeFestival(festival)) {
