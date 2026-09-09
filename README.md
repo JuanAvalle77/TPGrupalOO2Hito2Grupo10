@@ -112,6 +112,10 @@ classDiagram
 | Staff (Cocineros/Cajeros) asignado a una Unidad de Venta, con sueldo calculado (Herencia: Cocinero/Cajero · Uno a Muchos: UnidadVenta→Personal) | Santiago Agarzúa | ✅ |
 | Puestos Desarmables de un festival, con cantidad de carpas y superficie total (Herencia: PuestoDesarmable · Uno a Muchos: Festival→UnidadVenta) | Franco Luzardo | ✅ |
 | Total facturado por cada FoodTruck de un festival (Herencia: FoodTruck · Uno a Muchos: Pedido→DetallesPedido) | Federico Acosta Rosales | ✅ |
+| **2da consulta:** Precio de venta promedio de los platos de los FoodTrucks de un festival, con `avg()` resuelto en HQL | Juan Avalle | ✅ |
+| **2da consulta:** Personal (todas las subclases) con fecha de nacimiento en un rango de edad dado | Santiago Agarzúa | ✅ |
+| **2da consulta:** Superficie total (de todas las UnidadVenta, y solo de los Puestos Desarmables) de un festival, con `sum()` resuelto en HQL | Franco Luzardo | ✅ |
+| **2da consulta:** Total facturado por cada FoodTruck, resuelto directo en HQL con `sum()` y `group by` (en vez de sumar en Java) | Federico Acosta Rosales | ✅ |
 
 ## Stack
 
