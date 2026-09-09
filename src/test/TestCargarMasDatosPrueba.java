@@ -32,7 +32,7 @@ public class TestCargarMasDatosPrueba {
 
 		// Traigo los FoodTrucks con sus platos ya cargados (evita problemas de lazy loading)
 		List<UnidadVenta> foodTrucks = unidadVentaAbm.traerFoodTrucksDeFestival(festival);
-		UnidadVenta elFueguito = buscarPorCodigo(foodTrucks, "FT00000001");
+		UnidadVenta elFueguito = buscarPorCodigo(foodTrucks, "FT00100001");
 		UnidadVenta empanadas = buscarPorCodigo(foodTrucks, "FT00000002");
 		UnidadVenta sushi = buscarPorCodigo(foodTrucks, "FT00000003");
 
