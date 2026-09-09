@@ -58,22 +58,22 @@ public class UnidadVentaABM {
 	public List<Object[]> facturacionFoodTrucksDeFestival(Festival festival) {
 	    return dao.facturacionFoodTrucksDeFestival(festival);
 	}
-	
 	/**
 	 * Caso de Uso: Puestos Desarmables de un festival junto con la cantidad de
 	 * platos que ofrece cada uno (Herencia: PuestoDesarmable · Uno a Muchos:
 	 * Festival -> UnidadVenta).
 	 */
-	public List<UnidadVenta> traerPuestosDesarmablesDeFestival(long idFestival) {
-		return dao.traerPuestosDesarmablesDeFestival(idFestival);
+	public List<UnidadVenta> traerPuestosDesarmablesDeFestival(Festival f) {
+		return dao.traerPuestosDesarmablesDeFestival(f);
 	}
-
-	public double superficieTotal(List<UnidadVenta> puestos) {
-		double acumulador = 0;
-		for (UnidadVenta u : puestos) {
-	        PuestoDesarmable pd = (PuestoDesarmable) u;
-	        acumulador += pd.getSuperficie();
-	    }
-		return acumulador;
+	public double traerSuperficieTotalUnidadVenta(Festival f) {
+	    return dao.traerSuperficieTotal(f);
+	}
+	public double traerSuperficieTotalPuestosDesarmables(Festival f) {
+	    return dao.traerSuperficieTotalPuestosDesarmables(f);
+	}
+	///Santiago Agarzúa
+	public UnidadVenta traerUnidadVentaConStaff(long idUnidadVenta) {
+	       return dao.traerUnidadVentaConStaff(idUnidadVenta);
 	}
 }

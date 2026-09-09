@@ -41,4 +41,20 @@ public class PersonalABM {
 	public List<Personal> traer() {
 		return dao.traer();
 	}
+	
+	/**
+	consulta que liste el personal(Cocineros y Cajeros)asignado a una unidad de venta
+	puntual,mostrando el sueldo calculado de cada uno.Tiene que combinar la herencia de
+	Personal(Cocinero/Cajero) con la relación uno a muchos entre UnidadVenta y
+	Personal.
+	*/
+	
+	
+   ///Santiago Agarzúa
+   public List<Personal> traerPersonalPorRangoEdad(int edadMin, int edadMax) {
+       return dao.traerPersonalPorRangoEdad(edadMin, edadMax);
+   }
+	
+	
+	
 }

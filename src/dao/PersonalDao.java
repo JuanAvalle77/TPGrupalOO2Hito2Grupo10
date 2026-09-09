@@ -1,7 +1,8 @@
 package dao;
 
-import java.util.List;
+import java.time.*;
 
+import java.util.List;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -60,4 +61,33 @@ public class PersonalDao {
 		}
 		return lista;
 	}
+	
+	
+	///Santiago Agarzúa
+	@SuppressWarnings("unchecked")
+    public List<Personal> traerPersonalPorRangoEdad(int edadMin, int edadMax) throws HibernateException {
+        List<Personal> lista = null;
+        try {
+            iniciaOperacion();
+            
+            // Calculamos los rangos de fechas límite a partir de las edades pasadas por parámetro
+            LocalDate fechaHasta = LocalDate.now().minusYears(edadMin);
+            LocalDate fechaDesde = LocalDate.now().minusYears(edadMax + 1).plusDays(1);
+
+            // Consulta HQL filtrando por fechaNacimiento usando BETWEEN
+            String hql = "from Personal p where p.fechaNacimiento between :desde and :hasta order by p.apellido asc, p.nombre asc";
+            
+            lista = session.createQuery(hql)
+                           .setParameter("desde", fechaDesde)
+                           .setParameter("hasta", fechaHasta)
+                           .list();
+        } finally {
+            if (session != null && session.isOpen()) {
+                session.close();
+            }
+        }
+        return lista;
+    }
 }
+	
+

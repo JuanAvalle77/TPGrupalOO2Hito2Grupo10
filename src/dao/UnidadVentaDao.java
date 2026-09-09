@@ -9,6 +9,7 @@ import org.hibernate.query.Query;
 
 import datos.Festival;
 import datos.UnidadVenta;
+import datos.PuestoDesarmable;
 
 public class UnidadVentaDao {
 
@@ -161,20 +162,88 @@ public class UnidadVentaDao {
 	 * platos que ofrece cada uno. Combina Herencia (PuestoDesarmable) + Uno a
 	 * Muchos (Festival -> UnidadVenta).
 	 */
-	public List<UnidadVenta> traerPuestosDesarmablesDeFestival(long idFestival) {
-		List<UnidadVenta> lista = null;
-		try {
-			iniciaOperacion();
-			String hql = "select distinct pd from PuestoDesarmable pd "
-					+ "left join fetch pd.platos "
-					+ "where pd.festival.idFestival = :idFestival "
-					+ "order by pd.nombre asc";
-			Query<UnidadVenta> query = session.createQuery(hql, UnidadVenta.class);
-			query.setParameter("idFestival", idFestival);
-			lista = query.getResultList();
-		} finally {
-			session.close();
-		}
-		return lista;
+	
+	public List<UnidadVenta> traerPuestosDesarmablesDeFestival(Festival f) {
+
+	    List<UnidadVenta> lista = null;
+
+	    try {
+
+	        iniciaOperacion();
+
+	        String hql = "select distinct pd from PuestoDesarmable pd "
+	                   + "left join fetch pd.platos "
+	                   + "where pd.festival = :festival "
+	                   + "order by pd.nombre asc";
+
+	        Query<UnidadVenta> query = session.createQuery(hql, UnidadVenta.class);
+
+	        query.setParameter("festival", f);
+
+	        lista = query.getResultList();
+
+	    } finally {
+
+	        session.close();
+
+	    }
+
+	    return lista;
 	}
+	
+	public double traerSuperficieTotal(Festival f) {
+			double resultado = 0;
+			try {
+				iniciaOperacion();
+				String hql = "select sum(u.superficie) "
+				+ "from UnidadVenta u "
+				+ "where u.festival = :festival";
+
+		        Query<Double> query = session.createQuery(hql, Double.class);
+		        query.setParameter("festival", f);
+
+		        resultado = query.getSingleResult();
+				
+			} finally {
+				session.close();
+			}
+			return resultado;
+	}
+	
+	public double traerSuperficieTotalPuestosDesarmables(Festival f) {
+
+	    double resultado = 0;
+	    try {
+	        iniciaOperacion();
+	        String hql = "select sum(pd.superficie) "
+	                   + "from PuestoDesarmable pd "
+	                   + "where pd.festival = :festival";
+	        Query<Double> query = session.createQuery(hql, Double.class);
+	        query.setParameter("festival", f);
+	        resultado = query.getSingleResult();
+	    } finally {
+	        session.close();
+	    }
+
+	    return resultado;
+	}
+	///Santiago Agarzúa
+	public UnidadVenta traerUnidadVentaConStaff(long idUnidadVenta) throws HibernateException {
+	       UnidadVenta objeto = null;
+	       try {
+	           iniciaOperacion();
+	           // HQL: u.staff es el Set<Personal> mapeado en UnidadVenta.hbm.xml
+	           // inner join fetch obliga a Hibernate a traer los datos de Personal (y sus subclases) en el mismo SELECT
+	           String hql = "from UnidadVenta u inner join fetch u.personal p where u.idUnidadVenta = :id";
+	            
+	           objeto = (UnidadVenta) session.createQuery(hql)
+	                                          .setParameter("id", idUnidadVenta)
+	                                          .uniqueResult();
+	       } finally {
+	            if (session != null && session.isOpen()) {
+	                session.close();
+	            }
+	        }
+	        return objeto;
+	    }
 }
