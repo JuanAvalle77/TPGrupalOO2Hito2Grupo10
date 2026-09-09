@@ -185,10 +185,12 @@ Como el archivo `.classpath` del proyecto ya viene configurado bien en el repo, 
 
 ### 6) Primera corrida: crear tablas y cargar datos de prueba
 
-1. En el Package Explorer, abrí `src/test/TestCargarDatosPrueba.java`.
+1. En el Package Explorer, abrí `src/test/TestCargarTodosLosDatosPrueba.java`.
 2. Clic derecho → **Run As → Java Application**.
-3. Mirá la consola: vas a ver mucho texto en rojo (es normal, es el logging de Hibernate, no un error) y al final líneas tipo `Festival creado, id=1`, `Cocinero creado, id=1`, etc. sin ninguna `Exception`.
+3. Mirá la consola: vas a ver mucho texto en rojo (es normal, es el logging de Hibernate, no un error) y al final líneas tipo `Festival creado, id=1`, `Cocinero creado, id=1`, `FoodTruck creado: ...`, etc., terminando en `=== Toda la carga de datos de prueba se completo con exito ===`, sin ninguna `Exception`.
 4. Confirmá en MySQL Workbench (Schemas → `epicentro_gourmet` → clic derecho → Refresh All) que aparecieron las tablas.
+
+Esta clase carga de una sola vez: el festival, 10 FoodTrucks, 1 Puesto Desarmable, ~10 empleados (staff), sus platos, y varios pedidos con detalles.
 
 **Corré esta clase UNA SOLA VEZ.** Si la corrés de nuevo va a fallar por datos duplicados (DNI/código únicos) — es esperado, no arreglar nada, simplemente no la vuelvas a correr. Si necesitás datos frescos, mirá "Reiniciar la base" más abajo.
 
@@ -214,7 +216,7 @@ DROP DATABASE epicentro_gourmet;
 CREATE DATABASE epicentro_gourmet CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 ```
 
-Y después volvé a correr `TestCargarDatosPrueba.java` una sola vez.
+Y después volvé a correr `TestCargarTodosLosDatosPrueba.java` una sola vez.
 
 ## Estructura
 
