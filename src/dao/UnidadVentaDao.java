@@ -232,10 +232,11 @@ public class UnidadVentaDao {
 	       UnidadVenta objeto = null;
 	       try {
 	           iniciaOperacion();
-	           // HQL: u.staff es el Set<Personal> mapeado en UnidadVenta.hbm.xml
-	           // inner join fetch obliga a Hibernate a traer los datos de Personal (y sus subclases) en el mismo SELECT
-	           String hql = "from UnidadVenta u inner join fetch u.personal p where u.idUnidadVenta = :id";
-	            
+	           // HQL: u.personal es el Set<Personal> mapeado en UnidadVenta.hbm.xml
+	           // left join fetch trae la unidad aunque todavia no tenga personal asignado
+	           // (con inner join, una unidad sin staff no aparece en el resultado)
+	           String hql = "from UnidadVenta u left join fetch u.personal p where u.idUnidadVenta = :id";
+
 	           objeto = (UnidadVenta) session.createQuery(hql)
 	                                          .setParameter("id", idUnidadVenta)
 	                                          .uniqueResult();
