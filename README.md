@@ -205,7 +205,7 @@ El estado y el link al Pull Request de cada caso de uso se completan acá a medi
 
 | # | Caso de uso | Rol | Responsable | Rama | PR | Estado |
 |---|---|---|---|---|---|---|
-| Base | Proyecto Maven, entidades, login por roles, inicio con festivales, script SQL | todos | Juan Avalle | `CUBaseProyectoJuanAvalle` | _pendiente_ | en curso |
+| Base | Proyecto Maven, entidades, login por roles, inicio con festivales, script SQL | todos | Juan Avalle | `CUBaseProyectoJuanAvalle` | [PR #1](https://github.com/JuanAvalle77/TPGrupalOO2Grupo10/pull/1) | en revisión |
 | 1 | Ver festivales | Admin | Franco Luzardo | `CUVerFestivalesFrancoLuzardo` | | pendiente |
 | 2 | Ver unidades de venta de un festival | Admin | Franco Luzardo | `CUVerUnidadesFestivalFrancoLuzardo` | | pendiente |
 | 3 | Ranking de unidades por recaudación | Admin | Franco Luzardo | `CURankingUnidadesFrancoLuzardo` | | pendiente |
