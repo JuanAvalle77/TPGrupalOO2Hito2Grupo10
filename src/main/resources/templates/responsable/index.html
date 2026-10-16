@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout :: head}"></head>
+<body>
+    <nav th:replace="~{layout :: navbar}"></nav>
+
+    <main class="container py-4" style="margin-top: 70px;">
+        <div class="page-header">
+            <h2>Panel del Responsable</h2>
+        </div>
+        <ul class="list-group">
+            <!-- Cada caso de uso de responsable agrega su link aca -->
+            <li class="list-group-item text-muted">Alta, baja y modificacion de empleados (pendiente)</li>
+            <li class="list-group-item text-muted">Alta de platos (pendiente)</li>
+            <li class="list-group-item text-muted">Reportes y calculos de la unidad (pendiente)</li>
+        </ul>
+    </main>
+
+    <footer th:replace="~{layout :: footer}"></footer>
+    <div th:replace="~{layout :: scripts}"></div>
+</body>
+</html>

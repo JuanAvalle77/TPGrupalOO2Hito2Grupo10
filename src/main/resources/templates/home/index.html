@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout :: head}"></head>
+<body>
+    <nav th:replace="~{layout :: navbar}"></nav>
+
+    <main class="container py-4" style="margin-top: 70px;">
+        <div class="page-header">
+            <h2>Festivales</h2>
+            <p class="text-muted">Festivales tematicos del predio Epicentro Gourmet.</p>
+        </div>
+
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Temporada</th>
+                    <th>Inicio</th>
+                    <th>Fin</th>
+                    <th>Duracion</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="festival : ${festivales}">
+                    <td th:text="${festival.nombre}">Nombre</td>
+                    <td th:text="${festival.temporada}">Temporada</td>
+                    <td th:text="${#temporals.format(festival.fechaInicio, 'dd/MM/yyyy')}">01/01/2026</td>
+                    <td th:text="${#temporals.format(festival.fechaFin, 'dd/MM/yyyy')}">05/01/2026</td>
+                    <td th:text="${festival.duracionEnDias} + ' dias'">5 dias</td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(festivales)}">
+                    <td colspan="5" class="text-center text-muted">No hay festivales cargados.</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- TODO (CU Registro de Unidad de Venta con su Responsable): agregar aca el link a /registro -->
+    </main>
+
+    <footer th:replace="~{layout :: footer}"></footer>
+    <div th:replace="~{layout :: scripts}"></div>
+</body>
+</html>

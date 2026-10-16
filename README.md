@@ -1,6 +1,9 @@
 # TP Grupal OO2 2026 - Sistema de Gestión "Epicentro Gourmet"
 
-Trabajo práctico grupal de la materia Orientación a Objetos II (UNLa) - Hito 1: Hibernate.
+Trabajo práctico grupal de Orientación a Objetos II (UNLa).
+
+- **Hito 1 (Hibernate):** carpeta [`hito1/`](hito1/) y tag `hito1` (tal cual se entregó).
+- **Hito 2 (Spring Boot):** raíz de este repositorio (proyecto Maven).
 
 ## Grupo
 
@@ -13,82 +16,168 @@ Trabajo práctico grupal de la materia Orientación a Objetos II (UNLa) - Hito 1
 | Franco Joaquín Luzardo | FJLuzardo |
 | Federico Acosta Rosales | FederAcosta |
 
-## Diagrama de Clases
+## Stack
 
-Fuente editable: [`diagrama/oo2UML.dia`](diagrama/oo2UML.dia) (abrir con [Dia](https://sourceforge.net/projects/dia-installer/)).
+Java 17+ · Spring Boot 3.3 (Web, Data JPA, Security, Validation, Mail) · Thymeleaf · Maven · MySQL 8 · Lombok · ModelMapper · OpenPDF
+
+## Cómo correr la aplicación
+
+### 1) Requisitos
+- JDK 17 o superior (sirve el JDK 21 que trae Eclipse).
+- MySQL 8 corriendo.
+- No hace falta instalar Maven: el proyecto trae el wrapper (`mvnw`).
+
+### 2) Crear la base de datos
+```sql
+CREATE DATABASE epicentro_gourmet_h2 CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+```
+
+### 3) Variables de entorno
+Las credenciales **no** se escriben en el código (`application.yml` las lee del entorno):
+
+| Variable | Obligatoria | Descripción |
+|---|---|---|
+| `DB_USERNAME` | sí | usuario de MySQL (ej: `root`) |
+| `DB_PASSWORD` | sí | contraseña de MySQL |
+| `DB_URL` | no | por defecto `jdbc:mysql://localhost:3306/epicentro_gourmet_h2?serverTimezone=America/Argentina/Buenos_Aires` |
+| `MAIL_USERNAME` / `MAIL_PASSWORD` | no | cuenta SMTP (Gmail con contraseña de aplicación). Si no se definen, los mails solo se muestran en la consola. |
+
+> No usar el nombre `USERNAME`: en Windows ya existe y es el usuario del sistema.
+
+PowerShell (para la sesión actual):
+```powershell
+$env:DB_USERNAME="root"; $env:DB_PASSWORD="tu_password"
+```
+En Eclipse/STS: *Run Configurations → Environment*. En IntelliJ: *Edit Configurations → Environment variables*.
+
+### 4) Primera ejecución (crea las tablas)
+```bash
+./mvnw spring-boot:run          # en Windows PowerShell: .\mvnw.cmd spring-boot:run
+```
+Si `JAVA_HOME` no está definida, apuntarla al JDK. Cuando termine de arrancar (`Started EpicentrogourmetApplication`), detener la app con `Ctrl+C`.
+
+### 5) Cargar los datos de prueba
+Con MySQL Workbench (abrir y ejecutar `sql/datos_prueba.sql` sobre `epicentro_gourmet_h2`) o por consola:
+```bash
+mysql -u root -p --default-character-set=utf8mb4 epicentro_gourmet_h2 < sql/datos_prueba.sql
+```
+El script se puede volver a ejecutar cuando quieran: borra los datos y los recarga. Las fechas son relativas a hoy (siempre hay un festival activo).
+
+### 6) Usar la aplicación
+Volver a correr `./mvnw spring-boot:run` y entrar a http://localhost:8080
+
+| Usuario | Contraseña | Rol |
+|---|---|---|
+| `admin` | `admin123` | Administrador |
+| `juan.perez@epicentro.com` | `resp123` | Responsable de *El Fueguito* (festival activo) |
+| `rocio.fernandez@epicentro.com` | `resp123` | Responsable de *La Empanada Andante* |
+| `pedro.gomez@epicentro.com` | `resp123` | Responsable de *La Carpa de Pedro* |
+| `lucia.gomez@epicentro.com` | `emp123` | Empleada (cajera) |
+| `marcos.diaz@epicentro.com` | `emp123` | Empleado (cocina) |
+| `valentina.ortiz@epicentro.com` | `emp123` | Empleada (lavaplatos, trabajó en 2 festivales) |
+
+> **Lombok en Eclipse:** si ven errores de `getX()/setX()` inexistentes, hay que instalar Lombok en el IDE (`java -jar lombok.jar`, que está en `~/.m2/repository/org/projectlombok/lombok/`). Alternativa: correr siempre con `mvnw` desde la terminal.
+
+## Estructura del proyecto
+
+```
+src/main/java/com/unla/epicentrogourmet/
+  entities/       entidades JPA (modelo del diagrama)
+  enums/          Rol, RolCocina, Turno
+  repositories/   interfaces JpaRepository
+  services/       interfaz + implementation/ (logica de negocio)
+  controllers/    controladores MVC (devuelven vistas Thymeleaf)
+  dtos/           DTOs de reportes (no persisten)
+  helpers/        ViewRouteHelper (rutas y vistas)
+  configuration/  seguridad, ModelMapper
+src/main/resources/templates/   vistas (layout.html con navbar por rol)
+sql/datos_prueba.sql            datos de prueba
+hito1/                          proyecto del Hito 1
+```
+
+La seguridad separa tres zonas: `/admin/**` (ADMIN), `/responsable/**` (RESPONSABLE) y `/empleado/**` (EMPLEADO). Las contraseñas se guardan con BCrypt. El login redirige al panel del rol.
+
+## Diagrama de clases (iterado en el Hito 2)
+
+Fuente editable del Hito 1: [`diagrama/oo2UML.dia`](diagrama/oo2UML.dia). Cambios del Hito 2 respecto al Hito 1:
+- `Cocinero` pasa a tener `rolCocina` (cocinero, ayudante, lavaplatos) en vez de `especialidad`; `Cajero` tiene `turno` (mañana/noche) y cobra antigüedad.
+- Nueva `CostoFestival`: encapsula los costos del festival (costo por m², plus eléctrico, costo por minuto de montaje, sueldo base, plus por antigüedad y por categoría). Nada hardcodeado.
+- `Personal` suma `email` (es su usuario), `activo` (baja lógica) y se relaciona *muchos a muchos* con `UnidadVenta` (así un empleado puede haber trabajado en varios festivales).
+- Nuevas `Usuario` (con `Rol`) y `CierreCaja`.
+- Los reportes (`ReporteVentaDTO`, `ReporteMayoresCanonDTO`, `PlatoDTO`) son DTOs que no persisten.
 
 ```mermaid
 classDiagram
     class Festival {
-        -nombre: string
-        -temporada: string
-        -fechaInicio: date
-        -fechaFin: date
-        -unidadesVenta: Set~UnidadVenta~
-        -platos: Set~Plato~
+        -nombre: String
+        -temporada: String
+        -fechaInicio: LocalDate
+        -fechaFin: LocalDate
+        +getDuracionEnDias() long
+        +estaActivo(fecha) boolean
+    }
+    class CostoFestival {
+        -costoPorM2: double
+        -plusConexionElectrica: double
+        -costoPorMinutoMontaje: double
+        -sueldoBase: double
+        -plusAntiguedadAnual: double
+        -plusCocinero: double
+        -plusCocineroAyudante: double
+        -plusLavaplatos: double
     }
     class UnidadVenta {
         <<abstracta>>
-        -nombre: string
-        -superficie: float
-        -codigo: string
-        -festival: Festival
-        -responsable: Personal
-        -platos: Set~Plato~
-        -pedidosRealizados: Set~Pedido~
-        -personal: Set~Personal~
-        +calcularCostoTotal() double
+        -nombreComercial: String
+        -superficie: double
+        -codigo: String
+        +calcularCanon(costos) double
     }
     class FoodTruck {
-        -requiereElectricidad: boolean
         -patente: String
-        +calcularCostoTotal() double
+        -requiereElectricidad: boolean
     }
     class PuestoDesarmable {
         -cantidadCarpas: int
         -tiempoMontaje: int
-        +calcularCostoTotal() double
     }
     class Personal {
         <<abstracta>>
         -nombre: String
         -apellido: String
         -dni: int
-        -fechaNacimiento: Date
-        -fechaIngreso: Date
-        -sueldoBase: double
-        -unidadVenta: UnidadVenta
-        -contacto: String
-        +calcularSueldo() double
+        -fechaNacimiento: LocalDate
+        -fechaIngreso: LocalDate
+        -email: String
+        -activo: boolean
     }
     class Cajero {
-        -turno: String
-        -plus: int
-        +calcularSueldo() double
+        -turno: Turno
     }
     class Cocinero {
-        -especialidad: String
-        -plusEspecialidad: double
-        +calcularSueldo() double
+        -rolCocina: RolCocina
     }
     class Plato {
         -nombre: String
         -precioVenta: double
         -costoProduccion: double
-        -unidadVenta: UnidadVenta
-        +calcularGanancia() double
     }
     class Pedido {
-        -fecha: Date
-        -festival: Festival
-        -unidadVenta: UnidadVenta
-        -detalles: Set~DetallesPedido~
+        -fecha: LocalDate
         +calcularTotal() double
     }
     class DetallesPedido {
         -cantidad: int
-        -plato: Plato
-        -pedido: Pedido
+    }
+    class CierreCaja {
+        -fecha: LocalDate
+        -totalRecaudado: double
+    }
+    class Usuario {
+        -username: String
+        -password: String
+        -enabled: boolean
+        -rol: Rol
     }
 
     UnidadVenta <|-- FoodTruck
@@ -96,136 +185,76 @@ classDiagram
     Personal <|-- Cajero
     Personal <|-- Cocinero
 
+    Festival "1" --> "1" CostoFestival
     Festival "1" --> "0..*" UnidadVenta
-    UnidadVenta "1" --> "1..*" Plato
+    UnidadVenta "1" --> "0..*" Plato
     UnidadVenta "1" --> "0..*" Pedido
-    UnidadVenta "1" --> "1..*" Personal : personal
+    UnidadVenta "0..*" --> "1..*" Personal : personal
+    UnidadVenta "0..*" --> "1" Personal : responsable
+    Festival "1" --> "0..*" Pedido
     Pedido "1" --> "1..*" DetallesPedido
     DetallesPedido "0..*" --> "1" Plato
+    Usuario "0..1" --> "0..1" Personal
+    CierreCaja "0..*" --> "1" Cajero
+    CierreCaja "0..*" --> "1" UnidadVenta
 ```
 
-## Casos de Uso (Hito 1)
+## Casos de uso implementados y responsables
 
-| Caso de Uso | Responsable | Estado |
-|---|---|---|
-| FoodTrucks de un festival con la cantidad de platos que ofrece cada uno (Herencia: FoodTruck · Uno a Muchos: UnidadVenta→Plato) | Juan Avalle | ✅ |
-| Staff (Cocineros/Cajeros) asignado a una Unidad de Venta, con sueldo calculado (Herencia: Cocinero/Cajero · Uno a Muchos: UnidadVenta→Personal) | Santiago Agarzúa | ✅ |
-| Puestos Desarmables de un festival, con cantidad de carpas y superficie total (Herencia: PuestoDesarmable · Uno a Muchos: Festival→UnidadVenta) | Franco Luzardo | ✅ |
-| Total facturado por cada FoodTruck de un festival (Herencia: FoodTruck · Uno a Muchos: Pedido→DetallesPedido) | Federico Acosta Rosales | ✅ |
-| **2da consulta:** Precio de venta promedio de los platos de los FoodTrucks de un festival, con `avg()` resuelto en HQL | Juan Avalle | ✅ |
-| **2da consulta:** Personal (todas las subclases) con fecha de nacimiento en un rango de edad dado | Santiago Agarzúa | ✅ |
-| **2da consulta:** Superficie total (de todas las UnidadVenta, y solo de los Puestos Desarmables) de un festival, con `sum()` resuelto en HQL | Franco Luzardo | ✅ |
-| **2da consulta:** Total facturado por cada FoodTruck, resuelto directo en HQL con `sum()` y `group by` (en vez de sumar en Java) | Federico Acosta Rosales | ✅ |
+El estado y el link al Pull Request de cada caso de uso se completan acá a medida que se mergean.
 
-## Stack
+| # | Caso de uso | Rol | Responsable | Rama | PR | Estado |
+|---|---|---|---|---|---|---|
+| Base | Proyecto Maven, entidades, login por roles, inicio con festivales, script SQL | todos | Juan Avalle | `CUBaseProyectoJuanAvalle` | _pendiente_ | en curso |
+| 1 | Ver festivales | Admin | Franco Luzardo | `CUVerFestivalesFrancoLuzardo` | | pendiente |
+| 2 | Ver unidades de venta de un festival | Admin | Franco Luzardo | `CUVerUnidadesFestivalFrancoLuzardo` | | pendiente |
+| 3 | Ranking de unidades por recaudación | Admin | Franco Luzardo | `CURankingUnidadesFrancoLuzardo` | | pendiente |
+| 4 | Unidades con mayor canon (`ReporteMayoresCanonDTO`) | Admin | Franco Luzardo | `CUMayorCanonFrancoLuzardo` | | pendiente |
+| 5 | Registro de Unidad de Venta con su Responsable (crea usuario) | Público | Santiago Agarzúa | `CURegistroUnidadSantiagoAgarzua` | | pendiente |
+| 6 | Alta, baja lógica, modificación y reactivación de empleados + **mail** | Responsable | Juan Avalle | `CUABMEmpleadosJuanAvalle` | | pendiente |
+| 7 | Alta de platos | Responsable | Santiago Agarzúa | `CUAltaPlatosSantiagoAgarzua` | | pendiente |
+| 8 | Filtros de empleados por uno o varios atributos (solo activos) | Responsable | Juan Avalle | `CUFiltrosEmpleadosJuanAvalle` | | pendiente |
+| 9 | Cálculo de canon de una unidad | Responsable | Juan Avalle | `CUCalculoCanonJuanAvalle` | | pendiente |
+| 10 | Liquidación de haberes | Responsable | Juan Avalle | `CULiquidacionHaberesJuanAvalle` | | pendiente |
+| 11 | Reporte de recaudación de un festival (`ReporteVentaDTO`) | Responsable | Federico Acosta | `CUReporteRecaudacionFedericoAcosta` | | pendiente |
+| 12 | Rentabilidad neta de una unidad en un festival | Responsable | Federico Acosta | `CURentabilidadNetaFedericoAcosta` | | pendiente |
+| 13 | Rentabilidad neta entre dos fechas | Responsable | Federico Acosta | `CURentabilidadFechasFedericoAcosta` | | pendiente |
+| 14 | Plato estrella (`PlatoDTO`) | Responsable | Santiago Agarzúa | `CUPlatoEstrellaSantiagoAgarzua` | | pendiente |
+| 15 | Ver mi información (festivales y unidades en las que trabajé) | Empleado | Franco Luzardo | `CUMiInformacionFrancoLuzardo` | | pendiente |
+| 16 | Descargar recibo de sueldo en **PDF** | Empleado | Federico Acosta | `CUReciboSueldoFedericoAcosta` | | pendiente |
+| 17 | Ver en qué festival activo y unidad trabajo hoy | Empleado | Santiago Agarzúa | `CUDondeTrabajoHoySantiagoAgarzua` | | pendiente |
+| 18 | Cerrar caja (cajero) | Empleado | Federico Acosta | `CUCerrarCajaFedericoAcosta` | | pendiente |
 
-- Java 21 (JDK)
-- Hibernate 5.4.11 (mapeo por XML `.hbm.xml`, sin JPA)
-- MySQL 8
+**Mínimos por grupo:** 1 envío de mail (CU 6) · 1 DTO de reporte (CU 4, 11, 14) · 1 PDF (CU 16).
 
-## Cómo levantar el proyecto (paso a paso)
+**Validaciones de carga (2 por integrante):**
 
-Guía pensada para alguien que nunca tocó este repo. Seguí los pasos en orden.
+| Integrante | Validaciones |
+|---|---|
+| Juan Avalle | personal mayor de edad · email con formato válido y único |
+| Santiago Agarzúa | código de unidad único y con formato válido · superficie mayor a 0 |
+| Franco Luzardo | período del festival válido (fin posterior al inicio) · nombre de usuario único |
+| Federico Acosta | un pedido solo puede cargarse con la fecha del día · precio de venta mayor al costo de producción del plato |
 
-### 0) Requisitos previos
+**Dependencias entre casos de uso:** los CU 9 (canon) y 10 (haberes) los usan los CU 4, 12, 13 y 16. Se mergean primero; mientras tanto el resto puede avanzar con los datos de prueba.
 
-- **Eclipse IDE** (cualquier edición para Java, ej. "Eclipse IDE for Java Developers"). Trae un JDK propio incluido, no hace falta instalar Java aparte.
-- **MySQL Server** instalado y corriendo, + **MySQL Workbench** (o cualquier cliente para ejecutar SQL).
-- **Git** instalado (o descargar el repo como ZIP desde GitHub si no usás Git por consola).
+## Cómo trabajar (ramas y Pull Requests)
 
-### 1) Clonar el repositorio
-
-Abrí una terminal (Git Bash, símbolo del sistema o PowerShell), ubicate con `cd` en la carpeta donde querés que quede el proyecto (por ejemplo `cd Documents`), y ahí corré:
+Cada caso de uso entra a `main` **mediante Pull Request**. No se pushea directo a `main`.
 
 ```bash
-git clone https://github.com/JuanAvalle77/TPGrupalOO2Grupo10.git
+git checkout main && git pull
+git checkout -b CUAltaPlatosSantiagoAgarzua      # CU<Funcionalidad><Responsable>
+# ... desarrollar y probar el caso de uso ...
+git add . && git commit -m "CU Alta de platos: entidad, repositorio, servicio, controlador y vista"
+git push -u origin CUAltaPlatosSantiagoAgarzua
+gh pr create --base main --fill                   # o desde la web de GitHub
 ```
 
-Esto crea una carpeta nueva `TPGrupalOO2Grupo10` con el proyecto adentro.
-
-O desde GitHub, sin usar Git por consola: botón verde **Code → Download ZIP** y descomprimirlo en alguna carpeta.
-
-### 2) Crear la base de datos
-
-Abrí **MySQL Workbench**, conectate a tu instancia local (doble clic en la conexión, te va a pedir la contraseña de `root`), abrí una pestaña de **Query** y ejecutá (ícono del rayo ⚡ o `Ctrl+Enter`):
-
-```sql
-CREATE DATABASE epicentro_gourmet
-  CHARACTER SET utf8mb4
-  COLLATE utf8mb4_unicode_ci;
-```
-
-No hace falta crear tablas a mano — Hibernate las crea solo la primera vez que corras el proyecto.
-
-### 3) Importar el proyecto en Eclipse
-
-1. Abrí Eclipse (elegí cualquier carpeta como workspace si te lo pide).
-2. Menú **File → Open Projects from File System...**
-3. En "Import source", clic en **Directory...** y seleccioná la carpeta donde clonaste/descomprimiste el repo (la que tiene adentro `src`, `lib`, `.project`, etc.).
-4. Debería aparecer el proyecto `TpGrupo10` tildado en la lista → **Finish**.
-5. Esperá que Eclipse termine de indexar/compilar (mirá que no queden procesos corriendo en la barra de estado, abajo a la derecha).
-
-### 4) Configurar la conexión a la base (`hibernate.cfg.xml`)
-
-Este archivo tiene tu contraseña de MySQL, por eso **no está en el repo** (cada uno tiene la suya). Hay que crearlo a partir de una plantilla:
-
-1. En el Package Explorer, buscá `src/hibernate.cfg.xml.template`.
-2. Copialo y pegalo en la misma carpeta (`Ctrl+C`, `Ctrl+V` dentro de Eclipse) — te va a preguntar el nombre de la copia, o si prefieren, hacé la copia desde el explorador de Windows.
-3. Renombrá la copia a `hibernate.cfg.xml` (sin `.template`), en la misma carpeta `src`.
-4. Abrilo y reemplazá el texto `TU_PASSWORD_ACA` (línea `<property name="connection.password">...</property>`) por tu contraseña real de MySQL.
-5. Guardá con `Ctrl+S`.
-
-### 5) Chequear las librerías (Classpath vs Modulepath) — importante
-
-Este es el paso que más rompe las bolas si se salta. Java moderno (9+) separa las dependencias en dos "carriles": **Modulepath** y **Classpath**. Los jars de Hibernate que usamos son viejos y tienen que ir sí o sí en **Classpath**, o vas a tener un error `NoClassDefFoundError` relacionado a `byte-buddy` apenas arranque Hibernate.
-
-Como el archivo `.classpath` del proyecto ya viene configurado bien en el repo, en teoría no tenés que tocar nada. Pero conviene verificarlo:
-
-1. Clic derecho en el proyecto → **Properties**.
-2. **Java Build Path** → pestaña **Libraries**.
-3. Deberías ver dos nodos: **Modulepath** (con solo el `JRE System Library`) y **Classpath** (con los 19 jars de `lib/`).
-4. Si ves los 19 jars bajo **Modulepath** en lugar de Classpath: seleccionalos todos (clic en el primero, `Shift+clic` en el último), **Remove**, hacer clic en el nodo **Classpath** para seleccionarlo, y **Add JARs...** → navegar a `TpGrupo10/lib` → seleccionar los 19 archivos `.jar` → OK.
-5. **Apply and Close**.
-
-### 6) Primera corrida: crear tablas y cargar datos de prueba
-
-1. En el Package Explorer, abrí `src/test/TestCargarTodosLosDatosPrueba.java`.
-2. Clic derecho → **Run As → Java Application**.
-3. Mirá la consola: vas a ver mucho texto en rojo (es normal, es el logging de Hibernate, no un error) y al final líneas tipo `Festival creado, id=1`, `Cocinero creado, id=1`, `FoodTruck creado: ...`, etc., terminando en `=== Toda la carga de datos de prueba se completo con exito ===`, sin ninguna `Exception`.
-4. Confirmá en MySQL Workbench (Schemas → `epicentro_gourmet` → clic derecho → Refresh All) que aparecieron las tablas.
-
-Esta clase carga de una sola vez: el festival, 10 FoodTrucks, 1 Puesto Desarmable, ~10 empleados (staff), sus platos, y varios pedidos con detalles.
-
-**Corré esta clase UNA SOLA VEZ.** Si la corrés de nuevo va a fallar por datos duplicados (DNI/código únicos) — es esperado, no arreglar nada, simplemente no la vuelvas a correr. Si necesitás datos frescos, mirá "Reiniciar la base" más abajo.
-
-### 7) Correr un caso de uso
-
-Cualquier otra clase dentro de `src/test/` (por ejemplo `TestCasoDeUsoFoodTrucks.java`) se corre igual: clic derecho → **Run As → Java Application**. Esas sí las podés correr las veces que quieras, son solo lectura.
-
-## Cómo agregar tu propio Caso de Uso
-
-1. Elegí de la tabla de arriba cuál te toca (o coordinen entre el grupo).
-2. En el `Dao` correspondiente (`src/dao/`), agregá un método nuevo con una consulta HQL, siguiendo el mismo patrón que `UnidadVentaDao.traerFoodTrucksDeFestival(...)` (abrir sesión, `try/finally` con `session.close()`).
-3. Agregá el método "espejo" en el `ABM` correspondiente (`src/negocio/`) que solo delega al Dao.
-4. Creá una clase de prueba en `src/test/` con un `main()` que llame a tu ABM e imprima el resultado.
-5. Actualizá la tabla de Casos de Uso en este README con tu nombre y el estado.
-6. Commiteá y pusheá **tu propio commit** (no lo mezcles con cambios de otra parte del proyecto), para que se vea claramente tu aporte en el historial.
-
-## Reiniciar la base desde cero
-
-Si en algún momento querés borrar todo y volver a probar desde el principio, en MySQL Workbench:
-
-```sql
-DROP DATABASE epicentro_gourmet;
-CREATE DATABASE epicentro_gourmet CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-```
-
-Y después volvé a correr `TestCargarTodosLosDatosPrueba.java` una sola vez.
-
-## Estructura
-
-- `datos/` - POJOs del modelo
-- `mapeos/` - mapeos Hibernate `.hbm.xml`
-- `dao/` - acceso a datos (`HibernateUtil` + un Dao por entidad)
-- `negocio/` - capa de negocio (ABM por entidad)
-- `test/` - clases de prueba con `main()`
+Reglas:
+1. En la descripción del PR detallar lo realizado (entidades, repositorios, servicios, controladores, vistas) y cómo probarlo.
+2. Pegar el link del PR en la columna *PR* de la tabla de arriba.
+3. Cada caso de uso agrega su link en el `navbar` de `layout.html` (dentro del bloque de su rol) y en el panel del rol.
+4. Un compañero revisa el PR antes de mergear. Evitar tocar archivos de otros casos de uso para no generar conflictos.
+5. Nada hardcodeado: los valores de negocio (sueldo base, canon, plus) salen de `CostoFestival`.
+6. Credenciales solo por variables de entorno; nunca commitear contraseñas.
