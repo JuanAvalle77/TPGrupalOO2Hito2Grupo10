@@ -25,6 +25,7 @@
                             <th class="text-right">Sueldo base</th>
                             <th>Plus</th>
                             <th class="text-right">Subtotal</th>
+                            <th class="text-right">Factor</th>
                             <th class="text-right">Total a cobrar</th>
                         </tr>
                     </thead>
@@ -39,15 +40,16 @@
                             <td><span th:text="${l.conceptoPlus}">Plus</span>:
                                 <span th:text="'$ ' + ${#numbers.formatDecimal(l.plus, 1, 'POINT', 2, 'COMMA')}">$ 0,00</span></td>
                             <td class="text-right" th:text="'$ ' + ${#numbers.formatDecimal(l.subtotal, 1, 'POINT', 2, 'COMMA')}">$ 0,00</td>
+                            <td class="text-right text-muted" th:text="'× ' + ${#numbers.formatDecimal(l.factor, 1, 'POINT', 2, 'COMMA')}">× 0,50</td>
                             <td class="text-right"><strong th:text="'$ ' + ${#numbers.formatDecimal(l.total, 1, 'POINT', 2, 'COMMA')}">$ 0,00</strong></td>
                         </tr>
                         <tr th:if="${#lists.isEmpty(u.liquidaciones)}">
-                            <td colspan="6" class="text-center text-muted">La unidad no tiene personal asignado.</td>
+                            <td colspan="7" class="text-center text-muted">La unidad no tiene personal asignado.</td>
                         </tr>
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td colspan="5" class="text-right"><strong>Total de la unidad</strong></td>
+                            <td colspan="6" class="text-right"><strong>Total de la unidad</strong></td>
                             <td class="text-right"><strong th:text="'$ ' + ${#numbers.formatDecimal(u.totalUnidad, 1, 'POINT', 2, 'COMMA')}">$ 0,00</strong></td>
                         </tr>
                     </tfoot>
