@@ -206,37 +206,37 @@ El estado y el link al Pull Request de cada caso de uso se completan acá a medi
 | # | Caso de uso | Rol | Responsable | Rama | PR | Estado |
 |---|---|---|---|---|---|---|
 | Base | Proyecto Maven, entidades, login por roles, inicio con festivales, script SQL | todos | Juan Avalle | `CUBaseProyectoJuanAvalle` | [PR #1](https://github.com/JuanAvalle77/TPGrupalOO2Grupo10/pull/1) | en revisión |
-| 1 | Ver festivales | Admin | Franco Luzardo | `CUVerFestivalesFrancoLuzardo` | | pendiente |
-| 2 | Ver unidades de venta de un festival | Admin | Franco Luzardo | `CUVerUnidadesFestivalFrancoLuzardo` | | pendiente |
-| 3 | Ranking de unidades por recaudación | Admin | Franco Luzardo | `CURankingUnidadesFrancoLuzardo` | | pendiente |
-| 4 | Unidades con mayor canon (`ReporteMayoresCanonDTO`) | Admin | Franco Luzardo | `CUMayorCanonFrancoLuzardo` | | pendiente |
-| 5 | Registro de Unidad de Venta con su Responsable (crea usuario) | Público | Santiago Agarzúa | `CURegistroUnidadSantiagoAgarzua` | | pendiente |
-| 6 | Alta, baja lógica, modificación y reactivación de empleados + **mail** | Responsable | Juan Avalle | `CUABMEmpleadosJuanAvalle` | | pendiente |
+| 1 | Ver festivales y unidades de venta de un festival | Admin | Franco Luzardo | `CUVerFestivalesUnidadesFrancoLuzardo` | | pendiente |
+| 2 | Ranking de unidades por recaudación | Admin | Franco Luzardo | `CURankingUnidadesFrancoLuzardo` | | pendiente |
+| 3 | Unidades con mayor canon (`ReporteMayoresCanonDTO`) | Admin | Juan Avalle | `CUMayorCanonJuanAvalle` | | pendiente |
+| 4 | Registro de Unidad de Venta con su Responsable (crea usuario) | Público | Santiago Agarzúa | `CURegistroUnidadSantiagoAgarzua` | | pendiente |
+| 5 | Alta, baja lógica, modificación y reactivación de empleados + **mail** | Responsable | Juan Avalle | `CUABMEmpleadosJuanAvalle` | | pendiente |
+| 6 | Filtros de empleados por uno o varios atributos (solo activos) | Responsable | Juan Avalle | `CUFiltrosEmpleadosJuanAvalle` | | pendiente |
 | 7 | Alta de platos | Responsable | Santiago Agarzúa | `CUAltaPlatosSantiagoAgarzua` | | pendiente |
-| 8 | Filtros de empleados por uno o varios atributos (solo activos) | Responsable | Juan Avalle | `CUFiltrosEmpleadosJuanAvalle` | | pendiente |
-| 9 | Cálculo de canon de una unidad | Responsable | Juan Avalle | `CUCalculoCanonJuanAvalle` | | pendiente |
-| 10 | Liquidación de haberes | Responsable | Juan Avalle | `CULiquidacionHaberesJuanAvalle` | | pendiente |
-| 11 | Reporte de recaudación de un festival (`ReporteVentaDTO`) | Responsable | Federico Acosta | `CUReporteRecaudacionFedericoAcosta` | | pendiente |
-| 12 | Rentabilidad neta de una unidad en un festival | Responsable | Federico Acosta | `CURentabilidadNetaFedericoAcosta` | | pendiente |
-| 13 | Rentabilidad neta entre dos fechas | Responsable | Federico Acosta | `CURentabilidadFechasFedericoAcosta` | | pendiente |
-| 14 | Plato estrella (`PlatoDTO`) | Responsable | Santiago Agarzúa | `CUPlatoEstrellaSantiagoAgarzua` | | pendiente |
-| 15 | Ver mi información (festivales y unidades en las que trabajé) | Empleado | Franco Luzardo | `CUMiInformacionFrancoLuzardo` | | pendiente |
-| 16 | Descargar recibo de sueldo en **PDF** | Empleado | Federico Acosta | `CUReciboSueldoFedericoAcosta` | | pendiente |
-| 17 | Ver en qué festival activo y unidad trabajo hoy | Empleado | Santiago Agarzúa | `CUDondeTrabajoHoySantiagoAgarzua` | | pendiente |
-| 18 | Cerrar caja (cajero) | Empleado | Federico Acosta | `CUCerrarCajaFedericoAcosta` | | pendiente |
+| 8 | Cálculo de canon de una unidad | Responsable | Juan Avalle | `CUCalculoCanonJuanAvalle` | | pendiente |
+| 9 | Liquidación de haberes | Responsable | Juan Avalle | `CULiquidacionHaberesJuanAvalle` | | pendiente |
+| 10 | Reporte de recaudación de un festival (`ReporteVentaDTO`) | Responsable | Franco Luzardo | `CUReporteRecaudacionFrancoLuzardo` | | pendiente |
+| 11 | Rentabilidad neta de una unidad (y entre dos fechas) | Responsable | Juan Avalle | `CURentabilidadNetaJuanAvalle` | | pendiente |
+| 12 | Plato estrella (`PlatoDTO`) | Responsable | Santiago Agarzúa | `CUPlatoEstrellaSantiagoAgarzua` | | pendiente |
+| 13 | Ver mi información (festivales y unidades en las que trabajé) | Empleado | Franco Luzardo | `CUMiInformacionFrancoLuzardo` | | pendiente |
+| 14 | Recibo de sueldo en **PDF** | Empleado | Federico Acosta | `CUReciboSueldoFedericoAcosta` | | pendiente |
+| 15 | Ver en qué festival activo y unidad trabajo hoy | Empleado | Federico Acosta | `CUDondeTrabajoHoyFedericoAcosta` | | pendiente |
+| 16 | Cerrar caja (cajero) | Empleado | Federico Acosta | `CUCerrarCajaFedericoAcosta` | | pendiente |
 
-**Mínimos por grupo:** 1 envío de mail (CU 6) · 1 DTO de reporte (CU 4, 11, 14) · 1 PDF (CU 16).
+Guía detallada de cada caso de uso (qué construir, rutas, reglas y cómo verificarlo): [`docs/GUIA_CASOS_DE_USO.md`](docs/GUIA_CASOS_DE_USO.md).
+
+**Mínimos por grupo:** 1 envío de mail (CU 5) · DTOs de reporte (CU 3, 10, 12) · 1 PDF (CU 14).
 
 **Validaciones de carga (2 por integrante):**
 
 | Integrante | Validaciones |
 |---|---|
 | Juan Avalle | personal mayor de edad · email con formato válido y único |
-| Santiago Agarzúa | código de unidad único y con formato válido · superficie mayor a 0 |
-| Franco Luzardo | período del festival válido (fin posterior al inicio) · nombre de usuario único |
-| Federico Acosta | un pedido solo puede cargarse con la fecha del día · precio de venta mayor al costo de producción del plato |
+| Santiago Agarzúa | código de unidad único y con formato válido · precio de venta mayor al costo de producción del plato |
+| Franco Luzardo | período del festival válido (fin no anterior al inicio) · superficie de la unidad mayor a 0 |
+| Federico Acosta | un pedido solo puede cargarse con la fecha del día y cantidades mayores a 0 · un único cierre de caja por cajero y por día |
 
-**Dependencias entre casos de uso:** los CU 9 (canon) y 10 (haberes) los usan los CU 4, 12, 13 y 16. Se mergean primero; mientras tanto el resto puede avanzar con los datos de prueba.
+**Dependencias entre casos de uso:** los CU 8 (canon) y 9 (haberes) los usan los CU 3, 11 y 14. Se mergean primero; mientras tanto el resto puede avanzar con los datos de prueba.
 
 ## Cómo trabajar (ramas y Pull Requests)
 
