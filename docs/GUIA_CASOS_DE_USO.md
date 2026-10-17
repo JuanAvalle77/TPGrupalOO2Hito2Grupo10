@@ -45,7 +45,7 @@ Ejemplo de referencia ya hecho: la página de inicio (`HomeController` + `Festiv
 5. **Navegación**: en `templates/<rol>/index.html` reemplazar la tarjeta *Pendiente* de tu caso de uso (cada caso tiene la suya) por `<a class="cu-card" th:href="@{/ruta}">…</a>`.
 6. **Constantes**: sumar tus rutas/vistas a `ViewRouteHelper`.
 7. **Probar**: levantar la app, entrar con el usuario del rol y recorrer el flujo. Idealmente agregar un test en `src/test/java`.
-8. **Git** (obligatorio): rama `CU<Funcionalidad><Nombre>`, commits claros, `gh pr create --base main` (o desde la web), descripción del PR con lo hecho (entidades/consultas, servicios, controladores, vistas) y cómo probarlo. Pegar el link del PR en la tabla del README.
+8. **Git** (obligatorio): rama `CU<Funcionalidad><Nombre>`, commits claros, `gh pr create --base main` (o desde la web), descripción del PR con lo hecho (entidades/consultas, servicios, controladores, vistas) y cómo probarlo. Pasarle el link del PR a Juan por el grupo (él completa la tabla del README, así no hay conflictos). Para saber cómo se revisa un PR, ver el README.
 
 **Reglas generales:** no tocar archivos de otros casos de uso salvo para agregar tu tarjeta/link; no escribir contraseñas ni valores de negocio en el código; si falta una entidad o campo, **avisar en el grupo** antes de modificarla.
 
