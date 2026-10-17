@@ -1,0 +1,133 @@
+/* Epicentro Gourmet - estilos propios (base: Bootstrap 4) */
+:root {
+    --vino: #6d1a36;
+    --vino-oscuro: #4a1124;
+    --dorado: #d9902f;
+    --dorado-claro: #f4e3c6;
+    --crema: #faf7f2;
+    --texto: #2b2a2e;
+    --gris: #77727a;
+    --borde: #e8e1d6;
+    --verde: #2e7d5b;
+    --azul: #2f6b9a;
+    --radio: 14px;
+    --sombra: 0 4px 18px rgba(74, 17, 36, 0.08);
+}
+
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: var(--crema);
+    color: var(--texto);
+    font-family: 'Segoe UI', system-ui, -apple-system, Roboto, sans-serif;
+}
+
+main { flex: 1; }
+
+h1, h2, h3, h4, .brand-text { font-family: Georgia, 'Times New Roman', serif; }
+
+a { color: var(--vino); }
+a:hover { color: var(--vino-oscuro); }
+
+/* ---------- Navbar ---------- */
+.navbar-epicentro {
+    background: #fff;
+    border-bottom: 3px solid var(--vino);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+    padding: .5rem 0;
+}
+.navbar-epicentro .navbar-brand { display: flex; align-items: center; padding: 0; }
+.navbar-epicentro .logo-unla { height: 46px; width: auto; }
+.navbar-epicentro .brand-sep { width: 1px; height: 34px; background: var(--borde); margin: 0 .9rem; }
+.navbar-epicentro .brand-text { color: var(--vino); font-size: 1.35rem; font-weight: 700; letter-spacing: .3px; }
+.navbar-epicentro .brand-text small { display: block; font-family: 'Segoe UI', sans-serif; font-size: .62rem; font-weight: 600;
+    letter-spacing: 2px; text-transform: uppercase; color: var(--dorado); }
+.navbar-epicentro .nav-link { color: var(--texto); font-weight: 600; border-bottom: 2px solid transparent; margin: 0 .25rem; }
+.navbar-epicentro .nav-link:hover { color: var(--vino); border-bottom-color: var(--dorado); }
+.navbar-epicentro .navbar-toggler { border-color: var(--vino); }
+.btn-ingresar { background: var(--vino); color: #fff !important; border-radius: 999px; padding: .35rem 1.1rem !important; border: 0 !important; }
+.btn-ingresar:hover { background: var(--vino-oscuro); }
+.chip-usuario { background: var(--dorado-claro); color: var(--vino-oscuro) !important; border-radius: 999px; padding: .3rem .9rem !important; }
+
+/* ---------- Portada ---------- */
+.hero {
+    background: radial-gradient(circle at 85% 20%, rgba(217, 144, 47, .35), transparent 45%),
+                linear-gradient(135deg, var(--vino) 0%, var(--vino-oscuro) 100%);
+    color: #fff;
+    padding: 4rem 0 3.5rem;
+}
+.hero h1 { font-size: 2.6rem; font-weight: 700; margin-bottom: .6rem; }
+.hero p { font-size: 1.1rem; max-width: 620px; color: #f1dfe4; margin-bottom: 1.4rem; }
+.hero .eyebrow { text-transform: uppercase; letter-spacing: 3px; font-size: .75rem; color: var(--dorado); font-weight: 700; }
+.btn-dorado { background: var(--dorado); color: #2b1a05; font-weight: 700; border-radius: 999px; padding: .55rem 1.6rem; border: 0; }
+.btn-dorado:hover { background: #e7a447; color: #2b1a05; }
+
+.section-title { font-size: 1.6rem; color: var(--vino-oscuro); margin: 2.2rem 0 1.2rem; }
+.section-title:after { content: ''; display: block; width: 54px; height: 3px; background: var(--dorado); margin-top: .5rem; border-radius: 2px; }
+
+/* ---------- Tarjetas de festivales ---------- */
+.festival-card {
+    background: #fff;
+    border: 1px solid var(--borde);
+    border-radius: var(--radio);
+    box-shadow: var(--sombra);
+    height: 100%;
+    overflow: hidden;
+    transition: transform .2s ease, box-shadow .2s ease;
+}
+.festival-card:hover { transform: translateY(-3px); box-shadow: 0 10px 26px rgba(74, 17, 36, .14); }
+.festival-card .franja { height: 6px; }
+.festival-card .cuerpo { padding: 1.3rem 1.4rem 1.2rem; }
+.festival-card h3 { font-size: 1.3rem; color: var(--vino-oscuro); margin-bottom: .2rem; }
+.festival-card .temporada { color: var(--gris); font-size: .9rem; margin-bottom: 1rem; }
+.festival-card .fechas { display: flex; justify-content: space-between; font-size: .88rem; border-top: 1px dashed var(--borde); padding-top: .8rem; }
+.festival-card .fechas span { display: block; color: var(--gris); font-size: .72rem; text-transform: uppercase; letter-spacing: 1px; }
+.estado { display: inline-block; font-size: .72rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+    padding: .2rem .65rem; border-radius: 999px; float: right; }
+.estado-activo { background: #dff3e9; color: var(--verde); }
+.estado-proximo { background: #deebf6; color: var(--azul); }
+.estado-finalizado { background: #eee9e2; color: var(--gris); }
+.franja-activo { background: var(--verde); }
+.franja-proximo { background: var(--azul); }
+.franja-finalizado { background: #b9b2a8; }
+
+/* ---------- Paneles por rol ---------- */
+.panel-head { padding: 2.2rem 0 1.6rem; }
+.panel-head h2 { color: var(--vino-oscuro); margin: 0; }
+.panel-head .rol { display: inline-block; background: var(--dorado-claro); color: var(--vino-oscuro); font-weight: 700;
+    font-size: .72rem; letter-spacing: 2px; text-transform: uppercase; padding: .2rem .8rem; border-radius: 999px; margin-bottom: .6rem; }
+.cu-card { background: #fff; border: 1px solid var(--borde); border-left: 5px solid var(--dorado); border-radius: var(--radio);
+    padding: 1.1rem 1.3rem; height: 100%; box-shadow: var(--sombra); }
+.cu-card h4 { font-size: 1.05rem; color: var(--vino-oscuro); margin-bottom: .25rem; }
+.cu-card p { color: var(--gris); font-size: .88rem; margin: 0; }
+.cu-card .pendiente { float: right; font-size: .68rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+    background: #f3efe8; color: var(--gris); padding: .15rem .6rem; border-radius: 999px; }
+a.cu-card { display: block; text-decoration: none; color: inherit; transition: transform .2s ease; }
+a.cu-card:hover { transform: translateY(-3px); border-left-color: var(--vino); }
+
+/* ---------- Login ---------- */
+.login-wrap { max-width: 440px; margin: 3rem auto; }
+.login-card { background: #fff; border: 1px solid var(--borde); border-radius: var(--radio); box-shadow: var(--sombra);
+    padding: 2rem 2rem 1.6rem; text-align: center; }
+.login-card img { height: 84px; margin-bottom: .6rem; }
+.login-card h2 { color: var(--vino-oscuro); font-size: 1.5rem; }
+.login-card .sub { color: var(--gris); font-size: .9rem; margin-bottom: 1.4rem; }
+.login-card .form-control { border-radius: 10px; padding: .6rem .9rem; height: auto; text-align: left; }
+.login-card .form-control:focus { border-color: var(--dorado); box-shadow: 0 0 0 .2rem rgba(217, 144, 47, .25); }
+.login-card label { display: block; text-align: left; font-weight: 600; font-size: .85rem; margin-bottom: .25rem; }
+.login-card .btn-dorado { width: 100%; margin-top: .4rem; }
+
+/* ---------- Formularios y tablas (para los casos de uso) ---------- */
+.card-form { background: #fff; border: 1px solid var(--borde); border-radius: var(--radio); box-shadow: var(--sombra); padding: 1.5rem; }
+.table-epicentro thead th { background: var(--vino); color: #fff; border: 0; font-weight: 600; }
+.table-epicentro tbody tr:nth-child(even) { background: #fcfaf6; }
+.btn-primary { background: var(--vino); border-color: var(--vino); }
+.btn-primary:hover { background: var(--vino-oscuro); border-color: var(--vino-oscuro); }
+
+/* ---------- Footer ---------- */
+.footer-epicentro { background: var(--vino-oscuro); color: #e9d7dc; padding: 1.6rem 0; margin-top: 3rem; }
+.footer-epicentro .logo-pill { background: #fff; border-radius: 10px; padding: .3rem .5rem; display: inline-block; margin-right: .9rem; }
+.footer-epicentro .logo-pill img { height: 40px; display: block; }
+.footer-epicentro .inner { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; text-align: left; }
+.footer-epicentro small { color: #c9aab3; }

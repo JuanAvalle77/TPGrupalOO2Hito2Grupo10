@@ -1,40 +1,45 @@
 <!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:replace="~{layout :: head}"></head>
 <body>
     <nav th:replace="~{layout :: navbar}"></nav>
 
-    <main class="container py-4" style="margin-top: 70px;">
-        <div class="page-header">
-            <h2>Festivales</h2>
-            <p class="text-muted">Festivales tematicos del predio Epicentro Gourmet.</p>
+    <section class="hero">
+        <div class="container">
+            <div class="eyebrow">Predio ferial</div>
+            <h1>Epicentro Gourmet</h1>
+            <p>Festivales gastronómicos temáticos. Gestioná unidades de venta, personal, pedidos y el rendimiento de cada jornada.</p>
+            <a th:href="@{/login}" class="btn btn-dorado" sec:authorize="!isAuthenticated()">Iniciar sesión</a>
+            <!-- TODO (CU Registro de Unidad de Venta con su Responsable): agregar acá el botón a /registro -->
         </div>
+    </section>
 
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>Nombre</th>
-                    <th>Temporada</th>
-                    <th>Inicio</th>
-                    <th>Fin</th>
-                    <th>Duracion</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr th:each="festival : ${festivales}">
-                    <td th:text="${festival.nombre}">Nombre</td>
-                    <td th:text="${festival.temporada}">Temporada</td>
-                    <td th:text="${#temporals.format(festival.fechaInicio, 'dd/MM/yyyy')}">01/01/2026</td>
-                    <td th:text="${#temporals.format(festival.fechaFin, 'dd/MM/yyyy')}">05/01/2026</td>
-                    <td th:text="${festival.duracionEnDias} + ' dias'">5 dias</td>
-                </tr>
-                <tr th:if="${#lists.isEmpty(festivales)}">
-                    <td colspan="5" class="text-center text-muted">No hay festivales cargados.</td>
-                </tr>
-            </tbody>
-        </table>
+    <main class="container">
+        <h2 class="section-title">Festivales</h2>
 
-        <!-- TODO (CU Registro de Unidad de Venta con su Responsable): agregar aca el link a /registro -->
+        <div class="row" th:with="hoy=${#temporals.createToday()}">
+            <div class="col-md-6 col-lg-4 mb-4" th:each="festival : ${festivales}">
+                <div class="festival-card"
+                     th:with="activo=${festival.estaActivo(hoy)}, proximo=${festival.fechaInicio.isAfter(hoy)}">
+                    <div class="franja"
+                         th:classappend="${activo} ? 'franja-activo' : (${proximo} ? 'franja-proximo' : 'franja-finalizado')"></div>
+                    <div class="cuerpo">
+                        <span class="estado"
+                              th:classappend="${activo} ? 'estado-activo' : (${proximo} ? 'estado-proximo' : 'estado-finalizado')"
+                              th:text="${activo} ? 'En curso' : (${proximo} ? 'Próximo' : 'Finalizado')">Estado</span>
+                        <h3 th:text="${festival.nombre}">Nombre</h3>
+                        <div class="temporada" th:text="${festival.temporada} + ' · ' + ${festival.duracionEnDias} + ' días'">Temporada</div>
+                        <div class="fechas">
+                            <div><span>Inicio</span><strong th:text="${#temporals.format(festival.fechaInicio, 'dd/MM/yyyy')}">01/01/2026</strong></div>
+                            <div class="text-right"><span>Fin</span><strong th:text="${#temporals.format(festival.fechaFin, 'dd/MM/yyyy')}">05/01/2026</strong></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12" th:if="${#lists.isEmpty(festivales)}">
+                <p class="text-muted text-center py-4">Todavía no hay festivales cargados.</p>
+            </div>
+        </div>
     </main>
 
     <footer th:replace="~{layout :: footer}"></footer>

@@ -4,16 +4,23 @@
 <body>
     <nav th:replace="~{layout :: navbar}"></nav>
 
-    <main class="container py-4" style="margin-top: 70px;">
-        <div class="page-header">
+    <main class="container">
+        <div class="panel-head">
+            <span class="rol">Responsable</span>
             <h2>Panel del Responsable</h2>
         </div>
-        <ul class="list-group">
-            <!-- Cada caso de uso de responsable agrega su link aca -->
-            <li class="list-group-item text-muted">Alta, baja y modificacion de empleados (pendiente)</li>
-            <li class="list-group-item text-muted">Alta de platos (pendiente)</li>
-            <li class="list-group-item text-muted">Reportes y calculos de la unidad (pendiente)</li>
-        </ul>
+
+        <div class="row">
+            <!-- Cada caso de uso de responsable reemplaza su tarjeta por un <a class="cu-card" th:href="..."> -->
+            <div class="col-md-6 mb-4"><div class="cu-card"><span class="pendiente">Pendiente</span>
+                <h4>Empleados</h4><p>Alta, baja, modificación y filtros de empleados.</p></div></div>
+            <div class="col-md-6 mb-4"><div class="cu-card"><span class="pendiente">Pendiente</span>
+                <h4>Platos</h4><p>Alta de platos de la unidad.</p></div></div>
+            <div class="col-md-6 mb-4"><div class="cu-card"><span class="pendiente">Pendiente</span>
+                <h4>Canon y haberes</h4><p>Cálculo de canon y liquidación de haberes.</p></div></div>
+            <div class="col-md-6 mb-4"><div class="cu-card"><span class="pendiente">Pendiente</span>
+                <h4>Reportes</h4><p>Recaudación, rentabilidad neta y plato estrella.</p></div></div>
+        </div>
     </main>
 
     <footer th:replace="~{layout :: footer}"></footer>

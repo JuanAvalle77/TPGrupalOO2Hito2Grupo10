@@ -4,17 +4,23 @@
 <body>
     <nav th:replace="~{layout :: navbar}"></nav>
 
-    <main class="container py-4" style="margin-top: 70px;">
-        <div class="page-header">
+    <main class="container">
+        <div class="panel-head">
+            <span class="rol">Administrador</span>
             <h2>Panel del Administrador</h2>
         </div>
-        <ul class="list-group">
-            <!-- Cada caso de uso de admin agrega su link aca -->
-            <li class="list-group-item text-muted">Ver festivales (pendiente)</li>
-            <li class="list-group-item text-muted">Ver unidades de venta de un festival (pendiente)</li>
-            <li class="list-group-item text-muted">Ranking de unidades por recaudacion (pendiente)</li>
-            <li class="list-group-item text-muted">Unidades con mayor canon (pendiente)</li>
-        </ul>
+
+        <div class="row">
+            <!-- Cada caso de uso de admin reemplaza su tarjeta por un <a class="cu-card" th:href="..."> -->
+            <div class="col-md-6 mb-4"><div class="cu-card"><span class="pendiente">Pendiente</span>
+                <h4>Festivales</h4><p>Ver todos los festivales.</p></div></div>
+            <div class="col-md-6 mb-4"><div class="cu-card"><span class="pendiente">Pendiente</span>
+                <h4>Unidades de venta</h4><p>Ver las unidades de venta de un festival.</p></div></div>
+            <div class="col-md-6 mb-4"><div class="cu-card"><span class="pendiente">Pendiente</span>
+                <h4>Ranking de unidades</h4><p>Unidades de un festival ordenadas por recaudación.</p></div></div>
+            <div class="col-md-6 mb-4"><div class="cu-card"><span class="pendiente">Pendiente</span>
+                <h4>Unidades con mayor canon</h4><p>Las unidades que más pagaron de canon en un festival.</p></div></div>
+        </div>
     </main>
 
     <footer th:replace="~{layout :: footer}"></footer>
