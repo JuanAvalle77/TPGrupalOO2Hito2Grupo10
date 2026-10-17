@@ -24,7 +24,7 @@ Aplicación **Spring Boot 3 (Java 17+) + Thymeleaf + Spring Data JPA + MySQL + S
 
 **Seguridad (ya hecha):** tres zonas con prefijo de ruta. Si tu ruta empieza con el prefijo del rol, **queda protegida sola**:
 - `/admin/**` → solo `ADMIN` · `/responsable/**` → solo `RESPONSABLE` · `/empleado/**` → solo `EMPLEADO`.
-- Para saber quién está logueado: inyectar `SesionService` (`getUsuarioActual()`, `getPersonalActual()`).
+- Para saber quién está logueado: inyectar `SesionService` (`getUsuarioActual()`, `getPersonalActual()`, y para responsables `getUnidadesDelResponsable()`).
 
 **Datos y valores de negocio:** nada hardcodeado. Sueldo base, canon, plus, etc. salen de `Festival.getCostos()` (entidad `CostoFestival`).
 
@@ -40,9 +40,9 @@ Ejemplo de referencia ya hecho: la página de inicio (`HomeController` + `Festiv
 
 1. **Repositorio** (`repositories/IXxxRepository.java`): agregar el método de consulta que necesites.
 2. **Servicio**: crear `services/IXxxService.java` (interfaz) y `services/implementation/XxxService.java` (`@Service`) con la lógica. Las validaciones lanzan `IllegalArgumentException` con un mensaje claro.
-3. **Controlador**: en el controlador de tu rol (`AdminController`, `ResponsableController` o `EmpleadoController`) agregar los métodos `@GetMapping` / `@PostMapping`. Devolver `ModelAndView` con la vista y los datos (`mAV.addObject("clave", valor)`). Las rutas van bajo el prefijo del rol (ej. `/responsable/empleados`).
+3. **Controlador**: crear **un controlador propio por caso de uso** (ej. `CanonController` con `@Controller @RequestMapping("/responsable/canon")`) para no pisarse con los demás en el mismo archivo. Agregar los métodos `@GetMapping` / `@PostMapping`. Devolver `ModelAndView` con la vista y los datos (`mAV.addObject("clave", valor)`). Las rutas van bajo el prefijo del rol (ej. `/responsable/empleados`).
 4. **Vista**: crear `templates/<rol>/<pagina>.html` copiando la estructura de `templates/home/index.html` (los `th:replace` del layout al principio y al final). Los formularios usan `th:action="@{/ruta}" method="post"`: Spring agrega solo el token CSRF.
-5. **Navegación**: en `templates/<rol>/index.html` reemplazar la tarjeta *Pendiente* de tu caso de uso por `<a class="cu-card" th:href="@{/ruta}">…</a>`.
+5. **Navegación**: en `templates/<rol>/index.html` reemplazar la tarjeta *Pendiente* de tu caso de uso (cada caso tiene la suya) por `<a class="cu-card" th:href="@{/ruta}">…</a>`.
 6. **Constantes**: sumar tus rutas/vistas a `ViewRouteHelper`.
 7. **Probar**: levantar la app, entrar con el usuario del rol y recorrer el flujo. Idealmente agregar un test en `src/test/java`.
 8. **Git** (obligatorio): rama `CU<Funcionalidad><Nombre>`, commits claros, `gh pr create --base main` (o desde la web), descripción del PR con lo hecho (entidades/consultas, servicios, controladores, vistas) y cómo probarlo. Pegar el link del PR en la tabla del README.

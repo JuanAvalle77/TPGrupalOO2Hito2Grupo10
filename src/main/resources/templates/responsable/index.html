@@ -11,15 +11,22 @@
         </div>
 
         <div class="row">
-            <!-- Cada caso de uso de responsable reemplaza su tarjeta por un <a class="cu-card" th:href="..."> -->
+            <!-- Una tarjeta por caso de uso. Al implementarlo, reemplazar su tarjeta por:
+                 <div class="col-md-6 mb-4"><a class="cu-card" th:href="@{/responsable/...}"><h4>...</h4><p>...</p></a></div> -->
             <div class="col-md-6 mb-4"><div class="cu-card"><span class="pendiente">Pendiente</span>
                 <h4>Empleados</h4><p>Alta, baja, modificación y filtros de empleados.</p></div></div>
             <div class="col-md-6 mb-4"><div class="cu-card"><span class="pendiente">Pendiente</span>
                 <h4>Platos</h4><p>Alta de platos de la unidad.</p></div></div>
             <div class="col-md-6 mb-4"><div class="cu-card"><span class="pendiente">Pendiente</span>
-                <h4>Canon y haberes</h4><p>Cálculo de canon y liquidación de haberes.</p></div></div>
+                <h4>Canon</h4><p>Monto de canon a pagar por la unidad.</p></div></div>
             <div class="col-md-6 mb-4"><div class="cu-card"><span class="pendiente">Pendiente</span>
-                <h4>Reportes</h4><p>Recaudación, rentabilidad neta y plato estrella.</p></div></div>
+                <h4>Liquidación de haberes</h4><p>Sueldo de cada empleado de la unidad por festival.</p></div></div>
+            <div class="col-md-6 mb-4"><div class="cu-card"><span class="pendiente">Pendiente</span>
+                <h4>Reporte de recaudación</h4><p>Recaudación total de un festival.</p></div></div>
+            <div class="col-md-6 mb-4"><div class="cu-card"><span class="pendiente">Pendiente</span>
+                <h4>Rentabilidad neta</h4><p>Ganancia de la unidad en un festival o entre dos fechas.</p></div></div>
+            <div class="col-md-6 mb-4"><div class="cu-card"><span class="pendiente">Pendiente</span>
+                <h4>Plato estrella</h4><p>El plato que más se pidió en la unidad.</p></div></div>
         </div>
     </main>
 

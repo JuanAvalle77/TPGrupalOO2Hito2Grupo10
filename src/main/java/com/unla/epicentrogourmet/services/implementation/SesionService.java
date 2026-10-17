@@ -1,11 +1,15 @@
 package com.unla.epicentrogourmet.services.implementation;
 
+import java.util.List;
+
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.unla.epicentrogourmet.entities.Personal;
+import com.unla.epicentrogourmet.entities.UnidadVenta;
 import com.unla.epicentrogourmet.entities.Usuario;
+import com.unla.epicentrogourmet.repositories.IUnidadVentaRepository;
 import com.unla.epicentrogourmet.repositories.IUsuarioRepository;
 
 /**
@@ -16,9 +20,11 @@ import com.unla.epicentrogourmet.repositories.IUsuarioRepository;
 public class SesionService {
 
 	private final IUsuarioRepository usuarioRepository;
+	private final IUnidadVentaRepository unidadVentaRepository;
 
-	public SesionService(IUsuarioRepository usuarioRepository) {
+	public SesionService(IUsuarioRepository usuarioRepository, IUnidadVentaRepository unidadVentaRepository) {
 		this.usuarioRepository = usuarioRepository;
+		this.unidadVentaRepository = unidadVentaRepository;
 	}
 
 	/** Usuario autenticado en la sesion actual. */
@@ -38,5 +44,10 @@ public class SesionService {
 			throw new IllegalStateException("El usuario actual no tiene personal asociado");
 		}
 		return personal;
+	}
+
+	/** Unidades de venta de las que el usuario logueado es responsable. */
+	public List<UnidadVenta> getUnidadesDelResponsable() {
+		return unidadVentaRepository.findByResponsableId(getPersonalActual().getId());
 	}
 }
