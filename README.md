@@ -213,8 +213,8 @@ El estado y el link al Pull Request de cada caso de uso se completan acá a medi
 | 5 | Alta, baja lógica, modificación y reactivación de empleados + **mail** | Responsable | Juan Avalle | `CUABMEmpleadosJuanAvalle` | | pendiente |
 | 6 | Filtros de empleados por uno o varios atributos (solo activos) | Responsable | Juan Avalle | `CUFiltrosEmpleadosJuanAvalle` | | pendiente |
 | 7 | Alta de platos | Responsable | Santiago Agarzúa | `CUAltaPlatosSantiagoAgarzua` | | pendiente |
-| 8 | Cálculo de canon de una unidad | Responsable | Juan Avalle | `CUCalculoCanonJuanAvalle` | | pendiente |
-| 9 | Liquidación de haberes | Responsable | Juan Avalle | `CULiquidacionHaberesJuanAvalle` | | pendiente |
+| 8 | Cálculo de canon de una unidad | Responsable | Juan Avalle | `CUCalculoCanonJuanAvalle` | [PR #2](https://github.com/JuanAvalle77/TPGrupalOO2Grupo10/pull/2) | en revisión |
+| 9 | Liquidación de haberes | Responsable | Juan Avalle | `CULiquidacionHaberesJuanAvalle` | [PR #3](https://github.com/JuanAvalle77/TPGrupalOO2Grupo10/pull/3) | en revisión |
 | 10 | Reporte de recaudación de un festival (`ReporteVentaDTO`) | Responsable | Franco Luzardo | `CUReporteRecaudacionFrancoLuzardo` | | pendiente |
 | 11 | Rentabilidad neta de una unidad (y entre dos fechas) | Responsable | Juan Avalle | `CURentabilidadNetaJuanAvalle` | | pendiente |
 | 12 | Plato estrella (`PlatoDTO`) | Responsable | Santiago Agarzúa | `CUPlatoEstrellaSantiagoAgarzua` | | pendiente |
