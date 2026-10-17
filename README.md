@@ -242,19 +242,59 @@ Guía detallada de cada caso de uso (qué construir, rutas, reglas y cómo verif
 
 Cada caso de uso entra a `main` **mediante Pull Request**. No se pushea directo a `main`.
 
+### 1) Crear la rama y desarrollar
 ```bash
 git checkout main && git pull
-git checkout -b CUAltaPlatosSantiagoAgarzua      # CU<Funcionalidad><Responsable>
+git checkout -b CUAltaPlatosSantiagoAgarzua      # CU<Funcionalidad><Nombre>
 # ... desarrollar y probar el caso de uso ...
-git add . && git commit -m "CU Alta de platos: entidad, repositorio, servicio, controlador y vista"
+git add .
+git commit -m "CU Alta de platos: entidad, repositorio, servicio, controlador y vista"
 git push -u origin CUAltaPlatosSantiagoAgarzua
-gh pr create --base main --fill                   # o desde la web de GitHub
 ```
 
-Reglas:
-1. En la descripción del PR detallar lo realizado (entidades, repositorios, servicios, controladores, vistas) y cómo probarlo.
-2. Pegar el link del PR en la columna *PR* de la tabla de arriba.
-3. Cada caso de uso agrega su link en el `navbar` de `layout.html` (dentro del bloque de su rol) y en el panel del rol.
-4. Un compañero revisa el PR antes de mergear. Evitar tocar archivos de otros casos de uso para no generar conflictos.
-5. Nada hardcodeado: los valores de negocio (sueldo base, canon, plus) salen de `CostoFestival`.
-6. Credenciales solo por variables de entorno; nunca commitear contraseñas.
+### 2) Abrir el Pull Request
+- **Desde la web (lo más simple):** después del `push`, entrar al repo en GitHub: aparece un cartel amarillo **"Compare & pull request"**. Si no aparece, pestaña *Pull requests* → *New pull request* → base `main`, compare tu rama.
+- **Desde la terminal** (solo si tienen instalado y logueado GitHub CLI): `gh pr create --base main --fill`
+
+En la descripción del PR completar:
+1. **Qué hace** el caso de uso (una o dos líneas).
+2. **Qué se hizo:** entidades/consultas, repositorios, servicios, controladores, vistas.
+3. **Cómo probarlo:** qué usuario usar (ver tabla de usuarios) y qué debería verse.
+
+### 3) Si `main` cambia mientras trabajás
+Cuando se mergean otros PRs, tu rama queda atrasada. Antes de pedir la revisión (o si GitHub avisa de conflictos):
+```bash
+git fetch origin
+git merge origin/main        # resolver conflictos si los hay, probar, y:
+git push
+```
+Si hay conflicto en un archivo compartido (`layout.html`, el `index.html` de un panel), conservar **ambos** cambios.
+
+### 4) Revisión y merge
+- Un compañero **distinto del autor** revisa el PR (ver abajo). El autor lo mergea con el botón **Merge pull request** cuando está aprobado, y borra la rama.
+- **Link del PR en el README:** la tabla de casos de uso la completa **una sola persona (Juan)** para no generar conflictos. Pasale el link de tu PR por el grupo.
+
+### Cómo revisar un Pull Request
+1. **Leer los cambios:** en el PR, pestaña **Files changed**. Para comentar una línea, pasar el mouse sobre el número y tocar el **+** azul. Si el PR está apilado sobre otro (su base no es `main`), solo se ven los cambios propios.
+2. **Probarlo en tu compu** (lo más importante):
+   ```bash
+   git fetch origin
+   git checkout CUAltaPlatosSantiagoAgarzua     # la rama del PR
+   ./mvnw test                                   # tests
+   ./mvnw spring-boot:run                        # y probar el flujo con el usuario que indica el PR
+   ```
+3. **Checklist:**
+   - [ ] Compila, los tests pasan y el flujo descripto funciona con los datos de prueba.
+   - [ ] Sigue la estructura (entidad / repositorio / servicio / controlador / vista) y usa un controlador propio.
+   - [ ] La ruta está bajo el prefijo de su rol (`/admin`, `/responsable`, `/empleado`) y otro rol recibe 403.
+   - [ ] Nada hardcodeado: los valores de negocio salen de `CostoFestival`.
+   - [ ] Sin contraseñas ni datos personales en el código.
+   - [ ] Tiene las validaciones de carga que le tocan y mensajes de error claros.
+   - [ ] La descripción del PR explica qué se hizo y cómo probarlo; no toca archivos de otros casos de uso salvo su tarjeta/link.
+4. **Resolver la revisión:** botón **Review changes** → *Approve* (está bien), *Request changes* (hay que corregir algo) o *Comment* (dudas). Dejá comentarios concretos ("en la línea X falta validar Y").
+
+### Reglas generales
+1. Cada caso de uso agrega su link en el `navbar` de `layout.html` (dentro del bloque de su rol) y reemplaza su tarjeta *Pendiente* en el panel del rol.
+2. Nada hardcodeado: los valores de negocio (sueldo base, canon, plus) salen de `CostoFestival`.
+3. Credenciales solo por variables de entorno; nunca commitear contraseñas.
+4. Si falta una entidad o un campo, avisar en el grupo antes de modificarla.
