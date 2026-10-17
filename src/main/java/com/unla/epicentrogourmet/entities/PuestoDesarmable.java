@@ -20,6 +20,12 @@ public class PuestoDesarmable extends UnidadVenta {
 	}
 
 	@Override
+	public String describirCanon(CostoFestival costos) {
+		return String.format("%.1f m² × $%.0f − %d min de montaje × $%.0f", getSuperficie(), costos.getCostoPorM2(),
+				tiempoMontaje, costos.getCostoPorMinutoMontaje());
+	}
+
+	@Override
 	public String getTipo() {
 		return "Puesto Desarmable";
 	}
