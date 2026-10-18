@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout :: head}"></head>
+<body>
+    <nav th:replace="~{layout :: navbar}"></nav>
+
+    <main class="container">
+        <div class="panel-head">
+            <span class="rol">Administrador</span>
+            <h2>Panel del Administrador</h2>
+        </div>
+
+        <div class="row">
+            <!-- Cada caso de uso de admin reemplaza su tarjeta por un <a class="cu-card" th:href="..."> -->
+            <div class="col-md-6 mb-4"><div class="cu-card"><span class="pendiente">Pendiente</span>
+                <h4>Festivales</h4><p>Ver todos los festivales.</p></div></div>
+            <div class="col-md-6 mb-4"><div class="cu-card"><span class="pendiente">Pendiente</span>
+                <h4>Unidades de venta</h4><p>Ver las unidades de venta de un festival.</p></div></div>
+            <div class="col-md-6 mb-4"><div class="cu-card"><span class="pendiente">Pendiente</span>
+                <h4>Ranking de unidades</h4><p>Unidades de un festival ordenadas por recaudación.</p></div></div>
+            <div class="col-md-6 mb-4"><div class="cu-card"><span class="pendiente">Pendiente</span>
+                <h4>Unidades con mayor canon</h4><p>Las unidades que más pagaron de canon en un festival.</p></div></div>
+        </div>
+    </main>
+
+    <footer th:replace="~{layout :: footer}"></footer>
+    <div th:replace="~{layout :: scripts}"></div>
+</body>
+</html>

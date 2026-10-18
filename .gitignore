@@ -4,4 +4,42 @@ out/
 
 # Cada integrante crea el suyo a partir de src/hibernate.cfg.xml.template,
 # con su propia contraseña local de MySQL (no se sube al repo).
-src/hibernate.cfg.xml
+hito1/src/hibernate.cfg.xml
+/target/
+!.mvn/wrapper/maven-wrapper.jar
+
+### Environment ###
+.env
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+/nbproject/private/
+/build/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+### OS ###
+.DS_Store
+Thumbs.db
+
+### Docker ###
+docker-compose.override.yml
+### Entorno local ###
+.env
+*.local
