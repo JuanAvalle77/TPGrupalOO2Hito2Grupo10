@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout :: head}"></head>
+<body>
+    <nav th:replace="~{layout :: navbar}"></nav>
+
+    <main class="container">
+        <div class="panel-head">
+            <span class="rol">Responsable</span>
+            <h2 th:text="${edicion} ? 'Modificar empleado' : 'Nuevo empleado'">Nuevo empleado</h2>
+            <p class="text-muted mb-0" th:unless="${edicion}">Al guardar, el empleado recibe un mail con su usuario (su email) y una contraseña generada.</p>
+        </div>
+
+        <form th:action="${edicion} ? @{/responsable/empleados/{id}/editar(id=${empleadoForm.id})} : @{/responsable/empleados/nuevo}"
+              th:object="${empleadoForm}" method="post" class="card-form mb-4" novalidate="novalidate">
+
+            <div class="alert alert-danger" th:if="${#fields.hasGlobalErrors()}">
+                <div th:each="err : ${#fields.globalErrors()}" th:text="${err}">Error</div>
+            </div>
+
+            <div class="form-group" th:if="${#lists.size(unidades) > 1 and !edicion}">
+                <label for="unidadId">Unidad de venta</label>
+                <select class="form-control" id="unidadId" th:field="*{unidadId}">
+                    <option value="">Elegí la unidad...</option>
+                    <option th:each="u : ${unidades}" th:value="${u.id}" th:text="${u.nombreComercial}">Unidad</option>
+                </select>
+                <small class="text-danger" th:if="${#fields.hasErrors('unidadId')}" th:errors="*{unidadId}">Error</small>
+            </div>
+            <p class="text-muted" th:if="${#lists.size(unidades) == 1 and !edicion}">
+                Se asigna a: <strong th:text="${unidades[0].nombreComercial}">Unidad</strong>
+            </p>
+
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="nombre">Nombre</label>
+                    <input type="text" class="form-control" id="nombre" th:field="*{nombre}"
+                           th:classappend="${#fields.hasErrors('nombre')} ? 'is-invalid'" autofocus="autofocus"/>
+                    <div class="invalid-feedback" th:errors="*{nombre}">Error</div>
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="apellido">Apellido</label>
+                    <input type="text" class="form-control" id="apellido" th:field="*{apellido}"
+                           th:classappend="${#fields.hasErrors('apellido')} ? 'is-invalid'"/>
+                    <div class="invalid-feedback" th:errors="*{apellido}">Error</div>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <label for="dni">DNI</label>
+                    <input type="number" class="form-control" id="dni" th:field="*{dni}"
+                           th:classappend="${#fields.hasErrors('dni')} ? 'is-invalid'"/>
+                    <div class="invalid-feedback" th:errors="*{dni}">Error</div>
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="fechaNacimiento">Fecha de nacimiento</label>
+                    <input type="date" class="form-control" id="fechaNacimiento" th:field="*{fechaNacimiento}"
+                           th:classappend="${#fields.hasErrors('fechaNacimiento')} ? 'is-invalid'"/>
+                    <div class="invalid-feedback" th:errors="*{fechaNacimiento}">Error</div>
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="fechaIngreso">Fecha de ingreso</label>
+                    <input type="date" class="form-control" id="fechaIngreso" th:field="*{fechaIngreso}"
+                           th:classappend="${#fields.hasErrors('fechaIngreso')} ? 'is-invalid'"/>
+                    <div class="invalid-feedback" th:errors="*{fechaIngreso}">Error</div>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="email">Email (es su usuario para iniciar sesión)</label>
+                    <input type="email" class="form-control" id="email" th:field="*{email}"
+                           th:classappend="${#fields.hasErrors('email')} ? 'is-invalid'"/>
+                    <div class="invalid-feedback" th:errors="*{email}">Error</div>
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="contacto">Contacto (teléfono, opcional)</label>
+                    <input type="text" class="form-control" id="contacto" th:field="*{contacto}"
+                           th:classappend="${#fields.hasErrors('contacto')} ? 'is-invalid'"/>
+                    <div class="invalid-feedback" th:errors="*{contacto}">Error</div>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <label for="tipo">Tipo de empleado</label>
+                    <!-- Al modificar el tipo no se cambia: se muestra fijo y se envía oculto -->
+                    <select class="form-control" id="tipo" th:field="*{tipo}" th:unless="${edicion}">
+                        <option th:each="t : ${tipos}" th:value="${t}" th:text="${t.descripcion}">Cajero</option>
+                    </select>
+                    <div th:if="${edicion}">
+                        <input type="text" class="form-control" th:value="${empleadoForm.tipo.descripcion}" disabled="disabled"/>
+                        <input type="hidden" name="tipo" th:value="${empleadoForm.tipo}"/>
+                    </div>
+                </div>
+                <div class="form-group col-md-4" id="grupoTurno">
+                    <label for="turno">Turno</label>
+                    <select class="form-control" id="turno" th:field="*{turno}"
+                            th:classappend="${#fields.hasErrors('turno')} ? 'is-invalid'">
+                        <option value="">Elegí el turno...</option>
+                        <option th:each="t : ${turnos}" th:value="${t}"
+                                th:text="${T(com.unla.epicentrogourmet.helpers.EtiquetasHelper).turno(t)}">Mañana</option>
+                    </select>
+                    <div class="invalid-feedback" th:errors="*{turno}">Error</div>
+                </div>
+                <div class="form-group col-md-4" id="grupoRolCocina">
+                    <label for="rolCocina">Rol en la cocina</label>
+                    <select class="form-control" id="rolCocina" th:field="*{rolCocina}"
+                            th:classappend="${#fields.hasErrors('rolCocina')} ? 'is-invalid'">
+                        <option value="">Elegí el rol...</option>
+                        <option th:each="r : ${rolesCocina}" th:value="${r}"
+                                th:text="${T(com.unla.epicentrogourmet.helpers.EtiquetasHelper).rolCocina(r)}">Cocinero</option>
+                    </select>
+                    <div class="invalid-feedback" th:errors="*{rolCocina}">Error</div>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-dorado" th:text="${edicion} ? 'Guardar cambios' : 'Dar de alta'">Dar de alta</button>
+            <a th:href="@{/responsable/empleados}" class="btn btn-outline-secondary">Cancelar</a>
+        </form>
+    </main>
+
+    <footer th:replace="~{layout :: footer}"></footer>
+    <div th:replace="~{layout :: scripts}"></div>
+    <script>
+        // Muestra el turno (cajero) o el rol (cocina) según el tipo elegido
+        (function () {
+            var tipo = document.getElementById('tipo') || document.querySelector('input[name="tipo"]');
+            function actualizar() {
+                var esCajero = tipo.value === 'CAJERO';
+                document.getElementById('grupoTurno').style.display = esCajero ? '' : 'none';
+                document.getElementById('grupoRolCocina').style.display = esCajero ? 'none' : '';
+            }
+            tipo.addEventListener('change', actualizar);
+            actualizar();
+        })();
+    </script>
+</body>
+</html>
