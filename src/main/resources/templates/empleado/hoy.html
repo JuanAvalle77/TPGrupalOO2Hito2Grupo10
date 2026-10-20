@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout :: head}"></head>
+<body>
+    <nav th:replace="~{layout :: navbar}"></nav>
+    <main class="container">
+        <div class="panel-head">
+            <span class="rol">Empleado</span>
+            <h2>Dónde trabajo hoy</h2>
+        </div>
+        <div th:if="${#lists.isEmpty(asignaciones)}" class="alert alert-info">Hoy no tenés festival asignado.</div>
+        <div class="table-responsive" th:unless="${#lists.isEmpty(asignaciones)}">
+            <table class="table table-striped">
+                <thead><tr><th>Festival</th><th>Unidad</th><th>Código</th><th>Período</th></tr></thead>
+                <tbody>
+                    <tr th:each="asignacion : ${asignaciones}">
+                        <td th:text="${asignacion.festival}"></td>
+                        <td th:text="${asignacion.unidad}"></td>
+                        <td th:text="${asignacion.codigoUnidad}"></td>
+                        <td><span th:text="${asignacion.fechaInicio}"></span> al <span th:text="${asignacion.fechaFin}"></span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <a class="btn btn-outline-secondary" th:href="@{/empleado}">Volver al panel</a>
+    </main>
+    <footer th:replace="~{layout :: footer}"></footer>
+    <div th:replace="~{layout :: scripts}"></div>
+</body>
+</html>

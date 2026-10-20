@@ -20,4 +20,5 @@ public class ViewRouteHelper {
 	public static final String RESPONSABLE_INDEX = "responsable/index";
 	public static final String EMPLEADO_INDEX = "empleado/index";
 	public static final String EMPLEADO_CERRAR_CAJA = "empleado/cerrar-caja";
+	public static final String EMPLEADO_HOY = "empleado/hoy";
 }
