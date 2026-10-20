@@ -55,14 +55,14 @@ Ejemplo de referencia ya hecho: la página de inicio (`HomeController` + `Festiv
 
 | Integrante | Casos de uso (PRs) |
 |---|---|
-| **Juan Avalle** | ABM de empleados + mail · Filtros de empleados · Cálculo de canon · Liquidación de haberes · Unidades con mayor canon · Rentabilidad neta (y entre fechas) |
-| **Santiago Agarzúa** | Registro de unidad con responsable · Alta de platos · Plato estrella |
+| **Juan Avalle** | ABM de empleados + mail · Cálculo de canon · Liquidación de haberes · Rentabilidad neta (y entre fechas) |
+| **Santiago Agarzúa** | Registro de unidad con responsable · Alta de platos · Plato estrella · Filtros de empleados |
 | **Franco Luzardo** | Ver festivales y unidades · Ranking de unidades · Reporte de recaudación · Ver mi información (empleado) |
-| **Federico Acosta** | Recibo de sueldo en PDF · Dónde trabajo hoy · Cerrar caja |
+| **Federico Acosta** | Recibo de sueldo en PDF · Dónde trabajo hoy · Cerrar caja · Unidades con mayor canon |
 
 **Orden recomendado:** Juan mergea primero *canon* y *liquidación de haberes* (los usan otros). Mientras tanto todos pueden avanzar con lo que no depende de eso.
 
-**Mínimos de la consigna que se cumplen:** 1 mail (ABM de empleados) · DTOs de reporte (mayor canon, recaudación, plato estrella) · 1 PDF (recibo) · cada uno tiene 2 o más casos de uso y 2 validaciones de carga.
+**Mínimos de la consigna que se cumplen:** 1 mail (ABM de empleados) · DTOs de reporte (mayor canon, recaudación, plato estrella) · 1 PDF (recibo) · cada uno tiene 4 casos de uso y 2 validaciones de carga.
 
 ---
 
@@ -79,11 +79,6 @@ Ejemplo de referencia ya hecho: la página de inicio (`HomeController` + `Festiv
 - **Validaciones de carga (Juan):** persona **mayor de edad** (`Personal.esMayorDeEdad()`); **email con formato válido y único**.
 - **Listo cuando:** el responsable `juan.perez@…` da de alta un empleado, el mail aparece en la consola (o llega si hay `MAIL_*`), el nuevo empleado puede iniciar sesión, y al darlo de baja desaparece de la lista y no puede loguearse.
 
-**CU Filtros de empleados** · rama `CUFiltrosEmpleadosJuanAvalle` · Responsable
-- **Qué hace:** en la lista de empleados, filtrar por uno o varios atributos (nombre/apellido, DNI, tipo, turno o rol de cocina) **solo entre los activos**.
-- **Cómo:** `GET /responsable/empleados?apellido=&dni=&tipo=` — armar la consulta con `@Query` con parámetros opcionales (`(:apellido is null or lower(p.apellido) like lower(concat('%', :apellido, '%')))`) y `activo = true`, siempre acotada a la unidad del responsable.
-- **Listo cuando:** combinando filtros devuelve el subconjunto correcto y nunca muestra dados de baja.
-
 **CU Cálculo de canon** · rama `CUCalculoCanonJuanAvalle` · Responsable
 - **Qué hace:** el responsable ve el monto de canon de su unidad en su festival.
 - **Regla:** ya está en `UnidadVenta.calcularCanon(CostoFestival)`: FoodTruck = `superficie × costoPorM2` + plus eléctrico si lo requiere; Puesto = `superficie × costoPorM2 − tiempoMontaje × costoPorMinutoMontaje`. Crear `CanonService.calcularCanon(UnidadVenta)` que use `unidad.getFestival().getCostos()` y una vista `/responsable/canon`.
@@ -97,11 +92,6 @@ Ejemplo de referencia ya hecho: la página de inicio (`HomeController` + `Festiv
   - Total = factor × (base del rol).
 - **Crear:** `LiquidacionService.calcularSueldo(Personal, Festival)` — **lo usa Federico** para el recibo en PDF, así que mantener esa firma.
 - **Verificación:** *Valentina Ortiz* (lavaplatos) en el festival 2 (38 días) = **225.000** · *Ana Torres* (cajera, ingreso 2024-02-01) en el festival 2 = **165.000**.
-
-**CU Unidades con mayor canon** · rama `CUMayorCanonJuanAvalle` · Admin · *(DTO de reporte)*
-- **Qué hace:** el admin elige un festival y un número `x`; ve las `x` unidades que más canon pagan.
-- **Ruta:** `/admin/mayor-canon?festivalId=1&x=3`. Crear `dtos/ReporteMayoresCanonDTO` (nombreComercial, codigo, tipo, canon) — **no es entidad**. Ordenar por canon descendente y cortar en `x`.
-- **Verificación** (festival 1, x=3): El Fueguito 9750, La Empanada Andante 6000, La Carpa de Pedro 3950.
 
 **CU Rentabilidad neta (y entre dos fechas)** · rama `CURentabilidadNetaJuanAvalle` · Responsable
 - **Qué hace:** ganancia de **una unidad en un festival** = `total de pedidos − costo de producción de los platos − sueldos del personal − canon`. Segunda parte: lo mismo **limitado a pedidos entre dos fechas**.
@@ -129,6 +119,13 @@ Ejemplo de referencia ya hecho: la página de inicio (`HomeController` + `Festiv
 - **Criterio (documentarlo en el PR):** el plato con más **unidades vendidas** (suma de `DetallesPedido.cantidad`); la cantidad de pedidos queda como dato y como desempate.
 - **Cómo:** consulta agrupando `DetallesPedido` por plato para esa unidad y festival, ordenando descendente y tomando el primero (`LIMIT 1` o `findFirst`). Ruta `/responsable/plato-estrella`.
 - **Verificación:** *El Fueguito*, festival 1 → **Choripan** (8 unidades en 2 pedidos; Papas Fritas: 6 unidades en 2 pedidos).
+
+**CU Filtros de empleados** · rama `CUFiltrosEmpleadosSantiagoAgarzua` · Responsable
+- **Qué hace:** en la lista de empleados, filtrar por uno o varios atributos (nombre/apellido, DNI, tipo, turno o rol de cocina) **solo entre los activos**.
+- **Cómo:** `GET /responsable/empleados?apellido=&dni=&tipo=` — armar la consulta con `@Query` con parámetros opcionales (`(:apellido is null or lower(p.apellido) like lower(concat('%', :apellido, '%')))`) y `activo = true`, siempre acotada a la unidad del responsable.
+- **Listo cuando:** combinando filtros devuelve el subconjunto correcto y nunca muestra dados de baja.
+- **Depende de:** el ABM de empleados (PR de Juan): la lista `/responsable/empleados` y `IPersonalRepository`. Empezá cuando ese PR esté mergeado en `main`.
+- **Validaciones de carga:** al menos una en el filtro (por ejemplo, el DNI debe ser numérico y el texto no puede pasar de 100 caracteres).
 
 ### FRANCO LUZARDO
 
@@ -172,3 +169,10 @@ Ejemplo de referencia ya hecho: la página de inicio (`HomeController` + `Festiv
 - **Ruta:** `/empleado/cerrar-caja` (GET muestra el total del día, POST confirma). Solo cajeros: si el usuario es `Cocinero`, mostrar error.
 - **Validaciones (Federico):** **un cierre por cajero por día** (hay restricción única en la tabla) y **los pedidos solo se cargan con la fecha del día**: crear `PedidoService.crear(...)` que rechace fechas distintas de hoy y cantidades ≤ 0 en los items.
 - **Listo cuando:** `lucia.gomez@…` cierra la caja y un segundo intento el mismo día muestra un mensaje de error.
+
+**CU Unidades con mayor canon** · rama `CUMayorCanonFedericoAcosta` · Admin · *(DTO de reporte)*
+- **Qué hace:** el admin elige un festival y un número `x`; ve las `x` unidades que más canon pagan.
+- **Ruta:** `/admin/mayor-canon?festivalId=1&x=3`. Crear `dtos/ReporteMayoresCanonDTO` (nombreComercial, codigo, tipo, canon) — **no es entidad**. Ordenar por canon descendente y cortar en `x`.
+- **Verificación** (festival 1, x=3): El Fueguito 9750, La Empanada Andante 6000, La Carpa de Pedro 3950.
+- **Depende de:** el cálculo de canon (PR de Juan): usar `CanonService.calcularCanon(UnidadVenta)`. Empezá cuando ese PR esté mergeado en `main`.
+- **Validaciones de carga:** `x` debe ser un número mayor a 0 y el festival tiene que existir (mostrar un mensaje claro si no).
