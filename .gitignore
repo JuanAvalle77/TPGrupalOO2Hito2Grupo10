@@ -40,3 +40,6 @@ docker-compose.override.yml
 ### Entorno local ###
 .env
 *.local
+
+# Carpeta local del Hito 1 (el Hito 1 vive en otro repositorio)
+hito1/
