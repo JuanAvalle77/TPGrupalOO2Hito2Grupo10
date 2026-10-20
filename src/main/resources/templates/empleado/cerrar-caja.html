@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout :: head}"></head>
+<body>
+    <nav th:replace="~{layout :: navbar}"></nav>
+    <main class="container">
+        <div class="panel-head">
+            <span class="rol">Empleado</span>
+            <h2>Cerrar caja</h2>
+            <p th:if="${estado != null}" th:text="${'Recaudación del ' + estado.fecha}"></p>
+        </div>
+        <div class="alert alert-danger" th:if="${error != null}" th:text="${error}"></div>
+        <div class="alert alert-success" th:if="${exito != null}" th:text="${exito}"></div>
+        <div th:if="${estado != null}">
+            <div th:if="${#lists.isEmpty(estado.unidades)}" class="alert alert-info">No tenés unidades con un festival activo hoy.</div>
+            <div th:unless="${#lists.isEmpty(estado.unidades)}">
+                <div class="alert alert-info" th:if="${estado.cerrado}">Ya cerraste la caja de hoy.</div>
+                <form th:action="@{/empleado/cerrar-caja}" method="post" th:unless="${estado.cerrado}">
+                    <div class="form-group">
+                        <label for="unidadId">Unidad</label>
+                        <select class="form-control" id="unidadId" name="unidadId" required>
+                            <option th:each="unidad : ${estado.unidades}" th:value="${unidad.id}"
+                                    th:text="${unidad.nombre + ' — ' + unidad.festival + ' — Total: $' + #numbers.formatDecimal(unidad.totalDelDia, 1, 'POINT', 2, 'COMMA')}"></option>
+                        </select>
+                    </div>
+                    <button class="btn btn-primary" type="submit">Confirmar cierre de hoy</button>
+                </form>
+                <h3 class="mt-4">Totales del día</h3>
+                <ul class="list-group">
+                    <li class="list-group-item" th:each="unidad : ${estado.unidades}">
+                        <span th:text="${unidad.nombre + ' (' + unidad.festival + ')'}"></span>
+                        <strong class="float-right" th:text="${'$' + #numbers.formatDecimal(unidad.totalDelDia, 1, 'POINT', 2, 'COMMA')}"></strong>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <a class="btn btn-outline-secondary mt-3" th:href="@{/empleado}">Volver al panel</a>
+    </main>
+    <footer th:replace="~{layout :: footer}"></footer>
+    <div th:replace="~{layout :: scripts}"></div>
+</body>
+</html>
