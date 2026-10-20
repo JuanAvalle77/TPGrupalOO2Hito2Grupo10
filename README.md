@@ -2,8 +2,8 @@
 
 Trabajo práctico grupal de Orientación a Objetos II (UNLa).
 
-- **Hito 1 (Hibernate):** carpeta [`hito1/`](hito1/) y tag `hito1` (tal cual se entregó).
-- **Hito 2 (Spring Boot):** raíz de este repositorio (proyecto Maven).
+- **Hito 1 (Hibernate):** repositorio aparte, [TPGrupalOO2Grupo10](https://github.com/JuanAvalle77/TPGrupalOO2Grupo10) (tag `hito1`, tal cual se entregó).
+- **Hito 2 (Spring Boot):** este repositorio (proyecto Maven en la raíz).
 
 ## Grupo
 
@@ -92,7 +92,6 @@ src/main/java/com/unla/epicentrogourmet/
   configuration/  seguridad, ModelMapper
 src/main/resources/templates/   vistas (layout.html con navbar por rol)
 sql/datos_prueba.sql            datos de prueba
-hito1/                          proyecto del Hito 1
 ```
 
 La seguridad separa tres zonas: `/admin/**` (ADMIN), `/responsable/**` (RESPONSABLE) y `/empleado/**` (EMPLEADO). Las contraseñas se guardan con BCrypt. El login redirige al panel del rol.
@@ -205,7 +204,7 @@ El estado y el link al Pull Request de cada caso de uso se completan acá a medi
 
 | # | Caso de uso | Rol | Responsable | Rama | PR | Estado |
 |---|---|---|---|---|---|---|
-| Base | Proyecto Maven, entidades, login por roles, inicio con festivales, script SQL | todos | Juan Avalle | `CUBaseProyectoJuanAvalle` | [PR #1](https://github.com/JuanAvalle77/TPGrupalOO2Grupo10/pull/1) | en revisión |
+| Base | Proyecto Maven, entidades, login por roles, inicio con festivales, script SQL | todos | Juan Avalle | `CUBaseProyectoJuanAvalle` | [PR #1](https://github.com/JuanAvalle77/TPGrupalOO2Hito2Grupo10/pull/1) | en revisión |
 | 1 | Ver festivales y unidades de venta de un festival | Admin | Franco Luzardo | `CUVerFestivalesUnidadesFrancoLuzardo` | | pendiente |
 | 2 | Ranking de unidades por recaudación | Admin | Franco Luzardo | `CURankingUnidadesFrancoLuzardo` | | pendiente |
 | 3 | Unidades con mayor canon (`ReporteMayoresCanonDTO`) | Admin | Juan Avalle | `CUMayorCanonJuanAvalle` | | pendiente |
@@ -213,8 +212,8 @@ El estado y el link al Pull Request de cada caso de uso se completan acá a medi
 | 5 | Alta, baja lógica, modificación y reactivación de empleados + **mail** | Responsable | Juan Avalle | `CUABMEmpleadosJuanAvalle` | | pendiente |
 | 6 | Filtros de empleados por uno o varios atributos (solo activos) | Responsable | Juan Avalle | `CUFiltrosEmpleadosJuanAvalle` | | pendiente |
 | 7 | Alta de platos | Responsable | Santiago Agarzúa | `CUAltaPlatosSantiagoAgarzua` | | pendiente |
-| 8 | Cálculo de canon de una unidad | Responsable | Juan Avalle | `CUCalculoCanonJuanAvalle` | [PR #2](https://github.com/JuanAvalle77/TPGrupalOO2Grupo10/pull/2) | en revisión |
-| 9 | Liquidación de haberes | Responsable | Juan Avalle | `CULiquidacionHaberesJuanAvalle` | [PR #3](https://github.com/JuanAvalle77/TPGrupalOO2Grupo10/pull/3) | en revisión |
+| 8 | Cálculo de canon de una unidad | Responsable | Juan Avalle | `CUCalculoCanonJuanAvalle` | [PR #2](https://github.com/JuanAvalle77/TPGrupalOO2Hito2Grupo10/pull/2) | en revisión |
+| 9 | Liquidación de haberes | Responsable | Juan Avalle | `CULiquidacionHaberesJuanAvalle` | [PR #3](https://github.com/JuanAvalle77/TPGrupalOO2Hito2Grupo10/pull/3) | en revisión |
 | 10 | Reporte de recaudación de un festival (`ReporteVentaDTO`) | Responsable | Franco Luzardo | `CUReporteRecaudacionFrancoLuzardo` | | pendiente |
 | 11 | Rentabilidad neta de una unidad (y entre dos fechas) | Responsable | Juan Avalle | `CURentabilidadNetaJuanAvalle` | | pendiente |
 | 12 | Plato estrella (`PlatoDTO`) | Responsable | Santiago Agarzúa | `CUPlatoEstrellaSantiagoAgarzua` | | pendiente |
