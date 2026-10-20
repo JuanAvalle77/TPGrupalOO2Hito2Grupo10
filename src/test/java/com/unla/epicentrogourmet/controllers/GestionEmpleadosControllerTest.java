@@ -91,6 +91,8 @@ class GestionEmpleadosControllerTest {
 		mockMvc.perform(get("/responsable/empleados")).andExpect(status().isOk())
 				.andExpect(view().name("responsable/empleados"))
 				.andExpect(content().string(org.hamcrest.Matchers.containsString("Gomez, Lucia")))
+				// link del caso de uso en el navbar del rol Responsable
+				.andExpect(content().string(org.hamcrest.Matchers.containsString("href=\"/responsable/empleados\">Empleados</a>")))
 				.andExpect(content().string(org.hamcrest.Matchers.containsString("Dar de baja")))
 				.andExpect(content().string(org.hamcrest.Matchers.containsString("Lopez, Nahuel")))
 				.andExpect(content().string(org.hamcrest.Matchers.containsString("Reactivar")));
