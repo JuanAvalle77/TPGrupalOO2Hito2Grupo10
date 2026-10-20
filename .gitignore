@@ -2,9 +2,6 @@ bin/
 out/
 *.class
 
-# Cada integrante crea el suyo a partir de src/hibernate.cfg.xml.template,
-# con su propia contraseña local de MySQL (no se sube al repo).
-hito1/src/hibernate.cfg.xml
 /target/
 !.mvn/wrapper/maven-wrapper.jar
 
