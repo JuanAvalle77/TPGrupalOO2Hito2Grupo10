@@ -14,8 +14,8 @@
             <!-- Cada caso de uso de empleado reemplaza su tarjeta por un <a class="cu-card" th:href="..."> -->
             <div class="col-md-6 mb-4"><div class="cu-card"><span class="pendiente">Pendiente</span>
                 <h4>Mi información</h4><p>Festivales y unidades en las que trabajé.</p></div></div>
-            <div class="col-md-6 mb-4"><div class="cu-card"><span class="pendiente">Pendiente</span>
-                <h4>Recibo de sueldo</h4><p>Descargar el recibo de cada festival en PDF.</p></div></div>
+            <div class="col-md-6 mb-4"><a class="cu-card" th:href="@{/empleado/sueldos}">
+                <h4>Recibo de sueldo</h4><p>Descargar el recibo de cada festival en PDF.</p></a></div>
             <div class="col-md-6 mb-4"><a class="cu-card" th:href="@{/empleado/hoy}">
                 <h4>Dónde trabajo hoy</h4><p>Festival activo y unidad en la que me toca trabajar.</p></a></div>
             <div class="col-md-6 mb-4"><a class="cu-card" th:href="@{/empleado/cerrar-caja}">

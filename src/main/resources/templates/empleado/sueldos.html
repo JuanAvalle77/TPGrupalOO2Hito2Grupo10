@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout :: head}"></head>
+<body>
+    <nav th:replace="~{layout :: navbar}"></nav>
+    <main class="container">
+        <div class="panel-head">
+            <span class="rol">Empleado</span>
+            <h2>Mis recibos de sueldo</h2>
+            <p>Consultá el detalle de tu liquidación y descargá el recibo de cada festival.</p>
+        </div>
+        <div th:if="${#lists.isEmpty(recibos)}" class="alert alert-info">Todavía no tenés festivales asignados.</div>
+        <div class="table-responsive" th:unless="${#lists.isEmpty(recibos)}">
+            <table class="table table-striped">
+                <thead><tr><th>Festival</th><th>Período</th><th>Rol</th><th>Total</th><th>Recibo</th></tr></thead>
+                <tbody>
+                    <tr th:each="recibo : ${recibos}">
+                        <td th:text="${recibo.nombreFestival}"></td>
+                        <td><span th:text="${recibo.fechaInicio}"></span> al <span th:text="${recibo.fechaFin}"></span></td>
+                        <td th:text="${recibo.liquidacion.rol}"></td>
+                        <td th:text="${#numbers.formatDecimal(recibo.liquidacion.total, 1, 'POINT', 2, 'COMMA')}"></td>
+                        <td><a class="btn btn-primary btn-sm" th:href="@{/empleado/sueldos/{id}/recibo(id=${recibo.festivalId})}">Descargar PDF</a></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <a class="btn btn-outline-secondary" th:href="@{/empleado}">Volver al panel</a>
+    </main>
+    <footer th:replace="~{layout :: footer}"></footer>
+    <div th:replace="~{layout :: scripts}"></div>
+</body>
+</html>

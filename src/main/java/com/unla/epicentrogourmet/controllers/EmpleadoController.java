@@ -11,7 +11,6 @@ import com.unla.epicentrogourmet.helpers.ViewRouteHelper;
 @Controller
 @RequestMapping("/empleado")
 public class EmpleadoController {
-
 	@GetMapping("")
 	public ModelAndView index() {
 		return new ModelAndView(ViewRouteHelper.EMPLEADO_INDEX);
