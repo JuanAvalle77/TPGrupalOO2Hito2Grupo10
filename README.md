@@ -22,6 +22,13 @@ Java 17+ · Spring Boot 3.3 (Web, Data JPA, Security, Validation, Mail) · Thyme
 
 ## Cómo correr la aplicación
 
+### 0) Clonar el repositorio
+```bash
+git clone https://github.com/JuanAvalle77/TPGrupalOO2Hito2Grupo10.git
+cd TPGrupalOO2Hito2Grupo10
+```
+(Tienen que haber aceptado la invitación como colaboradores. Para empezar un caso de uso, ver "Cómo trabajar" más abajo.)
+
 ### 1) Requisitos
 - JDK 17 o superior (sirve el JDK 21 que trae Eclipse).
 - MySQL 8 corriendo.
