@@ -175,6 +175,15 @@ docs/GUIA_CASOS_DE_USO.md       guía de cada caso de uso
 
 Guía detallada de cada caso de uso (qué construir, rutas, reglas y cómo verificarlo): [`docs/GUIA_CASOS_DE_USO.md`](docs/GUIA_CASOS_DE_USO.md).
 
+**Cómo se reparte:** la consigna pide **2 casos de uso individuales por integrante** (que no sean los del grupo), más los del grupo (mail, PDF y DTO de reporte). Los demás casos de uso del enunciado son la **base del proyecto**, a cargo de Juan (marcados *(base)*), para que el sistema quede completo.
+
+| Integrante | Individuales (2) | Del grupo | Base |
+|---|---|---|---|
+| Juan Avalle | Canon · Haberes | ABM de empleados + mail · Mayor canon (DTO) | Rentabilidad neta · Filtros · Reporte de recaudación · Plato estrella · Ver mi información |
+| Federico Acosta | Dónde trabajo hoy · Cerrar caja | Recibo de sueldo en PDF | - |
+| Santiago Agarzúa | Registro de unidad · Alta de platos | - | - |
+| Franco Luzardo | Ver festivales y unidades · Ranking | - | - |
+
 ### Implementados (mergeados a `main`)
 
 | # | Caso de uso | Rol | Responsable | Rama | PR |
@@ -193,18 +202,18 @@ Guía detallada de cada caso de uso (qué construir, rutas, reglas y cómo verif
 |---|---|---|---|---|---|
 | 1 | Ver festivales y unidades de venta de un festival | Admin | Franco Luzardo | `CUVerFestivalesUnidadesFrancoLuzardo` | |
 | 2 | Ranking de unidades por recaudación | Admin | Franco Luzardo | `CURankingUnidadesFrancoLuzardo` | |
-| 3 | Unidades con mayor canon (`ReporteMayoresCanonDTO`) | Admin | Federico Acosta | `CUMayorCanonFedericoAcosta` | |
+| 3 | Unidades con mayor canon (`ReporteMayoresCanonDTO`) | Admin | Juan Avalle (base) | `CUMayorCanonJuanAvalle` | |
 | 4 | Registro de Unidad de Venta con su Responsable (crea usuario) | Público | Santiago Agarzúa | `CURegistroUnidadSantiagoAgarzua` | |
-| 6 | Filtros de empleados por uno o varios atributos (solo activos) | Responsable | Santiago Agarzúa | `CUFiltrosEmpleadosSantiagoAgarzua` | |
+| 6 | Filtros de empleados por uno o varios atributos (solo activos) | Responsable | Juan Avalle (base) | `CUFiltrosEmpleadosJuanAvalle` | |
 | 7 | Alta de platos | Responsable | Santiago Agarzúa | `CUAltaPlatosSantiagoAgarzua` | |
-| 10 | Reporte de recaudación de un festival (`ReporteVentaDTO`) | Responsable | Franco Luzardo | `CUReporteRecaudacionFrancoLuzardo` | |
+| 10 | Reporte de recaudación de un festival (`ReporteVentaDTO`) | Responsable | Juan Avalle (base) | `CUReporteRecaudacionJuanAvalle` | |
 | 11 | Rentabilidad neta de una unidad (y entre dos fechas) | Responsable | Juan Avalle | `CURentabilidadNetaJuanAvalle` | |
-| 12 | Plato estrella (`PlatoDTO`) | Responsable | Santiago Agarzúa | `CUPlatoEstrellaSantiagoAgarzua` | |
-| 13 | Ver mi información (festivales y unidades en las que trabajé) | Empleado | Franco Luzardo | `CUMiInformacionFrancoLuzardo` | |
+| 12 | Plato estrella (`PlatoDTO`) | Responsable | Juan Avalle (base) | `CUPlatoEstrellaJuanAvalle` | |
+| 13 | Ver mi información (festivales y unidades en las que trabajé) | Empleado | Juan Avalle (base) | `CUMiInformacionJuanAvalle` | |
 
 ### Requisitos del enunciado
 
-**Mínimos por grupo:** 1 envío de mail (CU 5, ya implementado) · DTOs de reporte (CU 3, 10, 12) · 1 PDF (CU 14, ya implementado).
+**Mínimos por grupo:** 1 envío de mail (CU 5, implementado) · 1 DTO de reporte (CU 3 mayor canon, `ReporteMayoresCanonDTO`; también los CU 10 y 12) · 1 PDF (CU 14, implementado).
 
 **Validaciones de carga (2 por integrante):**
 
@@ -213,7 +222,7 @@ Guía detallada de cada caso de uso (qué construir, rutas, reglas y cómo verif
 | Juan Avalle | personal mayor de edad · email con formato válido y único | implementadas (CU 5) |
 | Federico Acosta | un pedido solo puede cargarse con la fecha del día y cantidades mayores a 0 · un único cierre de caja por cajero y por día | implementadas (CU 16) |
 | Santiago Agarzúa | código de unidad único y con formato válido · precio de venta mayor al costo de producción del plato | pendientes |
-| Franco Luzardo | período del festival válido (fin no anterior al inicio) · superficie de la unidad mayor a 0 | pendientes |
+| Franco Luzardo | período del festival válido (fin no anterior al inicio) · superficie de la unidad mayor a 0 (en las entidades `Festival` y `UnidadVenta`, con sus tests) | pendientes |
 
 **Dependencias:** el canon (CU 8) y los haberes (CU 9) ya están en `main`, así que los CU 3 y 11 pueden usar `CanonService`, y el 11 también `LiquidacionService`. El filtro de empleados (CU 6) se apoya en la lista del CU 5.
 
