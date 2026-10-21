@@ -55,14 +55,14 @@ Ejemplo de referencia ya hecho: la página de inicio (`HomeController` + `Festiv
 
 | Integrante | Casos de uso (PRs) |
 |---|---|
-| **Juan Avalle** | **Individuales:** Cálculo de canon · Liquidación de haberes · **Grupo:** ABM de empleados + mail · **Base del proyecto:** Rentabilidad neta · Filtros de empleados · Unidades con mayor canon · Reporte de recaudación · Plato estrella · Ver mi información |
+| **Juan Avalle** | **Individuales:** Cálculo de canon · Liquidación de haberes · **Grupo:** ABM de empleados + mail · Unidades con mayor canon (DTO) · **Opcionales:** Rentabilidad neta · Filtros de empleados · Reporte de recaudación · Plato estrella · Ver mi información |
 | **Santiago Agarzúa** | **Individuales:** Registro de unidad con responsable · Alta de platos |
 | **Franco Luzardo** | **Individuales:** Ver festivales y unidades · Ranking de unidades |
 | **Federico Acosta** | **Individuales:** Dónde trabajo hoy · Cerrar caja · **Grupo:** Recibo de sueldo en PDF |
 
 **Orden recomendado:** Juan mergea primero *canon* y *liquidación de haberes* (los usan otros). Mientras tanto todos pueden avanzar con lo que no depende de eso.
 
-**Cómo se reparte:** la consigna pide **2 casos de uso individuales por integrante** (que no sean los del grupo) más los del grupo: 1 mail (ABM de empleados), 1 PDF (recibo) y 1 DTO de reporte (mayor canon, a cargo de Juan). Los demás casos de uso del enunciado forman la **base del proyecto** y los hace Juan, para que el sistema quede completo. Cada integrante tiene además 2 validaciones de carga.
+**Alcance:** la consigna pide **2 casos de uso individuales por integrante** (que no sean los del grupo) más los del grupo: 1 mail (ABM de empleados), 1 PDF (recibo) y 1 DTO de reporte (mayor canon). Son **11 casos de uso obligatorios**. Los otros 5 que lista el enunciado (rentabilidad neta, filtros, reporte de recaudación, plato estrella y ver mi información) son **opcionales**: se hacen solo si sobra tiempo. Cada integrante tiene además 2 validaciones de carga.
 
 ---
 
@@ -93,34 +93,34 @@ Ejemplo de referencia ya hecho: la página de inicio (`HomeController` + `Festiv
 - **Crear:** `LiquidacionService.calcularSueldo(Personal, Festival)` — **lo usa Federico** para el recibo en PDF, así que mantener esa firma.
 - **Verificación:** *Valentina Ortiz* (lavaplatos) en el festival 2 (38 días) = **225.000** · *Ana Torres* (cajera, ingreso 2024-02-01) en el festival 2 = **165.000**.
 
-**CU Rentabilidad neta (y entre dos fechas)** · rama `CURentabilidadNetaJuanAvalle` · Responsable
+**CU Rentabilidad neta (y entre dos fechas)** · *(opcional)* · rama `CURentabilidadNetaJuanAvalle` · Responsable
 - **Qué hace:** ganancia de **una unidad en un festival** = `total de pedidos − costo de producción de los platos − sueldos del personal − canon`. Segunda parte: lo mismo **limitado a pedidos entre dos fechas**.
 - **Cómo:** usa `Pedido.calcularTotal()`, `Pedido.calcularCostoPlatos()`, `LiquidacionService` y `CanonService`. Rutas `/responsable/rentabilidad` y `/responsable/rentabilidad?desde=&hasta=`.
 - **Decisión a documentar:** entre fechas, prorratear sueldos y canon por `días del rango / días del festival` (anotarlo en el PR).
 
-**CU Plato estrella** · *(base)* · rama `CUPlatoEstrellaJuanAvalle` · Responsable · *(DTO de reporte)*
+**CU Plato estrella** · *(opcional)* · rama `CUPlatoEstrellaJuanAvalle` · Responsable · *(DTO de reporte)*
 - **Qué hace:** dada una unidad y un festival, devuelve el plato que más se pidió. Crear `dtos/PlatoDTO` (nombre, precio de venta, cantidad de pedidos en los que aparece, unidades vendidas).
 - **Criterio (documentarlo en el PR):** el plato con más **unidades vendidas** (suma de `DetallesPedido.cantidad`); la cantidad de pedidos queda como dato y como desempate.
 - **Cómo:** consulta agrupando `DetallesPedido` por plato para esa unidad y festival, ordenando descendente y tomando el primero (`LIMIT 1` o `findFirst`). Ruta `/responsable/plato-estrella`.
 - **Verificación:** *El Fueguito*, festival 1 → **Choripan** (8 unidades en 2 pedidos; Papas Fritas: 6 unidades en 2 pedidos).
 
-**CU Filtros de empleados** · *(base)* · rama `CUFiltrosEmpleadosJuanAvalle` · Responsable
+**CU Filtros de empleados** · *(opcional)* · rama `CUFiltrosEmpleadosJuanAvalle` · Responsable
 - **Qué hace:** en la lista de empleados, filtrar por uno o varios atributos (nombre/apellido, DNI, tipo, turno o rol de cocina) **solo entre los activos**.
 - **Cómo:** `GET /responsable/empleados?apellido=&dni=&tipo=` — armar la consulta con `@Query` con parámetros opcionales (`(:apellido is null or lower(p.apellido) like lower(concat('%', :apellido, '%')))`) y `activo = true`, siempre acotada a la unidad del responsable.
 - **Listo cuando:** combinando filtros devuelve el subconjunto correcto y nunca muestra dados de baja.
 - **Validaciones de carga:** al menos una en el filtro (por ejemplo, el DNI debe ser numérico y el texto no puede pasar de 100 caracteres).
 
-**CU Reporte de recaudación** · *(base)* · rama `CUReporteRecaudacionJuanAvalle` · Responsable · *(DTO de reporte)*
+**CU Reporte de recaudación** · *(opcional)* · rama `CUReporteRecaudacionJuanAvalle` · Responsable · *(DTO de reporte)*
 - **Qué hace:** dado un festival, la recaudación total. Crear `dtos/ReporteVentaDTO` (festival, cantidad de pedidos, recaudación total).
 - **Ruta:** `/responsable/reporte-recaudacion?festivalId=1`.
 - **Verificación** (festival 1, todo el festival): **78.900**.
 
-**CU Ver mi información (empleado)** · *(base)* · rama `CUMiInformacionJuanAvalle` · Empleado
+**CU Ver mi información (empleado)** · *(opcional)* · rama `CUMiInformacionJuanAvalle` · Empleado
 - **Qué hace:** el empleado logueado ve los festivales y unidades en las que trabajó.
 - **Ruta:** `/empleado/mi-informacion`. Usar `SesionService.getPersonalActual().getUnidades()` y de cada unidad su `getFestival()`.
 - **Verificación:** `valentina.ortiz@…` ve dos filas (festival 1 y festival 2).
 
-**CU Unidades con mayor canon** · *(base)* · rama `CUMayorCanonJuanAvalle` · Admin · *(DTO de reporte)*
+**CU Unidades con mayor canon** · *(grupo: DTO de reporte)* · rama `CUMayorCanonJuanAvalle` · Admin · 
 - **Qué hace:** el admin elige un festival y un número `x`; ve las `x` unidades que más canon pagan.
 - **Ruta:** `/admin/mayor-canon?festivalId=1&x=3`. Crear `dtos/ReporteMayoresCanonDTO` (nombreComercial, codigo, tipo, canon) — **no es entidad**. Ordenar por canon descendente y cortar en `x`.
 - **Verificación** (festival 1, x=3): El Fueguito 9750, La Empanada Andante 6000, La Carpa de Pedro 3950.
