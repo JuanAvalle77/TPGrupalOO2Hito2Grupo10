@@ -13,4 +13,7 @@ public interface IUsuarioRepository extends JpaRepository<Usuario, Long> {
 	Optional<Usuario> findByUsername(String username);
 
 	boolean existsByUsername(String username);
+
+	/** Usuario de login de un empleado. */
+	Optional<Usuario> findByPersonalId(Long personalId);
 }

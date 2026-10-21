@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout :: head}"></head>
+<body>
+    <nav th:replace="~{layout :: navbar}"></nav>
+
+    <main class="container">
+        <div class="panel-head">
+            <span class="rol">Responsable</span>
+            <h2>Empleados de mi unidad</h2>
+            <p class="text-muted mb-0">Altas, modificaciones y bajas. Los empleados dados de baja no inician sesión ni aparecen en la lista principal.</p>
+        </div>
+
+        <div class="alert alert-success" th:if="${ok != null}" th:text="${ok}">Operación realizada.</div>
+        <div class="alert alert-danger" th:if="${error != null}" th:text="${error}">Error.</div>
+
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h4 class="mb-0">Empleados activos</h4>
+            <a th:href="@{/responsable/empleados/nuevo}" class="btn btn-dorado">+ Nuevo empleado</a>
+        </div>
+
+        <div class="table-responsive mb-4">
+            <table class="table table-epicentro">
+                <thead>
+                    <tr>
+                        <th>Empleado</th>
+                        <th>DNI</th>
+                        <th>Email</th>
+                        <th>Tipo</th>
+                        <th>Ingreso</th>
+                        <th>Unidad</th>
+                        <th class="text-right">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="e : ${empleados}">
+                        <td><strong th:text="${e.nombreCompleto}">Apellido, Nombre</strong></td>
+                        <td th:text="${e.dni}">30111222</td>
+                        <td th:text="${e.email}">email@epicentro.com</td>
+                        <td><span th:text="${e.tipo}">Cajero</span><br/><small class="text-muted" th:text="${e.detalle}">Turno noche</small></td>
+                        <td><span th:text="${#temporals.format(e.fechaIngreso, 'dd/MM/yyyy')}">01/03/2023</span><br/>
+                            <small class="text-muted" th:text="${e.antiguedadAnios} + (${e.antiguedadAnios} == 1 ? ' año' : ' años')">2 años</small></td>
+                        <td th:text="${e.unidad}">Unidad</td>
+                        <td class="text-right text-nowrap">
+                            <a th:href="@{/responsable/empleados/{id}/editar(id=${e.id})}" class="btn btn-sm btn-outline-secondary">Editar</a>
+                            <form th:action="@{/responsable/empleados/baja/{id}(id=${e.id})}" method="post" class="d-inline"
+                                  onsubmit="return confirm('¿Dar de baja a este empleado? Dejará de poder iniciar sesión.');">
+                                <button type="submit" class="btn btn-sm btn-outline-danger">Dar de baja</button>
+                            </form>
+                        </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(empleados)}">
+                        <td colspan="7" class="text-center text-muted py-4">Todavía no hay empleados activos en tu unidad.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div th:if="${!#lists.isEmpty(bajas)}" class="mb-4">
+            <h4>Empleados dados de baja</h4>
+            <p class="text-muted">Si necesitás volver a darlos de alta, reactivalos desde acá en lugar de cargarlos de nuevo.</p>
+            <div class="table-responsive">
+                <table class="table table-epicentro">
+                    <thead>
+                        <tr>
+                            <th>Empleado</th>
+                            <th>DNI</th>
+                            <th>Email</th>
+                            <th>Tipo</th>
+                            <th class="text-right">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="e : ${bajas}">
+                            <td th:text="${e.nombreCompleto}">Apellido, Nombre</td>
+                            <td th:text="${e.dni}">38111000</td>
+                            <td th:text="${e.email}">email@epicentro.com</td>
+                            <td><span th:text="${e.tipo}">Cajero</span> <small class="text-muted" th:text="${e.detalle}">Turno noche</small></td>
+                            <td class="text-right">
+                                <form th:action="@{/responsable/empleados/reactivar/{id}(id=${e.id})}" method="post" class="d-inline">
+                                    <button type="submit" class="btn btn-sm btn-outline-success">Reactivar</button>
+                                </form>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <a th:href="@{/responsable}" class="btn btn-outline-secondary">Volver al panel</a>
+    </main>
+
+    <footer th:replace="~{layout :: footer}"></footer>
+    <div th:replace="~{layout :: scripts}"></div>
+</body>
+</html>

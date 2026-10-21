@@ -7,7 +7,7 @@ Iteración del diagrama del Hito 1 (fuente editable del Hito 1: [`oo2UML.dia`](o
 - Nueva `CostoFestival`: encapsula los costos del festival (costo por m², plus eléctrico, costo por minuto de montaje, sueldo base, plus por antigüedad y por categoría). Nada hardcodeado en los métodos.
 - `Personal` suma `email` (es su usuario), `activo` (baja lógica) y se relaciona *muchos a muchos* con `UnidadVenta` (así un empleado puede haber trabajado en varios festivales).
 - Nuevas `Usuario` (con `Rol`) y `CierreCaja`.
-- Los reportes son DTO que no persisten: `ReporteVentaDTO`, `ReporteMayoresCanonDTO` y `PlatoDTO` (pedidos por el enunciado), más `CanonUnidadDTO`, `LiquidacionDTO` y `LiquidacionUnidadDTO`.
+- Los reportes son DTO que no persisten: `ReporteVentaDTO`, `ReporteMayoresCanonDTO` y `PlatoDTO` (pedidos por el enunciado), más `EmpleadoForm` y `EmpleadoDTO` (ABM de empleados), `CanonUnidadDTO`, `LiquidacionDTO` y `LiquidacionUnidadDTO`.
 
 **Convención:** los métodos en cursiva son abstractos. `describirCanon`, `calcularPlus`, `getConceptoPlus` y `getRolDescripcion` llegan con los PRs de canon y haberes. Cada caso de uso actualiza este archivo si agrega clases o métodos.
 
@@ -109,6 +109,11 @@ classDiagram
         COCINERO_AYUDANTE
         LAVAPLATOS
     }
+    class TipoEmpleado {
+        <<enumeration>>
+        CAJERO
+        COCINA
+    }
     class Turno {
         <<enumeration>>
         MANANA
@@ -163,6 +168,31 @@ classDiagram
         -totalUnidad: double
     }
 
+    class EmpleadoForm {
+        <<DTO>>
+        -unidadId: Long
+        -nombre: String
+        -apellido: String
+        -dni: Integer
+        -fechaNacimiento: LocalDate
+        -fechaIngreso: LocalDate
+        -email: String
+        -contacto: String
+        -tipo: TipoEmpleado
+        -turno: Turno
+        -rolCocina: RolCocina
+    }
+    class EmpleadoDTO {
+        <<DTO>>
+        -nombreCompleto: String
+        -dni: int
+        -email: String
+        -tipo: String
+        -detalle: String
+        -antiguedadAnios: int
+        -unidad: String
+    }
+
     UnidadVenta <|-- FoodTruck
     UnidadVenta <|-- PuestoDesarmable
     Personal <|-- Cajero
@@ -181,6 +211,7 @@ classDiagram
     Usuario --> Rol
     Cajero --> Turno
     Cocinero --> RolCocina
+    EmpleadoForm --> TipoEmpleado
     CierreCaja "0..*" --> "1" Cajero
     CierreCaja "0..*" --> "1" UnidadVenta
     LiquidacionUnidadDTO "1" --> "0..*" LiquidacionDTO : liquidaciones

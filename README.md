@@ -118,7 +118,7 @@ El estado y el link al Pull Request de cada caso de uso se completan acá a medi
 | 2 | Ranking de unidades por recaudación | Admin | Franco Luzardo | `CURankingUnidadesFrancoLuzardo` | | pendiente |
 | 3 | Unidades con mayor canon (`ReporteMayoresCanonDTO`) | Admin | Federico Acosta | `CUMayorCanonFedericoAcosta` | | pendiente |
 | 4 | Registro de Unidad de Venta con su Responsable (crea usuario) | Público | Santiago Agarzúa | `CURegistroUnidadSantiagoAgarzua` | | pendiente |
-| 5 | Alta, baja lógica, modificación y reactivación de empleados + **mail** | Responsable | Juan Avalle | `CUABMEmpleadosJuanAvalle` | | pendiente |
+| 5 | Alta, baja lógica, modificación y reactivación de empleados + **mail** | Responsable | Juan Avalle | `CUABMEmpleadosJuanAvalle` | [PR #3](https://github.com/JuanAvalle77/TPGrupalOO2Hito2Grupo10/pull/3) | en revisión |
 | 6 | Filtros de empleados por uno o varios atributos (solo activos) | Responsable | Santiago Agarzúa | `CUFiltrosEmpleadosSantiagoAgarzua` | | pendiente |
 | 7 | Alta de platos | Responsable | Santiago Agarzúa | `CUAltaPlatosSantiagoAgarzua` | | pendiente |
 | 8 | Cálculo de canon de una unidad | Responsable | Juan Avalle | `CUCalculoCanonJuanAvalle` | [PR #1](https://github.com/JuanAvalle77/TPGrupalOO2Hito2Grupo10/pull/1) | en revisión |
