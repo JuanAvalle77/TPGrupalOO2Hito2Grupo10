@@ -16,10 +16,11 @@ import com.unla.epicentrogourmet.entities.UnidadVenta;
 import com.unla.epicentrogourmet.repositories.ICierreCajaRepository;
 import com.unla.epicentrogourmet.repositories.IPedidoRepository;
 import com.unla.epicentrogourmet.repositories.IUnidadVentaRepository;
+import com.unla.epicentrogourmet.services.ICierreCajaService;
 
 /** Recaudación diaria y cierre único por cajero y fecha. */
 @Service
-public class CierreCajaService {
+public class CierreCajaService implements ICierreCajaService {
 	private final ICierreCajaRepository cierreCajaRepository;
 	private final IPedidoRepository pedidoRepository;
 	private final IUnidadVentaRepository unidadVentaRepository;
@@ -31,6 +32,7 @@ public class CierreCajaService {
 		this.unidadVentaRepository = unidadVentaRepository;
 	}
 
+	@Override
 	@Transactional(readOnly = true)
 	public CierreCajaEstadoDTO estadoDeHoy(Cajero cajero) {
 		LocalDate hoy = LocalDate.now();
@@ -42,6 +44,7 @@ public class CierreCajaService {
 		return new CierreCajaEstadoDTO(hoy, cierreCajaRepository.existsByCajero_IdAndFecha(cajero.getId(), hoy), unidades);
 	}
 
+	@Override
 	@Transactional
 	public CierreCaja cerrar(Cajero cajero, Long unidadId) {
 		LocalDate hoy = LocalDate.now();

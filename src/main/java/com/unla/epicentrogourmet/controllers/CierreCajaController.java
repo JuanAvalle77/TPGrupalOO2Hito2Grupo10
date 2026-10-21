@@ -11,17 +11,17 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.unla.epicentrogourmet.entities.Cajero;
 import com.unla.epicentrogourmet.entities.Personal;
 import com.unla.epicentrogourmet.helpers.ViewRouteHelper;
-import com.unla.epicentrogourmet.services.implementation.CierreCajaService;
+import com.unla.epicentrogourmet.services.ICierreCajaService;
 import com.unla.epicentrogourmet.services.implementation.SesionService;
 
 /** Pantalla de recaudación y cierre diario, disponible solo para cajeros. */
 @Controller
 @RequestMapping("/empleado/cerrar-caja")
 public class CierreCajaController {
-	private final CierreCajaService cierreCajaService;
+	private final ICierreCajaService cierreCajaService;
 	private final SesionService sesionService;
 
-	public CierreCajaController(CierreCajaService cierreCajaService, SesionService sesionService) {
+	public CierreCajaController(ICierreCajaService cierreCajaService, SesionService sesionService) {
 		this.cierreCajaService = cierreCajaService;
 		this.sesionService = sesionService;
 	}
