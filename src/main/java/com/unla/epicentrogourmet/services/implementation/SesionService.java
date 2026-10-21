@@ -2,6 +2,7 @@ package com.unla.epicentrogourmet.services.implementation;
 
 import java.util.List;
 
+import org.hibernate.Hibernate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -43,7 +44,7 @@ public class SesionService {
 		if (personal == null) {
 			throw new IllegalStateException("El usuario actual no tiene personal asociado");
 		}
-		return personal;
+		return (Personal) Hibernate.unproxy(personal);
 	}
 
 	/** Unidades de venta de las que el usuario logueado es responsable. */
