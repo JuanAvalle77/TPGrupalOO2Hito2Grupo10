@@ -1,9 +1,22 @@
 # TP Grupal OO2 2026 - Sistema de Gestión "Epicentro Gourmet"
 
-Trabajo práctico grupal de Orientación a Objetos II (UNLa).
+Trabajo práctico grupal de Orientación a Objetos II (UNLa) · **Grupo 10**.
+
+Aplicación web para gestionar los festivales del predio Epicentro Gourmet: unidades de venta, personal, pedidos, canon, sueldos y rentabilidad. Tiene tres zonas según el rol del usuario: **Administrador**, **Responsable** de una unidad de venta y **Empleado**.
 
 - **Hito 1 (Hibernate):** repositorio aparte, [TPGrupalOO2Grupo10](https://github.com/JuanAvalle77/TPGrupalOO2Grupo10) (tag `hito1`, tal cual se entregó).
 - **Hito 2 (Spring Boot):** este repositorio (proyecto Maven en la raíz).
+
+## Índice
+
+1. [Grupo](#grupo)
+2. [Stack](#stack)
+3. [Cómo correr la aplicación](#cómo-correr-la-aplicación)
+4. [Qué se puede probar hoy](#qué-se-puede-probar-hoy)
+5. [Estructura del proyecto](#estructura-del-proyecto)
+6. [Diagrama de clases](#diagrama-de-clases)
+7. [Casos de uso implementados y responsables](#casos-de-uso-implementados-y-responsables)
+8. [Cómo trabajar (ramas y Pull Requests)](#cómo-trabajar-ramas-y-pull-requests)
 
 ## Grupo
 
@@ -22,55 +35,60 @@ Java 17+ · Spring Boot 3.3 (Web, Data JPA, Security, Validation, Mail) · Thyme
 
 ## Cómo correr la aplicación
 
-### 0) Clonar el repositorio
+### 1) Clonar el repositorio
 ```bash
 git clone https://github.com/JuanAvalle77/TPGrupalOO2Hito2Grupo10.git
 cd TPGrupalOO2Hito2Grupo10
 ```
-(Tienen que haber aceptado la invitación como colaboradores. Para empezar un caso de uso, ver "Cómo trabajar" más abajo.)
+(Tienen que haber aceptado la invitación como colaboradores.)
 
-### 1) Requisitos
-- JDK 17 o superior (sirve el JDK 21 que trae Eclipse).
-- MySQL 8 corriendo.
+### 2) Requisitos
+- **JDK 17 o superior** (sirve el JDK 21 que trae Eclipse).
+- **MySQL 8** corriendo.
 - No hace falta instalar Maven: el proyecto trae el wrapper (`mvnw`).
 
-### 2) Crear la base de datos
+### 3) Crear la base de datos
 ```sql
 CREATE DATABASE epicentro_gourmet_h2 CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 ```
 
-### 3) Variables de entorno
-Las credenciales **no** se escriben en el código (`application.yml` las lee del entorno):
+### 4) Variables de entorno
+Las credenciales **no** se escriben en el código: `application.yml` las lee del entorno.
 
 | Variable | Obligatoria | Descripción |
 |---|---|---|
 | `DB_USERNAME` | sí | usuario de MySQL (ej: `root`) |
 | `DB_PASSWORD` | sí | contraseña de MySQL |
 | `DB_URL` | no | por defecto `jdbc:mysql://localhost:3306/epicentro_gourmet_h2?serverTimezone=America/Argentina/Buenos_Aires` |
-| `MAIL_USERNAME` / `MAIL_PASSWORD` | no | cuenta SMTP (Gmail con contraseña de aplicación). Si no se definen, los mails solo se muestran en la consola. |
+| `MAIL_USERNAME` / `MAIL_PASSWORD` | no | cuenta SMTP para enviar mails (ver [Envío de mails](#envío-de-mails)). Si no se definen, el mail se muestra en la consola. |
+| `JAVA_HOME` | si Java no está en el PATH | carpeta del JDK (ver [Problemas frecuentes](#problemas-frecuentes)) |
 
 > No usar el nombre `USERNAME`: en Windows ya existe y es el usuario del sistema.
 
-PowerShell (para la sesión actual):
+PowerShell, para la sesión actual (las variables valen solo para esa ventana, así que la app se levanta desde la misma):
 ```powershell
 $env:DB_USERNAME="root"; $env:DB_PASSWORD="tu_password"
 ```
-En Eclipse/STS: *Run Configurations → Environment*. En IntelliJ: *Edit Configurations → Environment variables*.
+En Eclipse/STS: *Run Configurations → Environment*. En IntelliJ: *Edit Configurations → Environment variables*. En VS Code, la terminal integrada es una PowerShell común.
 
-### 4) Primera ejecución (crea las tablas)
+### 5) Primera ejecución (crea las tablas)
 ```bash
-./mvnw spring-boot:run          # en Windows PowerShell: .\mvnw.cmd spring-boot:run
+./mvnw spring-boot:run          # en Windows PowerShell: .\mvnw spring-boot:run
 ```
-Si `JAVA_HOME` no está definida, apuntarla al JDK. Cuando termine de arrancar (`Started EpicentrogourmetApplication`), detener la app con `Ctrl+C`.
+La primera vez baja Maven y las librerías, y puede tardar unos minutos. Cuando aparezca `Started EpicentrogourmetApplication`, detener la app con `Ctrl+C`.
 
-### 5) Cargar los datos de prueba
-Con MySQL Workbench (abrir y ejecutar `sql/datos_prueba.sql` sobre `epicentro_gourmet_h2`) o por consola:
+### 6) Cargar los datos de prueba
+Por consola:
 ```bash
 mysql -u root -p --default-character-set=utf8mb4 epicentro_gourmet_h2 < sql/datos_prueba.sql
 ```
-El script se puede volver a ejecutar cuando quieran: borra los datos y los recarga. Las fechas son relativas a hoy (siempre hay un festival activo).
+(En PowerShell el `<` no funciona: usar `cmd /c "mysql ... < sql\datos_prueba.sql"` o MySQL Workbench.)
 
-### 6) Usar la aplicación
+Con **MySQL Workbench**: *File → Open...* y elegir `sql/datos_prueba.sql`; agregar como **primera línea** `USE epicentro_gourmet_h2;`, seleccionar todo (`Ctrl+A`) y tocar **Run**.
+
+El script se puede volver a ejecutar cuando quieran: borra los datos y los recarga (sirve para dejar todo limpio antes de una demo). Las fechas son relativas a hoy, así que siempre hay un festival activo.
+
+### 7) Usar la aplicación
 Volver a correr `./mvnw spring-boot:run` y entrar a http://localhost:8080
 
 | Usuario | Contraseña | Rol |
@@ -83,25 +101,71 @@ Volver a correr `./mvnw spring-boot:run` y entrar a http://localhost:8080
 | `marcos.diaz@epicentro.com` | `emp123` | Empleado (cocina) |
 | `valentina.ortiz@epicentro.com` | `emp123` | Empleada (lavaplatos, trabajó en 2 festivales) |
 
-> **Lombok en Eclipse:** si ven errores de `getX()/setX()` inexistentes, hay que instalar Lombok en el IDE (`java -jar lombok.jar`, que está en `~/.m2/repository/org/projectlombok/lombok/`). Alternativa: correr siempre con `mvnw` desde la terminal.
+Para correr los tests: `./mvnw test`.
+
+### Envío de mails
+Cuando el responsable da de alta a un empleado, el sistema le manda un mail con su usuario (su email) y una contraseña generada al azar.
+
+- **Sin configurar:** si no se definen `MAIL_USERNAME` y `MAIL_PASSWORD`, la app funciona igual y el mensaje completo (con usuario y contraseña) queda escrito en la consola. Sirve para desarrollar.
+- **Con mail real (Gmail):**
+  1. En la cuenta de Google, activar la **Verificación en 2 pasos** (Seguridad).
+  2. Crear una **contraseña de aplicación** (Seguridad → Contraseñas de aplicaciones). Son 16 letras, y se usan **sin espacios**.
+  3. Definir las variables antes de levantar la app (en la misma terminal):
+     ```powershell
+     $env:MAIL_USERNAME="tu_cuenta@gmail.com"; $env:MAIL_PASSWORD="LAS16LETRASSINESPACIOS"
+     ```
+- **Si el envío falla** (clave incorrecta, sin internet), el alta se deshace entera y la pantalla avisa *"No se pudo enviar el mail"*: no queda un empleado sin poder entrar.
+- **Seguridad:** la contraseña de aplicación nunca va en el código ni en el repositorio. Si se filtra, se revoca desde la misma página de Google.
+
+### Problemas frecuentes
+
+| Qué pasa | Qué hacer |
+|---|---|
+| `JAVA_HOME not found` | Apuntarla al JDK. Para encontrarlo: `Get-ChildItem "C:\Program Files\Java","C:\Program Files\Eclipse Adoptium","$env:USERPROFILE\.p2" -Filter javac.exe -Recurse -ErrorAction SilentlyContinue \| Select-Object -First 5 FullName`. `JAVA_HOME` es esa ruta **sin** `\bin\javac.exe`. Ej: `$env:JAVA_HOME="C:\Users\tu_usuario\.p2\pool\plugins\org.eclipse.justj.openjdk.hotspot.jre.full.win32.x86_64_21.0.8.v20250724-1412\jre"` |
+| `Access denied for user 'root'` | `DB_USERNAME` o `DB_PASSWORD` incorrectos. |
+| `Unknown database 'epicentro_gourmet_h2'` | Falta el paso 3: crear la base. |
+| La página de inicio no muestra festivales o no hay usuarios | Faltan los datos de prueba (paso 6). |
+| `Port 8080 was already in use` | Hay otra copia de la app corriendo: cerrar esa terminal. |
+| `mysql` no se reconoce como comando | Usar MySQL Workbench, o la ruta completa (`C:\Program Files\MySQL\MySQL Server 8.0\bin\mysql.exe`). |
+| El alta de empleado dice *"No se pudo enviar el mail"* | Revisar `MAIL_USERNAME`/`MAIL_PASSWORD` (16 letras sin espacios, misma cuenta donde se generaron). |
+| Errores de `getX()/setX()` inexistentes en el IDE | Instalar Lombok en el IDE (`java -jar lombok.jar`, está en `~/.m2/repository/org/projectlombok/lombok/`), o correr siempre con `mvnw` desde la terminal. |
+
+## Qué se puede probar hoy
+
+| Zona | Rutas | Qué hace |
+|---|---|---|
+| Público | `/` · `/login` | Inicio con los festivales (en curso, próximo y finalizado) · inicio de sesión |
+| Responsable | `/responsable` | Panel con una tarjeta por caso de uso |
+| | `/responsable/canon` | Canon que paga la unidad, con el detalle del cálculo |
+| | `/responsable/haberes` | Liquidación de sueldos del personal de la unidad |
+| | `/responsable/empleados` | Lista de empleados activos y dados de baja · alta (`/nuevo`), modificación (`/{id}/editar`), baja lógica y reactivación |
+| Empleado | `/empleado` | Panel del empleado |
+| | `/empleado/hoy` | En qué unidad y festival activo trabaja hoy |
+| | `/empleado/sueldos` | Sus liquidaciones por festival y descarga del recibo en PDF (`/empleado/sueldos/{festivalId}/recibo`) |
+| | `/empleado/cerrar-caja` | Cierre diario de caja (solo cajeros) |
+| Administrador | `/admin` | Panel (sus casos de uso están pendientes) |
+
+La seguridad separa tres zonas: `/admin/**` (ADMIN), `/responsable/**` (RESPONSABLE) y `/empleado/**` (EMPLEADO); entrar a la zona de otro rol da **403**. Las contraseñas se guardan con BCrypt, los formularios llevan token CSRF y el login redirige al panel del rol.
 
 ## Estructura del proyecto
 
 ```
 src/main/java/com/unla/epicentrogourmet/
   entities/       entidades JPA (modelo del diagrama)
-  enums/          Rol, RolCocina, Turno
+  enums/          Rol, RolCocina, Turno, TipoEmpleado
   repositories/   interfaces JpaRepository
-  services/       interfaz + implementation/ (logica de negocio)
+  services/       interfaz + implementation/ (lógica de negocio)
   controllers/    controladores MVC (devuelven vistas Thymeleaf)
-  dtos/           DTOs de reportes (no persisten)
-  helpers/        ViewRouteHelper (rutas y vistas)
+  dtos/           DTOs de reportes y formularios (no persisten)
+  exceptions/     ReglaDeNegocioException (validaciones de carga)
+  helpers/        ViewRouteHelper, ContraseniaAleatoria, EtiquetasHelper
   configuration/  seguridad, ModelMapper
 src/main/resources/templates/   vistas (layout.html con navbar por rol)
+src/test/                       tests de servicios y controladores
 sql/datos_prueba.sql            datos de prueba
+diagrama/                       diagramas de clases
+docs/GUIA_CASOS_DE_USO.md       guía de cada caso de uso
 ```
-
-La seguridad separa tres zonas: `/admin/**` (ADMIN), `/responsable/**` (RESPONSABLE) y `/empleado/**` (EMPLEADO). Las contraseñas se guardan con BCrypt. El login redirige al panel del rol.
 
 ## Diagrama de clases
 
@@ -109,42 +173,49 @@ La seguridad separa tres zonas: `/admin/**` (ADMIN), `/responsable/**` (RESPONSA
 
 ## Casos de uso implementados y responsables
 
-El estado y el link al Pull Request de cada caso de uso se completan acá a medida que se mergean.
-
-| # | Caso de uso | Rol | Responsable | Rama | PR | Estado |
-|---|---|---|---|---|---|---|
-| Base | Proyecto Maven, entidades, login por roles, inicio con festivales, script SQL | todos | Juan Avalle | `CUBaseProyectoJuanAvalle` | [PR #1 (repo del Hito 1)](https://github.com/JuanAvalle77/TPGrupalOO2Grupo10/pull/1) | en revisión |
-| 1 | Ver festivales y unidades de venta de un festival | Admin | Franco Luzardo | `CUVerFestivalesUnidadesFrancoLuzardo` | | pendiente |
-| 2 | Ranking de unidades por recaudación | Admin | Franco Luzardo | `CURankingUnidadesFrancoLuzardo` | | pendiente |
-| 3 | Unidades con mayor canon (`ReporteMayoresCanonDTO`) | Admin | Federico Acosta | `CUMayorCanonFedericoAcosta` | | pendiente |
-| 4 | Registro de Unidad de Venta con su Responsable (crea usuario) | Público | Santiago Agarzúa | `CURegistroUnidadSantiagoAgarzua` | | pendiente |
-| 5 | Alta, baja lógica, modificación y reactivación de empleados + **mail** | Responsable | Juan Avalle | `CUABMEmpleadosJuanAvalle` | [PR #3](https://github.com/JuanAvalle77/TPGrupalOO2Hito2Grupo10/pull/3) | en revisión |
-| 6 | Filtros de empleados por uno o varios atributos (solo activos) | Responsable | Santiago Agarzúa | `CUFiltrosEmpleadosSantiagoAgarzua` | | pendiente |
-| 7 | Alta de platos | Responsable | Santiago Agarzúa | `CUAltaPlatosSantiagoAgarzua` | | pendiente |
-| 8 | Cálculo de canon de una unidad | Responsable | Juan Avalle | `CUCalculoCanonJuanAvalle` | [PR #1](https://github.com/JuanAvalle77/TPGrupalOO2Hito2Grupo10/pull/1) | en revisión |
-| 9 | Liquidación de haberes | Responsable | Juan Avalle | `CULiquidacionHaberesJuanAvalle` | [PR #2](https://github.com/JuanAvalle77/TPGrupalOO2Hito2Grupo10/pull/2) | en revisión |
-| 10 | Reporte de recaudación de un festival (`ReporteVentaDTO`) | Responsable | Franco Luzardo | `CUReporteRecaudacionFrancoLuzardo` | | pendiente |
-| 11 | Rentabilidad neta de una unidad (y entre dos fechas) | Responsable | Juan Avalle | `CURentabilidadNetaJuanAvalle` | | pendiente |
-| 12 | Plato estrella (`PlatoDTO`) | Responsable | Santiago Agarzúa | `CUPlatoEstrellaSantiagoAgarzua` | | pendiente |
-| 13 | Ver mi información (festivales y unidades en las que trabajé) | Empleado | Franco Luzardo | `CUMiInformacionFrancoLuzardo` | | pendiente |
-| 14 | Recibo de sueldo en **PDF** | Empleado | Federico Acosta | `CUReciboSueldoFedericoAcosta` | | pendiente |
-| 15 | Ver en qué festival activo y unidad trabajo hoy | Empleado | Federico Acosta | `CUDondeTrabajoHoyFedericoAcosta` | | pendiente |
-| 16 | Cerrar caja (cajero) | Empleado | Federico Acosta | `CUCerrarCajaFedericoAcosta` | | pendiente |
-
 Guía detallada de cada caso de uso (qué construir, rutas, reglas y cómo verificarlo): [`docs/GUIA_CASOS_DE_USO.md`](docs/GUIA_CASOS_DE_USO.md).
 
-**Mínimos por grupo:** 1 envío de mail (CU 5) · DTOs de reporte (CU 3, 10, 12) · 1 PDF (CU 14).
+### Implementados (mergeados a `main`)
+
+| # | Caso de uso | Rol | Responsable | Rama | PR |
+|---|---|---|---|---|---|
+| Base | Proyecto Maven, entidades, login por roles, inicio con festivales, script SQL | todos | Juan Avalle | `CUBaseProyectoJuanAvalle` | [PR #1 (repo del Hito 1)](https://github.com/JuanAvalle77/TPGrupalOO2Grupo10/pull/1) |
+| 5 | Alta, baja lógica, modificación y reactivación de empleados + **mail** | Responsable | Juan Avalle | `CUABMEmpleadosJuanAvalle` | [PR #3](https://github.com/JuanAvalle77/TPGrupalOO2Hito2Grupo10/pull/3) |
+| 8 | Cálculo de canon de una unidad | Responsable | Juan Avalle | `CUCalculoCanonJuanAvalle` | [PR #1](https://github.com/JuanAvalle77/TPGrupalOO2Hito2Grupo10/pull/1) |
+| 9 | Liquidación de haberes | Responsable | Juan Avalle | `CULiquidacionHaberesJuanAvalle` | [PR #2](https://github.com/JuanAvalle77/TPGrupalOO2Hito2Grupo10/pull/2) |
+| 14 | Recibo de sueldo en **PDF** | Empleado | Federico Acosta | `CUReciboSueldoFedericoAcosta` | [PR #6](https://github.com/JuanAvalle77/TPGrupalOO2Hito2Grupo10/pull/6) |
+| 15 | Ver en qué festival activo y unidad trabajo hoy | Empleado | Federico Acosta | `CUDondeTrabajoHoyFedericoAcosta` | [PR #5](https://github.com/JuanAvalle77/TPGrupalOO2Hito2Grupo10/pull/5) |
+| 16 | Cerrar caja (cajero) | Empleado | Federico Acosta | `CUCerrarCajaFedericoAcosta` | [PR #4](https://github.com/JuanAvalle77/TPGrupalOO2Hito2Grupo10/pull/4) |
+
+### Pendientes
+
+| # | Caso de uso | Rol | Responsable | Rama | PR |
+|---|---|---|---|---|---|
+| 1 | Ver festivales y unidades de venta de un festival | Admin | Franco Luzardo | `CUVerFestivalesUnidadesFrancoLuzardo` | |
+| 2 | Ranking de unidades por recaudación | Admin | Franco Luzardo | `CURankingUnidadesFrancoLuzardo` | |
+| 3 | Unidades con mayor canon (`ReporteMayoresCanonDTO`) | Admin | Federico Acosta | `CUMayorCanonFedericoAcosta` | |
+| 4 | Registro de Unidad de Venta con su Responsable (crea usuario) | Público | Santiago Agarzúa | `CURegistroUnidadSantiagoAgarzua` | |
+| 6 | Filtros de empleados por uno o varios atributos (solo activos) | Responsable | Santiago Agarzúa | `CUFiltrosEmpleadosSantiagoAgarzua` | |
+| 7 | Alta de platos | Responsable | Santiago Agarzúa | `CUAltaPlatosSantiagoAgarzua` | |
+| 10 | Reporte de recaudación de un festival (`ReporteVentaDTO`) | Responsable | Franco Luzardo | `CUReporteRecaudacionFrancoLuzardo` | |
+| 11 | Rentabilidad neta de una unidad (y entre dos fechas) | Responsable | Juan Avalle | `CURentabilidadNetaJuanAvalle` | |
+| 12 | Plato estrella (`PlatoDTO`) | Responsable | Santiago Agarzúa | `CUPlatoEstrellaSantiagoAgarzua` | |
+| 13 | Ver mi información (festivales y unidades en las que trabajé) | Empleado | Franco Luzardo | `CUMiInformacionFrancoLuzardo` | |
+
+### Requisitos del enunciado
+
+**Mínimos por grupo:** 1 envío de mail (CU 5, ya implementado) · DTOs de reporte (CU 3, 10, 12) · 1 PDF (CU 14, ya implementado).
 
 **Validaciones de carga (2 por integrante):**
 
-| Integrante | Validaciones |
-|---|---|
-| Juan Avalle | personal mayor de edad · email con formato válido y único |
-| Santiago Agarzúa | código de unidad único y con formato válido · precio de venta mayor al costo de producción del plato |
-| Franco Luzardo | período del festival válido (fin no anterior al inicio) · superficie de la unidad mayor a 0 |
-| Federico Acosta | un pedido solo puede cargarse con la fecha del día y cantidades mayores a 0 · un único cierre de caja por cajero y por día |
+| Integrante | Validaciones | Estado |
+|---|---|---|
+| Juan Avalle | personal mayor de edad · email con formato válido y único | implementadas (CU 5) |
+| Federico Acosta | un pedido solo puede cargarse con la fecha del día y cantidades mayores a 0 · un único cierre de caja por cajero y por día | implementadas (CU 16) |
+| Santiago Agarzúa | código de unidad único y con formato válido · precio de venta mayor al costo de producción del plato | pendientes |
+| Franco Luzardo | período del festival válido (fin no anterior al inicio) · superficie de la unidad mayor a 0 | pendientes |
 
-**Dependencias entre casos de uso:** los CU 8 (canon) y 9 (haberes) los usan los CU 3, 11 y 14. Se mergean primero; mientras tanto el resto puede avanzar con los datos de prueba.
+**Dependencias:** el canon (CU 8) y los haberes (CU 9) ya están en `main`, así que los CU 3 y 11 pueden usar `CanonService`, y el 11 también `LiquidacionService`. El filtro de empleados (CU 6) se apoya en la lista del CU 5.
 
 ## Cómo trabajar (ramas y Pull Requests)
 
@@ -176,10 +247,10 @@ git fetch origin
 git merge origin/main        # resolver conflictos si los hay, probar, y:
 git push
 ```
-Si hay conflicto en un archivo compartido (`layout.html`, el `index.html` de un panel), conservar **ambos** cambios.
+Si hay conflicto en un archivo compartido (`layout.html`, el `index.html` de un panel, `ViewRouteHelper`), conservar **ambos** cambios.
 
 ### 4) Revisión y merge
-- Un compañero **distinto del autor** revisa el PR (ver abajo). El autor lo mergea con el botón **Merge pull request** cuando está aprobado, y borra la rama.
+- Un compañero **distinto del autor** revisa el PR (ver abajo). El autor lo mergea con **Create a merge commit** cuando está aprobado (así se conservan los commits de cada uno), y borra la rama recién cuando todo lo que dependía de ella ya se mergeó.
 - **Link del PR en el README:** la tabla de casos de uso la completa **una sola persona (Juan)** para no generar conflictos. Pasale el link de tu PR por el grupo.
 
 ### Cómo revisar un Pull Request
@@ -198,11 +269,13 @@ Si hay conflicto en un archivo compartido (`layout.html`, el `index.html` de un 
    - [ ] Nada hardcodeado: los valores de negocio salen de `CostoFestival`.
    - [ ] Sin contraseñas ni datos personales en el código.
    - [ ] Tiene las validaciones de carga que le tocan y mensajes de error claros.
+   - [ ] Tiene su link en el navbar del rol y su tarjeta activa en el panel.
    - [ ] La descripción del PR explica qué se hizo y cómo probarlo; no toca archivos de otros casos de uso salvo su tarjeta/link.
 4. **Resolver la revisión:** botón **Review changes** → *Approve* (está bien), *Request changes* (hay que corregir algo) o *Comment* (dudas). Dejá comentarios concretos ("en la línea X falta validar Y").
 
 ### Reglas generales
 1. Cada caso de uso agrega su link en el `navbar` de `layout.html` (dentro del bloque de su rol) y reemplaza su tarjeta *Pendiente* en el panel del rol.
 2. Nada hardcodeado: los valores de negocio (sueldo base, canon, plus) salen de `CostoFestival`.
-3. Credenciales solo por variables de entorno; nunca commitear contraseñas.
+3. Credenciales solo por variables de entorno; nunca commitear contraseñas ni claves de aplicación.
 4. Si falta una entidad o un campo, avisar en el grupo antes de modificarla.
+5. Si el caso de uso agrega clases o métodos, actualizar el [diagrama de clases](diagrama/diagrama-clases-hito2.md).
