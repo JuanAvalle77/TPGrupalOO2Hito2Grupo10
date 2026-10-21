@@ -58,6 +58,15 @@ public abstract class Personal {
 		return Period.between(fechaIngreso, hasta).getYears();
 	}
 
+	/** Rol legible del empleado (para recibos y reportes). */
+	public abstract String getRolDescripcion();
+
+	/** Nombre del plus que cobra segun su rol (antiguedad o categoria). */
+	public abstract String getConceptoPlus(LocalDate fechaCalculo);
+
+	/** Plus que suma al sueldo base: antiguedad para cajeros, categoria para cocina. */
+	public abstract double calcularPlus(CostoFestival costos, LocalDate fechaCalculo);
+
 	public boolean esMayorDeEdad() {
 		return Period.between(fechaNacimiento, LocalDate.now()).getYears() >= 18;
 	}

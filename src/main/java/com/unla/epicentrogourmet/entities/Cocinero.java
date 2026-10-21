@@ -1,5 +1,7 @@
 package com.unla.epicentrogourmet.entities;
 
+import java.time.LocalDate;
+
 import com.unla.epicentrogourmet.enums.RolCocina;
 
 import jakarta.persistence.Entity;
@@ -16,4 +18,19 @@ public class Cocinero extends Personal {
 
 	@Enumerated(EnumType.STRING)
 	private RolCocina rolCocina;
+
+	@Override
+	public String getRolDescripcion() {
+		return rolCocina != null ? rolCocina.getDescripcion() : "Cocina";
+	}
+
+	@Override
+	public String getConceptoPlus(LocalDate fechaCalculo) {
+		return "Plus por categoría";
+	}
+
+	@Override
+	public double calcularPlus(CostoFestival costos, LocalDate fechaCalculo) {
+		return costos.getPlusCategoria(rolCocina);
+	}
 }
