@@ -22,6 +22,15 @@ public class FoodTruck extends UnidadVenta {
 	}
 
 	@Override
+	public String describirCanon(CostoFestival costos) {
+		String detalle = String.format("%.1f m² × $%.0f", getSuperficie(), costos.getCostoPorM2());
+		if (requiereElectricidad) {
+			detalle += String.format(" + $%.0f (conexión eléctrica)", costos.getPlusConexionElectrica());
+		}
+		return detalle;
+	}
+
+	@Override
 	public String getTipo() {
 		return "Food Truck";
 	}

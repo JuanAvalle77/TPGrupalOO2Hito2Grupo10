@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout :: head}"></head>
+<body>
+    <nav th:replace="~{layout :: navbar}"></nav>
+
+    <main class="container">
+        <div class="panel-head">
+            <span class="rol">Responsable</span>
+            <h2>Canon de mi unidad</h2>
+            <p class="text-muted mb-0">Monto a pagar según los costos que fijó cada festival.</p>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-epicentro">
+                <thead>
+                    <tr>
+                        <th>Unidad</th>
+                        <th>Código</th>
+                        <th>Tipo</th>
+                        <th>Festival</th>
+                        <th class="text-right">Superficie</th>
+                        <th>Cálculo</th>
+                        <th class="text-right">Canon</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="c : ${canones}">
+                        <td th:text="${c.nombreComercial}">Unidad</td>
+                        <td th:text="${c.codigo}">FT00000001</td>
+                        <td th:text="${c.tipo}">Food Truck</td>
+                        <td th:text="${c.festival}">Festival</td>
+                        <td class="text-right" th:text="${#numbers.formatDecimal(c.superficie, 1, 'POINT', 1, 'COMMA')} + ' m²'">15,5 m²</td>
+                        <td class="text-muted" th:text="${c.detalleCalculo}">detalle</td>
+                        <td class="text-right"><strong th:text="'$ ' + ${#numbers.formatDecimal(c.canon, 1, 'POINT', 2, 'COMMA')}">$ 0,00</strong></td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(canones)}">
+                        <td colspan="7" class="text-center text-muted py-4">No tenés unidades de venta a tu cargo.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <a th:href="@{/responsable}" class="btn btn-outline-secondary">Volver al panel</a>
+    </main>
+
+    <footer th:replace="~{layout :: footer}"></footer>
+    <div th:replace="~{layout :: scripts}"></div>
+</body>
+</html>

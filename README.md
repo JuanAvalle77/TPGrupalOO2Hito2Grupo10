@@ -22,6 +22,13 @@ Java 17+ · Spring Boot 3.3 (Web, Data JPA, Security, Validation, Mail) · Thyme
 
 ## Cómo correr la aplicación
 
+### 0) Clonar el repositorio
+```bash
+git clone https://github.com/JuanAvalle77/TPGrupalOO2Hito2Grupo10.git
+cd TPGrupalOO2Hito2Grupo10
+```
+(Tienen que haber aceptado la invitación como colaboradores. Para empezar un caso de uso, ver "Cómo trabajar" más abajo.)
+
 ### 1) Requisitos
 - JDK 17 o superior (sirve el JDK 21 que trae Eclipse).
 - MySQL 8 corriendo.
@@ -96,107 +103,9 @@ sql/datos_prueba.sql            datos de prueba
 
 La seguridad separa tres zonas: `/admin/**` (ADMIN), `/responsable/**` (RESPONSABLE) y `/empleado/**` (EMPLEADO). Las contraseñas se guardan con BCrypt. El login redirige al panel del rol.
 
-## Diagrama de clases (iterado en el Hito 2)
+## Diagrama de clases
 
-Fuente editable del Hito 1: [`diagrama/oo2UML.dia`](diagrama/oo2UML.dia). Cambios del Hito 2 respecto al Hito 1:
-- `Cocinero` pasa a tener `rolCocina` (cocinero, ayudante, lavaplatos) en vez de `especialidad`; `Cajero` tiene `turno` (mañana/noche) y cobra antigüedad.
-- Nueva `CostoFestival`: encapsula los costos del festival (costo por m², plus eléctrico, costo por minuto de montaje, sueldo base, plus por antigüedad y por categoría). Nada hardcodeado.
-- `Personal` suma `email` (es su usuario), `activo` (baja lógica) y se relaciona *muchos a muchos* con `UnidadVenta` (así un empleado puede haber trabajado en varios festivales).
-- Nuevas `Usuario` (con `Rol`) y `CierreCaja`.
-- Los reportes (`ReporteVentaDTO`, `ReporteMayoresCanonDTO`, `PlatoDTO`) son DTOs que no persisten.
-
-```mermaid
-classDiagram
-    class Festival {
-        -nombre: String
-        -temporada: String
-        -fechaInicio: LocalDate
-        -fechaFin: LocalDate
-        +getDuracionEnDias() long
-        +estaActivo(fecha) boolean
-    }
-    class CostoFestival {
-        -costoPorM2: double
-        -plusConexionElectrica: double
-        -costoPorMinutoMontaje: double
-        -sueldoBase: double
-        -plusAntiguedadAnual: double
-        -plusCocinero: double
-        -plusCocineroAyudante: double
-        -plusLavaplatos: double
-    }
-    class UnidadVenta {
-        <<abstracta>>
-        -nombreComercial: String
-        -superficie: double
-        -codigo: String
-        +calcularCanon(costos) double
-    }
-    class FoodTruck {
-        -patente: String
-        -requiereElectricidad: boolean
-    }
-    class PuestoDesarmable {
-        -cantidadCarpas: int
-        -tiempoMontaje: int
-    }
-    class Personal {
-        <<abstracta>>
-        -nombre: String
-        -apellido: String
-        -dni: int
-        -fechaNacimiento: LocalDate
-        -fechaIngreso: LocalDate
-        -email: String
-        -activo: boolean
-    }
-    class Cajero {
-        -turno: Turno
-    }
-    class Cocinero {
-        -rolCocina: RolCocina
-    }
-    class Plato {
-        -nombre: String
-        -precioVenta: double
-        -costoProduccion: double
-    }
-    class Pedido {
-        -fecha: LocalDate
-        +calcularTotal() double
-    }
-    class DetallesPedido {
-        -cantidad: int
-    }
-    class CierreCaja {
-        -fecha: LocalDate
-        -totalRecaudado: double
-    }
-    class Usuario {
-        -username: String
-        -password: String
-        -enabled: boolean
-        -rol: Rol
-    }
-
-    UnidadVenta <|-- FoodTruck
-    UnidadVenta <|-- PuestoDesarmable
-    Personal <|-- Cajero
-    Personal <|-- Cocinero
-
-    Festival "1" --> "1" CostoFestival
-    Festival "1" --> "0..*" UnidadVenta
-    UnidadVenta "1" --> "0..*" Plato
-    UnidadVenta "1" --> "0..*" Pedido
-    UnidadVenta "0..*" --> "1..*" Personal : personal
-    UnidadVenta "0..*" --> "1" Personal : responsable
-    Festival "1" --> "0..*" Pedido
-    Pedido "1" --> "1..*" DetallesPedido
-    DetallesPedido "0..*" --> "1" Plato
-    Usuario "0..1" --> "0..1" Personal
-    CierreCaja "0..*" --> "1" Cajero
-    CierreCaja "0..*" --> "1" UnidadVenta
-```
+**[Ver el diagrama de clases del Hito 2](diagrama/diagrama-clases-hito2.md)** (se dibuja directo en GitHub, con la lista de cambios respecto al Hito 1). El del Hito 1 sigue en [`diagrama/oo2UML.dia`](diagrama/oo2UML.dia) (fuente editable).
 
 ## Casos de uso implementados y responsables
 
@@ -204,16 +113,16 @@ El estado y el link al Pull Request de cada caso de uso se completan acá a medi
 
 | # | Caso de uso | Rol | Responsable | Rama | PR | Estado |
 |---|---|---|---|---|---|---|
-| Base | Proyecto Maven, entidades, login por roles, inicio con festivales, script SQL | todos | Juan Avalle | `CUBaseProyectoJuanAvalle` | [PR #1](https://github.com/JuanAvalle77/TPGrupalOO2Hito2Grupo10/pull/1) | en revisión |
+| Base | Proyecto Maven, entidades, login por roles, inicio con festivales, script SQL | todos | Juan Avalle | `CUBaseProyectoJuanAvalle` | [PR #1 (repo del Hito 1)](https://github.com/JuanAvalle77/TPGrupalOO2Grupo10/pull/1) | en revisión |
 | 1 | Ver festivales y unidades de venta de un festival | Admin | Franco Luzardo | `CUVerFestivalesUnidadesFrancoLuzardo` | | pendiente |
 | 2 | Ranking de unidades por recaudación | Admin | Franco Luzardo | `CURankingUnidadesFrancoLuzardo` | | pendiente |
-| 3 | Unidades con mayor canon (`ReporteMayoresCanonDTO`) | Admin | Juan Avalle | `CUMayorCanonJuanAvalle` | | pendiente |
+| 3 | Unidades con mayor canon (`ReporteMayoresCanonDTO`) | Admin | Federico Acosta | `CUMayorCanonFedericoAcosta` | | pendiente |
 | 4 | Registro de Unidad de Venta con su Responsable (crea usuario) | Público | Santiago Agarzúa | `CURegistroUnidadSantiagoAgarzua` | | pendiente |
 | 5 | Alta, baja lógica, modificación y reactivación de empleados + **mail** | Responsable | Juan Avalle | `CUABMEmpleadosJuanAvalle` | | pendiente |
-| 6 | Filtros de empleados por uno o varios atributos (solo activos) | Responsable | Juan Avalle | `CUFiltrosEmpleadosJuanAvalle` | | pendiente |
+| 6 | Filtros de empleados por uno o varios atributos (solo activos) | Responsable | Santiago Agarzúa | `CUFiltrosEmpleadosSantiagoAgarzua` | | pendiente |
 | 7 | Alta de platos | Responsable | Santiago Agarzúa | `CUAltaPlatosSantiagoAgarzua` | | pendiente |
-| 8 | Cálculo de canon de una unidad | Responsable | Juan Avalle | `CUCalculoCanonJuanAvalle` | [PR #2](https://github.com/JuanAvalle77/TPGrupalOO2Hito2Grupo10/pull/2) | en revisión |
-| 9 | Liquidación de haberes | Responsable | Juan Avalle | `CULiquidacionHaberesJuanAvalle` | [PR #3](https://github.com/JuanAvalle77/TPGrupalOO2Hito2Grupo10/pull/3) | en revisión |
+| 8 | Cálculo de canon de una unidad | Responsable | Juan Avalle | `CUCalculoCanonJuanAvalle` | [PR #1](https://github.com/JuanAvalle77/TPGrupalOO2Hito2Grupo10/pull/1) | en revisión |
+| 9 | Liquidación de haberes | Responsable | Juan Avalle | `CULiquidacionHaberesJuanAvalle` | [PR #2](https://github.com/JuanAvalle77/TPGrupalOO2Hito2Grupo10/pull/2) | en revisión |
 | 10 | Reporte de recaudación de un festival (`ReporteVentaDTO`) | Responsable | Franco Luzardo | `CUReporteRecaudacionFrancoLuzardo` | | pendiente |
 | 11 | Rentabilidad neta de una unidad (y entre dos fechas) | Responsable | Juan Avalle | `CURentabilidadNetaJuanAvalle` | | pendiente |
 | 12 | Plato estrella (`PlatoDTO`) | Responsable | Santiago Agarzúa | `CUPlatoEstrellaSantiagoAgarzua` | | pendiente |

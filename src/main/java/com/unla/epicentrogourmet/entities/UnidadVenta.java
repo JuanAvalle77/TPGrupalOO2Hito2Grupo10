@@ -66,6 +66,9 @@ public abstract class UnidadVenta {
 	/** Monto a pagar por la unidad, segun los costos que fijo el festival. */
 	public abstract double calcularCanon(CostoFestival costos);
 
+	/** Explica como se calculo el canon (para mostrar en pantalla). */
+	public abstract String describirCanon(CostoFestival costos);
+
 	/** Tipo legible de la unidad (para reportes). */
 	public abstract String getTipo();
 }

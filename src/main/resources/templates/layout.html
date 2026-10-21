@@ -37,6 +37,9 @@
                         <a class="nav-link" th:href="@{/responsable}">Panel Responsable</a>
                     </li>
                     <li class="nav-item" sec:authorize="hasRole('RESPONSABLE')">
+                        <a class="nav-link" th:href="@{/responsable/canon}">Canon</a>
+                    </li>
+                    <li class="nav-item" sec:authorize="hasRole('RESPONSABLE')">
                         <a class="nav-link" th:href="@{/responsable/haberes}">Haberes</a>
                     </li>
 

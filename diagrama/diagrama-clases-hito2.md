@@ -1,0 +1,187 @@
+# Diagrama de clases - Hito 2 (Epicentro Gourmet)
+
+Iteración del diagrama del Hito 1 (fuente editable del Hito 1: [`oo2UML.dia`](oo2UML.dia)). GitHub dibuja el diagrama de abajo directamente.
+
+**Cambios respecto al Hito 1**
+- `Cocinero` pasa a tener `rolCocina` (cocinero, ayudante, lavaplatos) en vez de `especialidad`; `Cajero` tiene `turno` (mañana/noche) y cobra antigüedad.
+- Nueva `CostoFestival`: encapsula los costos del festival (costo por m², plus eléctrico, costo por minuto de montaje, sueldo base, plus por antigüedad y por categoría). Nada hardcodeado en los métodos.
+- `Personal` suma `email` (es su usuario), `activo` (baja lógica) y se relaciona *muchos a muchos* con `UnidadVenta` (así un empleado puede haber trabajado en varios festivales).
+- Nuevas `Usuario` (con `Rol`) y `CierreCaja`.
+- Los reportes son DTO que no persisten: `ReporteVentaDTO`, `ReporteMayoresCanonDTO` y `PlatoDTO` (pedidos por el enunciado), más `CanonUnidadDTO`, `LiquidacionDTO` y `LiquidacionUnidadDTO`.
+
+**Convención:** los métodos en cursiva son abstractos. `describirCanon`, `calcularPlus`, `getConceptoPlus` y `getRolDescripcion` llegan con los PRs de canon y haberes. Cada caso de uso actualiza este archivo si agrega clases o métodos.
+
+```mermaid
+classDiagram
+    class Festival {
+        -id: Long
+        -nombre: String
+        -temporada: String
+        -fechaInicio: LocalDate
+        -fechaFin: LocalDate
+        +getDuracionEnDias() long
+        +estaActivo(fecha) boolean
+    }
+    class CostoFestival {
+        -costoPorM2: double
+        -plusConexionElectrica: double
+        -costoPorMinutoMontaje: double
+        -sueldoBase: double
+        -plusAntiguedadAnual: double
+        -plusCocinero: double
+        -plusCocineroAyudante: double
+        -plusLavaplatos: double
+        +getPlusCategoria(rol) double
+    }
+    class UnidadVenta {
+        <<abstracta>>
+        -nombreComercial: String
+        -superficie: double
+        -codigo: String
+        +calcularCanon(costos) double*
+        +getTipo() String*
+        +describirCanon(costos) String*
+    }
+    class FoodTruck {
+        -patente: String
+        -requiereElectricidad: boolean
+    }
+    class PuestoDesarmable {
+        -cantidadCarpas: int
+        -tiempoMontaje: int
+    }
+    class Personal {
+        <<abstracta>>
+        -nombre: String
+        -apellido: String
+        -dni: int
+        -fechaNacimiento: LocalDate
+        -fechaIngreso: LocalDate
+        -email: String
+        -contacto: String
+        -activo: boolean
+        +getAntiguedadEnAnios(hasta) int
+        +esMayorDeEdad() boolean
+        +getNombreCompleto() String
+        +calcularPlus(costos, fecha) double*
+        +getConceptoPlus(fecha) String*
+        +getRolDescripcion() String*
+    }
+    class Cajero {
+        -turno: Turno
+    }
+    class Cocinero {
+        -rolCocina: RolCocina
+    }
+    class Plato {
+        -nombre: String
+        -precioVenta: double
+        -costoProduccion: double
+        +calcularGanancia() double
+    }
+    class Pedido {
+        -fecha: LocalDate
+        +calcularTotal() double
+        +calcularCostoPlatos() double
+    }
+    class DetallesPedido {
+        -cantidad: int
+    }
+    class CierreCaja {
+        -fecha: LocalDate
+        -totalRecaudado: double
+    }
+    class Usuario {
+        -username: String
+        -password: String
+        -enabled: boolean
+        -rol: Rol
+    }
+    class Rol {
+        <<enumeration>>
+        ADMIN
+        RESPONSABLE
+        EMPLEADO
+    }
+    class RolCocina {
+        <<enumeration>>
+        COCINERO
+        COCINERO_AYUDANTE
+        LAVAPLATOS
+    }
+    class Turno {
+        <<enumeration>>
+        MANANA
+        NOCHE
+    }
+
+    class ReporteVentaDTO {
+        <<DTO>>
+        -festival: String
+        -recaudacionTotal: double
+    }
+    class ReporteMayoresCanonDTO {
+        <<DTO>>
+        -nombreComercial: String
+        -codigo: String
+        -tipoUnidad: String
+        -canon: double
+    }
+    class PlatoDTO {
+        <<DTO>>
+        -nombre: String
+        -cantidadPedidos: long
+    }
+    class CanonUnidadDTO {
+        <<DTO>>
+        -nombreComercial: String
+        -codigo: String
+        -tipo: String
+        -festival: String
+        -superficie: double
+        -detalleCalculo: String
+        -canon: double
+    }
+    class LiquidacionDTO {
+        <<DTO>>
+        -empleado: String
+        -dni: int
+        -rol: String
+        -sueldoBase: double
+        -conceptoPlus: String
+        -plus: double
+        -subtotal: double
+        -factor: double
+        -total: double
+    }
+    class LiquidacionUnidadDTO {
+        <<DTO>>
+        -unidad: String
+        -festival: String
+        -diasFestival: long
+        -factor: double
+        -totalUnidad: double
+    }
+
+    UnidadVenta <|-- FoodTruck
+    UnidadVenta <|-- PuestoDesarmable
+    Personal <|-- Cajero
+    Personal <|-- Cocinero
+
+    Festival "1" --> "1" CostoFestival
+    Festival "1" --> "0..*" UnidadVenta
+    UnidadVenta "1" --> "0..*" Plato
+    UnidadVenta "1" --> "0..*" Pedido
+    UnidadVenta "0..*" --> "1..*" Personal : personal
+    UnidadVenta "0..*" --> "1" Personal : responsable
+    Festival "1" --> "0..*" Pedido
+    Pedido "1" --> "1..*" DetallesPedido
+    DetallesPedido "0..*" --> "1" Plato
+    Usuario "0..1" --> "0..1" Personal
+    Usuario --> Rol
+    Cajero --> Turno
+    Cocinero --> RolCocina
+    CierreCaja "0..*" --> "1" Cajero
+    CierreCaja "0..*" --> "1" UnidadVenta
+    LiquidacionUnidadDTO "1" --> "0..*" LiquidacionDTO : liquidaciones
+```
