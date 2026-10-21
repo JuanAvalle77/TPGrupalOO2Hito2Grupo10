@@ -1,13 +1,18 @@
 package com.unla.epicentrogourmet.services.implementation;
 
 import java.io.ByteArrayOutputStream;
+import java.text.NumberFormat;
 import java.util.Comparator;
+import java.util.Currency;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.lowagie.text.Document;
 import com.lowagie.text.DocumentException;
@@ -46,12 +51,17 @@ public class ReciboSueldoService {
 		ReciboSueldoDTO recibo = listarRecibos().stream()
 				.filter(item -> item.getFestivalId().equals(festivalId))
 				.findFirst()
-				.orElseThrow(() -> new IllegalArgumentException("No tenés un recibo para ese festival"));
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+						"No tenés un recibo para ese festival"));
 		try (ByteArrayOutputStream output = new ByteArrayOutputStream()) {
 			Document document = new Document();
 			PdfWriter.getInstance(document, output);
 			document.open();
 			LiquidacionDTO liquidacion = recibo.getLiquidacion();
+			NumberFormat moneda = NumberFormat.getCurrencyInstance(Locale.forLanguageTag("es-AR"));
+			moneda.setCurrency(Currency.getInstance("ARS"));
+			moneda.setMinimumFractionDigits(2);
+			moneda.setMaximumFractionDigits(2);
 			document.add(new Paragraph("RECIBO DE SUELDO"));
 			document.add(new Paragraph("Empleado: " + liquidacion.getEmpleado()));
 			document.add(new Paragraph("DNI: " + liquidacion.getDni()));
@@ -59,11 +69,11 @@ public class ReciboSueldoService {
 			document.add(new Paragraph("Festival: " + recibo.getNombreFestival()));
 			document.add(new Paragraph("Período: " + recibo.getFechaInicio() + " al " + recibo.getFechaFin()));
 			document.add(new Paragraph("Duración: " + liquidacion.getDiasFestival() + " días"));
-			document.add(new Paragraph("Sueldo base: " + liquidacion.getSueldoBase()));
-			document.add(new Paragraph(liquidacion.getConceptoPlus() + ": " + liquidacion.getPlus()));
-			document.add(new Paragraph("Subtotal: " + liquidacion.getSubtotal()));
+			document.add(new Paragraph("Sueldo base: " + moneda.format(liquidacion.getSueldoBase())));
+			document.add(new Paragraph(liquidacion.getConceptoPlus() + ": " + moneda.format(liquidacion.getPlus())));
+			document.add(new Paragraph("Subtotal: " + moneda.format(liquidacion.getSubtotal())));
 			document.add(new Paragraph("Factor aplicado: " + liquidacion.getFactor()));
-			document.add(new Paragraph("Total: " + liquidacion.getTotal()));
+			document.add(new Paragraph("Total: " + moneda.format(liquidacion.getTotal())));
 			document.close();
 			return output.toByteArray();
 		} catch (DocumentException ex) {
