@@ -5,6 +5,11 @@ import org.springframework.stereotype.Repository;
 
 import com.unla.epicentrogourmet.entities.Plato;
 
+import java.util.List;
+
 @Repository
 public interface IPlatoRepository extends JpaRepository<Plato, Long> {
+
+    List<Plato> findByUnidadVentaId(Long unidadId);
+
 }
