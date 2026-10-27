@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout :: head}"></head>
+<body>
+    <nav th:replace="~{layout :: navbar}"></nav>
+    <main class="container py-4">
+        <div class="panel-head"><span class="rol">Responsable</span><h2>Rentabilidad neta</h2><p>Sin fechas, se calcula todo el festival. Con fechas, los costos fijos se prorratean por días.</p></div>
+        <div class="alert alert-danger" th:if="${error}" th:text="${error}"></div>
+        <form class="card p-3 mb-4" method="get" th:action="@{/responsable/rentabilidad}">
+            <div class="form-row align-items-end">
+                <div class="form-group col-md-4"><label for="unidadId">Unidad</label><select id="unidadId" name="unidadId" class="form-control" required>
+                    <option value="">Seleccioná una unidad</option><option th:each="item : ${unidades}" th:value="${item.id}" th:selected="${unidadId != null and unidadId == item.id}" th:text="${item.nombreComercial} + ' · ' + ${item.festival.nombre}"></option>
+                </select></div>
+                <div class="form-group col-md-3"><label for="desde">Desde (opcional)</label><input id="desde" name="desde" class="form-control" type="date" th:value="${desde}"/></div>
+                <div class="form-group col-md-3"><label for="hasta">Hasta (opcional)</label><input id="hasta" name="hasta" class="form-control" type="date" th:value="${hasta}"/></div>
+                <div class="form-group col-md-2"><button type="submit" class="btn btn-dorado">Calcular</button></div>
+            </div>
+        </form>
+        <div class="card p-4" th:if="${rentabilidad != null}">
+            <h3 class="h5" th:text="${rentabilidad.unidad} + ' · ' + ${rentabilidad.festival}">Unidad · Festival</h3>
+            <p>Período: <strong th:text="${#temporals.format(rentabilidad.desde, 'dd/MM/yyyy')} + ' al ' + ${#temporals.format(rentabilidad.hasta, 'dd/MM/yyyy')}">Fechas</strong></p>
+            <table class="table"><tbody>
+                <tr><th>Ventas</th><td th:text="${#numbers.formatDecimal(rentabilidad.ventas, 1, 'POINT', 2, 'COMMA')}">$0</td></tr>
+                <tr><th>Costo de platos</th><td th:text="${#numbers.formatDecimal(rentabilidad.costoPlatos, 1, 'POINT', 2, 'COMMA')}">$0</td></tr>
+                <tr><th>Sueldos prorrateados</th><td th:text="${#numbers.formatDecimal(rentabilidad.sueldos, 1, 'POINT', 2, 'COMMA')}">$0</td></tr>
+                <tr><th>Canon prorrateado</th><td th:text="${#numbers.formatDecimal(rentabilidad.canon, 1, 'POINT', 2, 'COMMA')}">$0</td></tr>
+                <tr class="table-active"><th>Rentabilidad neta</th><td><strong th:text="${#numbers.formatDecimal(rentabilidad.rentabilidadNeta, 1, 'POINT', 2, 'COMMA')}">$0</strong></td></tr>
+            </tbody></table>
+        </div>
+    </main>
+    <footer th:replace="~{layout :: footer}"></footer><div th:replace="~{layout :: scripts}"></div>
+</body>
+</html>

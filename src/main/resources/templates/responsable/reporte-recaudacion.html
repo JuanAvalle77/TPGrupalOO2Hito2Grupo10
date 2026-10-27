@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout :: head}"></head>
+<body>
+    <nav th:replace="~{layout :: navbar}"></nav>
+    <main class="container py-4">
+        <div class="panel-head"><span class="rol">Responsable</span><h2>Reporte de recaudación</h2><p>Recaudación y cantidad de pedidos de un festival.</p></div>
+        <div class="alert alert-danger" th:if="${error}" th:text="${error}"></div>
+        <form class="card p-3 mb-4" method="get" th:action="@{/responsable/reporte-recaudacion}">
+            <div class="form-row align-items-end">
+                <div class="form-group col-md-8"><label for="festivalId">Festival</label><select id="festivalId" name="festivalId" class="form-control" required>
+                    <option value="">Seleccioná un festival</option><option th:each="item : ${festivales}" th:value="${item.id}" th:selected="${festivalId != null and festivalId == item.id}" th:text="${item.nombre}"></option>
+                </select></div>
+                <div class="form-group col-md-4"><button type="submit" class="btn btn-dorado">Consultar</button></div>
+            </div>
+        </form>
+        <div class="card p-4" th:if="${reporte != null}">
+            <h3 class="h5" th:text="${reporte.festival}">Festival</h3>
+            <p>Pedidos: <strong th:text="${reporte.cantidadPedidos}">0</strong></p>
+            <p class="mb-0">Recaudación total: <strong th:text="${#numbers.formatDecimal(reporte.recaudacionTotal, 1, 'POINT', 2, 'COMMA')}">$0</strong></p>
+        </div>
+    </main>
+    <footer th:replace="~{layout :: footer}"></footer><div th:replace="~{layout :: scripts}"></div>
+</body>
+</html>

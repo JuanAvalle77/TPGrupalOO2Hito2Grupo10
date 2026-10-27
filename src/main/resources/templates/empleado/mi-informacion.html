@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout :: head}"></head>
+<body>
+    <nav th:replace="~{layout :: navbar}"></nav>
+    <main class="container py-4">
+        <div class="panel-head"><span class="rol">Empleado</span><h2>Mi información</h2><p>Festivales y unidades en las que trabajé.</p></div>
+        <div class="table-responsive">
+            <table class="table table-striped"><thead><tr><th>Festival</th><th>Temporada</th><th>Fechas</th><th>Unidad</th><th>Código</th><th>Tipo</th></tr></thead>
+                <tbody>
+                    <tr th:each="asignacion : ${asignaciones}">
+                        <td th:text="${asignacion.festival}">Festival</td><td th:text="${asignacion.temporada}">Temporada</td>
+                        <td th:text="${#temporals.format(asignacion.fechaInicio, 'dd/MM/yyyy')} + ' - ' + ${#temporals.format(asignacion.fechaFin, 'dd/MM/yyyy')}">Fechas</td>
+                        <td th:text="${asignacion.unidad}">Unidad</td><td th:text="${asignacion.codigoUnidad}">Código</td><td th:text="${asignacion.tipoUnidad}">Tipo</td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(asignaciones)}"><td colspan="6" class="text-muted">Todavía no tenés asignaciones registradas.</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+    <footer th:replace="~{layout :: footer}"></footer><div th:replace="~{layout :: scripts}"></div>
+</body>
+</html>

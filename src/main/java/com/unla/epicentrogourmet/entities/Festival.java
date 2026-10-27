@@ -15,6 +15,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
+import jakarta.validation.constraints.AssertTrue;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -53,5 +54,10 @@ public class Festival {
 
 	public boolean estaActivo(LocalDate fecha) {
 		return !fecha.isBefore(fechaInicio) && !fecha.isAfter(fechaFin);
+	}
+
+	@AssertTrue(message = "La fecha de fin del festival debe ser igual o posterior a la fecha de inicio")
+	public boolean isPeriodoValido() {
+		return fechaInicio != null && fechaFin != null && !fechaFin.isBefore(fechaInicio);
 	}
 }

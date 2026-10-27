@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout :: head}"></head>
+<body>
+    <nav th:replace="~{layout :: navbar}"></nav>
+    <main class="container py-4">
+        <div class="panel-head"><span class="rol">Administrador</span><h2>Ranking de unidades</h2><p>Ordenado por recaudación, de mayor a menor.</p></div>
+        <div class="alert alert-danger" th:if="${error}" th:text="${error}"></div>
+        <form class="form-inline card p-3 mb-4" method="get" th:action="@{/admin/ranking}">
+            <label for="festivalId" class="mr-2">Festival</label>
+            <select id="festivalId" name="festivalId" class="form-control mr-2" required>
+                <option value="">Seleccioná</option>
+                <option th:each="item : ${festivales}" th:value="${item.id}" th:selected="${festival != null and festival.id == item.id}" th:text="${item.nombre}"></option>
+            </select>
+            <button class="btn btn-dorado" type="submit">Ver ranking</button>
+        </form>
+        <div th:if="${ranking != null}">
+            <h3 class="h5" th:text="${festival.nombre}">Festival</h3>
+            <table class="table table-striped"><thead><tr><th>#</th><th>Unidad</th><th>Código</th><th>Recaudación</th></tr></thead>
+                <tbody><tr th:each="fila, iter : ${ranking}"><td th:text="${iter.count}">1</td><td th:text="${fila.nombre}">Unidad</td><td th:text="${fila.codigo}">Código</td><td th:text="${#numbers.formatDecimal(fila.recaudacion, 1, 'POINT', 2, 'COMMA')}">$0</td></tr>
+                <tr th:if="${#lists.isEmpty(ranking)}"><td colspan="4" class="text-muted">El festival no tiene unidades para incluir.</td></tr></tbody>
+            </table>
+        </div>
+    </main>
+    <footer th:replace="~{layout :: footer}"></footer><div th:replace="~{layout :: scripts}"></div>
+</body>
+</html>

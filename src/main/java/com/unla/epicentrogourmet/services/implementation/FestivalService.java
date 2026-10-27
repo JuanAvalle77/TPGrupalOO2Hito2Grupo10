@@ -2,6 +2,7 @@ package com.unla.epicentrogourmet.services.implementation;
 
 import java.util.List;
 import java.util.Optional;
+import java.time.LocalDate;
 
 import org.springframework.stereotype.Service;
 
@@ -26,5 +27,12 @@ public class FestivalService implements IFestivalService {
 	@Override
 	public Optional<Festival> findById(Long id) {
 		return festivalRepository.findById(id);
+	}
+
+	@Override
+	public void validarPeriodo(LocalDate fechaInicio, LocalDate fechaFin) {
+		if (fechaInicio == null || fechaFin == null || fechaFin.isBefore(fechaInicio)) {
+			throw new IllegalArgumentException("El período del festival no es válido: la fecha de fin debe ser igual o posterior a la de inicio");
+		}
 	}
 }

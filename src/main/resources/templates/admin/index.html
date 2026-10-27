@@ -11,15 +11,12 @@
         </div>
 
         <div class="row">
-            <!-- Cada caso de uso de admin reemplaza su tarjeta por un <a class="cu-card" th:href="..."> -->
-            <div class="col-md-6 mb-4"><div class="cu-card"><span class="pendiente">Pendiente</span>
-                <h4>Festivales</h4><p>Ver todos los festivales.</p></div></div>
-            <div class="col-md-6 mb-4"><div class="cu-card"><span class="pendiente">Pendiente</span>
-                <h4>Unidades de venta</h4><p>Ver las unidades de venta de un festival.</p></div></div>
-            <div class="col-md-6 mb-4"><div class="cu-card"><span class="pendiente">Pendiente</span>
-                <h4>Ranking de unidades</h4><p>Unidades de un festival ordenadas por recaudación.</p></div></div>
-            <div class="col-md-6 mb-4"><div class="cu-card"><span class="pendiente">Pendiente</span>
-                <h4>Unidades con mayor canon</h4><p>Las unidades que más pagaron de canon en un festival.</p></div></div>
+            <div class="col-md-6 mb-4"><a class="cu-card" th:href="@{/admin/festivales}">
+                <h4>Festivales y unidades</h4><p>Ver los festivales y las unidades de venta asociadas.</p></a></div>
+            <div class="col-md-6 mb-4"><a class="cu-card" th:href="@{/admin/ranking}">
+                <h4>Ranking de unidades</h4><p>Unidades de un festival ordenadas por recaudación.</p></a></div>
+            <div class="col-md-6 mb-4"><a class="cu-card" th:href="@{/admin/mayor-canon}">
+                <h4>Unidades con mayor canon</h4><p>Consultar las unidades que más canon pagan en un festival.</p></a></div>
         </div>
     </main>
 

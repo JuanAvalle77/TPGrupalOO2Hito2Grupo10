@@ -7,7 +7,7 @@ Iteración del diagrama del Hito 1 (fuente editable del Hito 1: [`oo2UML.dia`](o
 - Nueva `CostoFestival`: encapsula los costos del festival (costo por m², plus eléctrico, costo por minuto de montaje, sueldo base, plus por antigüedad y por categoría). Nada hardcodeado en los métodos.
 - `Personal` suma `email` (es su usuario), `activo` (baja lógica) y se relaciona *muchos a muchos* con `UnidadVenta` (así un empleado puede haber trabajado en varios festivales).
 - Nuevas `Usuario` (con `Rol`) y `CierreCaja`.
-- Los reportes son DTO que no persisten: `ReporteVentaDTO`, `ReporteMayoresCanonDTO` y `PlatoDTO` (pedidos por el enunciado), más `EmpleadoForm` y `EmpleadoDTO` (ABM de empleados), `CanonUnidadDTO`, `LiquidacionDTO` y `LiquidacionUnidadDTO`.
+- Los reportes son DTO que no persisten: `ReporteVentaDTO`, `ReporteMayoresCanonDTO`, `RankingUnidadDTO`, `RentabilidadDTO`, `PlatoDTO` e `InformacionEmpleadoDTO`; los formularios usan `EmpleadoForm`, `FiltroEmpleadosForm`, `RegistroUnidadForm` y `PlatoForm`.
 
 **Convención:** los métodos en cursiva son abstractos. `describirCanon`, `calcularPlus`, `getConceptoPlus` y `getRolDescripcion` llegan con los PRs de canon y haberes. Cada caso de uso actualiza este archivo si agrega clases o métodos.
 
@@ -21,6 +21,7 @@ classDiagram
         -fechaFin: LocalDate
         +getDuracionEnDias() long
         +estaActivo(fecha) boolean
+        +isPeriodoValido() boolean
     }
     class CostoFestival {
         -costoPorM2: double
@@ -123,19 +124,51 @@ classDiagram
     class ReporteVentaDTO {
         <<DTO>>
         -festival: String
+        -cantidadPedidos: long
         -recaudacionTotal: double
     }
     class ReporteMayoresCanonDTO {
         <<DTO>>
         -nombreComercial: String
         -codigo: String
-        -tipoUnidad: String
+        -tipo: String
         -canon: double
     }
     class PlatoDTO {
         <<DTO>>
         -nombre: String
+        -precioVenta: double
         -cantidadPedidos: long
+        -unidadesVendidas: long
+    }
+    class RankingUnidadDTO {
+        <<DTO>>
+        -unidadId: Long
+        -nombre: String
+        -codigo: String
+        -recaudacion: double
+    }
+    class RentabilidadDTO {
+        <<DTO>>
+        -unidad: String
+        -festival: String
+        -desde: LocalDate
+        -hasta: LocalDate
+        -ventas: double
+        -costoPlatos: double
+        -sueldos: double
+        -canon: double
+        -rentabilidadNeta: double
+    }
+    class InformacionEmpleadoDTO {
+        <<DTO>>
+        -festival: String
+        -temporada: String
+        -fechaInicio: LocalDate
+        -fechaFin: LocalDate
+        -unidad: String
+        -codigoUnidad: String
+        -tipoUnidad: String
     }
     class CanonUnidadDTO {
         <<DTO>>
@@ -192,6 +225,43 @@ classDiagram
         -antiguedadAnios: int
         -unidad: String
     }
+    class RegistroUnidadForm {
+        <<DTO>>
+        -festivalId: Long
+        -tipoUnidad: String
+        -nombreComercial: String
+        -superficie: Double
+        -codigo: String
+        -patente: String
+        -requiereElectricidad: boolean
+        -cantidadCarpas: Integer
+        -tiempoMontaje: Integer
+        -nombre: String
+        -apellido: String
+        -dni: Integer
+        -fechaNacimiento: LocalDate
+        -fechaIngreso: LocalDate
+        -email: String
+        -tipoEmpleado: TipoEmpleado
+        -rolCocina: RolCocina
+        -turno: Turno
+        -username: String
+        -password: String
+    }
+    class PlatoForm {
+        <<DTO>>
+        -unidadId: Long
+        -nombre: String
+        -precioVenta: Double
+        -costoProduccion: Double
+    }
+    class FiltroEmpleadosForm {
+        <<DTO>>
+        -nombreApellido: String
+        -dni: String
+        -tipo: String
+        -detalle: String
+    }
 
     UnidadVenta <|-- FoodTruck
     UnidadVenta <|-- PuestoDesarmable
@@ -212,6 +282,9 @@ classDiagram
     Cajero --> Turno
     Cocinero --> RolCocina
     EmpleadoForm --> TipoEmpleado
+    RegistroUnidadForm --> TipoEmpleado
+    RegistroUnidadForm --> RolCocina
+    RegistroUnidadForm --> Turno
     CierreCaja "0..*" --> "1" Cajero
     CierreCaja "0..*" --> "1" UnidadVenta
     LiquidacionUnidadDTO "1" --> "0..*" LiquidacionDTO : liquidaciones

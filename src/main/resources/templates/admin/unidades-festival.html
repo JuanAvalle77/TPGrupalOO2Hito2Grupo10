@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout :: head}"></head>
+<body>
+    <nav th:replace="~{layout :: navbar}"></nav>
+    <main class="container py-4">
+        <div class="panel-head"><span class="rol">Administrador</span><h2>Unidades de venta</h2><p th:text="${festival.nombre}">Festival</p></div>
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead><tr><th>Nombre comercial</th><th>Código</th><th>Tipo</th><th>Superficie</th><th>Responsable</th></tr></thead>
+                <tbody>
+                    <tr th:each="unidad : ${unidades}">
+                        <td th:text="${unidad.nombreComercial}">Unidad</td><td th:text="${unidad.codigo}">Código</td><td th:text="${unidad.tipo}">Tipo</td>
+                        <td th:text="${#numbers.formatDecimal(unidad.superficie, 1, 'POINT', 2, 'COMMA')} + ' m²'">0 m²</td>
+                        <td th:text="${unidad.responsable != null ? unidad.responsable.nombreCompleto : '-'}">Responsable</td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(unidades)}"><td colspan="5" class="text-muted">El festival no tiene unidades asociadas.</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <a class="btn btn-link" th:href="@{/admin/festivales}">Volver a festivales</a>
+    </main>
+    <footer th:replace="~{layout :: footer}"></footer><div th:replace="~{layout :: scripts}"></div>
+</body>
+</html>

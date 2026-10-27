@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout :: head}"></head>
+<body>
+    <nav th:replace="~{layout :: navbar}"></nav>
+    <main class="container py-4">
+        <div class="panel-head"><span class="rol">Administrador</span><h2>Unidades con mayor canon</h2></div>
+        <div class="alert alert-danger" th:if="${error}" th:text="${error}"></div>
+        <form class="form-inline card p-3 mb-4" method="get" th:action="@{/admin/mayor-canon}">
+            <label for="festivalId" class="mr-2">Festival</label>
+            <select id="festivalId" name="festivalId" class="form-control mr-3" required>
+                <option value="">Seleccioná</option>
+                <option th:each="item : ${festivales}" th:value="${item.id}" th:selected="${festival != null and festival.id == item.id}" th:text="${item.nombre}"></option>
+            </select>
+            <label for="x" class="mr-2">Cantidad</label>
+            <input id="x" name="x" type="number" class="form-control mr-3" min="1" th:value="${x}" required/>
+            <button class="btn btn-dorado" type="submit">Consultar</button>
+        </form>
+        <div th:if="${mayoresCanones != null}">
+            <h3 class="h5" th:text="${festival.nombre}">Festival</h3>
+            <table class="table table-striped"><thead><tr><th>#</th><th>Unidad</th><th>Código</th><th>Tipo</th><th>Canon</th></tr></thead>
+                <tbody><tr th:each="fila, iter : ${mayoresCanones}"><td th:text="${iter.count}">1</td><td th:text="${fila.nombreComercial}">Unidad</td><td th:text="${fila.codigo}">Código</td><td th:text="${fila.tipo}">Tipo</td><td th:text="${#numbers.formatDecimal(fila.canon, 1, 'POINT', 2, 'COMMA')}">$0</td></tr>
+                <tr th:if="${#lists.isEmpty(mayoresCanones)}"><td colspan="5" class="text-muted">El festival no tiene unidades asociadas.</td></tr></tbody>
+            </table>
+        </div>
+    </main>
+    <footer th:replace="~{layout :: footer}"></footer><div th:replace="~{layout :: scripts}"></div>
+</body>
+</html>

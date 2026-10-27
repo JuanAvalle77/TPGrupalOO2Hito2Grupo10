@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.unla.epicentrogourmet.dtos.EmpleadoDTO;
 import com.unla.epicentrogourmet.dtos.EmpleadoForm;
+import com.unla.epicentrogourmet.dtos.FiltroEmpleadosForm;
 import com.unla.epicentrogourmet.entities.Personal;
 import com.unla.epicentrogourmet.entities.UnidadVenta;
 
@@ -15,6 +16,9 @@ public interface IEmpleadoService {
 
 	/** Empleados de las unidades (sin el responsable): activos o dados de baja. */
 	List<EmpleadoDTO> listar(List<UnidadVenta> misUnidades, boolean activos);
+
+	/** Filtra solo empleados activos de las unidades indicadas. */
+	List<EmpleadoDTO> filtrar(List<UnidadVenta> misUnidades, FiltroEmpleadosForm filtro);
 
 	/** Datos del empleado para precargar el formulario de modificacion. */
 	EmpleadoForm obtenerParaEditar(Long id, List<UnidadVenta> misUnidades);

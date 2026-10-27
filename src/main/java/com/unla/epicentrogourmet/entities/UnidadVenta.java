@@ -17,6 +17,7 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Positive;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -35,6 +36,7 @@ public abstract class UnidadVenta {
 
 	/** Superficie en m2 (areaSup). */
 	@Column(nullable = false)
+	@Positive(message = "La superficie debe ser mayor a cero")
 	private double superficie;
 
 	/** Codigo unico de 10 caracteres: 2 letras mayusculas + 8 digitos (ej: FT00000001). */

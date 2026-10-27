@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout :: head}"></head>
+<body>
+    <nav th:replace="~{layout :: navbar}"></nav>
+    <main class="container py-4">
+        <div class="panel-head"><span class="rol">Responsable</span><h2>Plato estrella</h2><p>El más vendido por cantidad de unidades; los pedidos cuentan como desempate.</p></div>
+        <div class="alert alert-danger" th:if="${error}" th:text="${error}"></div>
+        <form class="card p-3 mb-4" method="get" th:action="@{/responsable/plato-estrella}">
+            <div class="form-row align-items-end"><div class="form-group col-md-8"><label for="unidadId">Unidad</label><select id="unidadId" name="unidadId" class="form-control" required>
+                <option value="">Seleccioná una unidad</option><option th:each="item : ${unidades}" th:value="${item.id}" th:selected="${unidadId != null and unidadId == item.id}" th:text="${item.nombreComercial} + ' · ' + ${item.festival.nombre}"></option>
+            </select></div><div class="form-group col-md-4"><button class="btn btn-dorado" type="submit">Consultar</button></div></div>
+        </form>
+        <div class="card p-4" th:if="${plato != null}">
+            <h3 class="h5" th:text="${plato.nombre}">Nombre del plato</h3>
+            <p>Precio de venta: <strong th:text="${#numbers.formatDecimal(plato.precioVenta, 1, 'POINT', 2, 'COMMA')}">$0</strong></p>
+            <p>Unidades vendidas: <strong th:text="${plato.unidadesVendidas}">0</strong></p>
+            <p class="mb-0">Pedidos en los que apareció: <strong th:text="${plato.cantidadPedidos}">0</strong></p>
+        </div>
+        <div class="alert alert-info" th:if="${unidad != null and plato == null}">La unidad todavía no tiene platos vendidos en pedidos.</div>
+    </main>
+    <footer th:replace="~{layout :: footer}"></footer><div th:replace="~{layout :: scripts}"></div>
+</body>
+</html>

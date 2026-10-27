@@ -138,12 +138,18 @@ Cuando el responsable da de alta a un empleado, el sistema le manda un mail con 
 | Responsable | `/responsable` | Panel con una tarjeta por caso de uso |
 | | `/responsable/canon` | Canon que paga la unidad, con el detalle del cálculo |
 | | `/responsable/haberes` | Liquidación de sueldos del personal de la unidad |
-| | `/responsable/empleados` | Lista de empleados activos y dados de baja · alta (`/nuevo`), modificación (`/{id}/editar`), baja lógica y reactivación |
+| | `/responsable/empleados` | Lista y filtros de empleados activos · alta (`/nuevo`), modificación (`/{id}/editar`), baja lógica y reactivación |
+| | `/responsable/platos` | Menú y alta de platos de la unidad |
+| | `/responsable/reporte-recaudacion` | Recaudación de un festival |
+| | `/responsable/rentabilidad` | Rentabilidad neta del festival o de un rango de fechas |
+| | `/responsable/plato-estrella` | Plato más vendido de una unidad |
 | Empleado | `/empleado` | Panel del empleado |
+| | `/empleado/mi-informacion` | Festivales y unidades asignados al empleado |
 | | `/empleado/hoy` | En qué unidad y festival activo trabaja hoy |
 | | `/empleado/sueldos` | Sus liquidaciones por festival y descarga del recibo en PDF (`/empleado/sueldos/{festivalId}/recibo`) |
 | | `/empleado/cerrar-caja` | Cierre diario de caja (solo cajeros) |
-| Administrador | `/admin` | Panel (sus casos de uso están pendientes) |
+| Administrador | `/admin` · `/admin/festivales` · `/admin/ranking` · `/admin/mayor-canon` | Panel, festivales y unidades, ranking por recaudación y unidades con mayor canon |
+| Público | `/registro` | Registro de una unidad y su responsable con cuenta de acceso |
 
 La seguridad separa tres zonas: `/admin/**` (ADMIN), `/responsable/**` (RESPONSABLE) y `/empleado/**` (EMPLEADO); entrar a la zona de otro rol da **403**. Las contraseñas se guardan con BCrypt, los formularios llevan token CSRF y el login redirige al panel del rol.
 
@@ -196,25 +202,21 @@ Guía detallada de cada caso de uso (qué construir, rutas, reglas y cómo verif
 | 15 | Ver en qué festival activo y unidad trabajo hoy | Empleado | Federico Acosta | `CUDondeTrabajoHoyFedericoAcosta` | [PR #5](https://github.com/JuanAvalle77/TPGrupalOO2Hito2Grupo10/pull/5) |
 | 16 | Cerrar caja (cajero) | Empleado | Federico Acosta | `CUCerrarCajaFedericoAcosta` | [PR #4](https://github.com/JuanAvalle77/TPGrupalOO2Hito2Grupo10/pull/4) |
 
-### Pendientes obligatorios
+### Implementados en la rama local `CUsRestantesJuanAvalle` (PR pendiente)
 
-| # | Caso de uso | Rol | Responsable | Rama | PR |
-|---|---|---|---|---|---|
-| 1 | Ver festivales y unidades de venta de un festival | Admin | Franco Luzardo | `CUVerFestivalesUnidadesFrancoLuzardo` | |
-| 2 | Ranking de unidades por recaudación | Admin | Franco Luzardo | `CURankingUnidadesFrancoLuzardo` | |
-| 3 | Unidades con mayor canon (`ReporteMayoresCanonDTO`) | Admin | Juan Avalle | `CUMayorCanonJuanAvalle` | |
-| 4 | Registro de Unidad de Venta con su Responsable (crea usuario) | Público | Santiago Agarzúa | `CURegistroUnidadSantiagoAgarzua` | |
-| 7 | Alta de platos | Responsable | Santiago Agarzúa | `CUAltaPlatosSantiagoAgarzua` | |
+| # | Caso de uso | Rol | Estado |
+|---|---|---|---|
+| 1 | Ver festivales y unidades de venta de un festival | Admin | Implementado |
+| 2 | Ranking de unidades por recaudación | Admin | Implementado |
+| 3 | Unidades con mayor canon (`ReporteMayoresCanonDTO`) | Admin | Implementado |
+| 4 | Registro de Unidad de Venta con su Responsable | Público | Implementado |
+| 7 | Alta de platos | Responsable | Implementado |
 
-### Opcionales (no son obligatorios, se hacen si sobra tiempo)
+No quedan casos de uso obligatorios pendientes en la rama local. Estos cambios todavía no están en `main`.
 
-| # | Caso de uso | Rol | Responsable | Rama | PR |
-|---|---|---|---|---|---|
-| 6 | Filtros de empleados por uno o varios atributos (solo activos) | Responsable | Juan Avalle (si hay tiempo) | `CUFiltrosEmpleadosJuanAvalle` | |
-| 10 | Reporte de recaudación de un festival (`ReporteVentaDTO`) | Responsable | Juan Avalle (si hay tiempo) | `CUReporteRecaudacionJuanAvalle` | |
-| 11 | Rentabilidad neta de una unidad (y entre dos fechas) | Responsable | Juan Avalle (si hay tiempo) | `CURentabilidadNetaJuanAvalle` | |
-| 12 | Plato estrella (`PlatoDTO`) | Responsable | Juan Avalle (si hay tiempo) | `CUPlatoEstrellaJuanAvalle` | |
-| 13 | Ver mi información (festivales y unidades en las que trabajé) | Empleado | Juan Avalle (si hay tiempo) | `CUMiInformacionJuanAvalle` | |
+### Opcionales implementados en la rama local
+
+Los cinco casos opcionales también están implementados en `CUsRestantesJuanAvalle`; falta su revisión e incorporación a `main`.
 
 ### Requisitos del enunciado
 
@@ -226,8 +228,8 @@ Guía detallada de cada caso de uso (qué construir, rutas, reglas y cómo verif
 |---|---|---|
 | Juan Avalle | personal mayor de edad · email con formato válido y único | implementadas (CU 5) |
 | Federico Acosta | un pedido solo puede cargarse con la fecha del día y cantidades mayores a 0 · un único cierre de caja por cajero y por día | implementadas (CU 16) |
-| Santiago Agarzúa | código de unidad único y con formato válido · precio de venta mayor al costo de producción del plato | pendientes |
-| Franco Luzardo | período del festival válido (fin no anterior al inicio) · superficie de la unidad mayor a 0 (en las entidades `Festival` y `UnidadVenta`, con sus tests) | pendientes |
+| Santiago Agarzúa | código de unidad único y con formato válido · precio de venta mayor al costo de producción del plato | implementadas en registro y alta de platos |
+| Franco Luzardo | período del festival válido (fin no anterior al inicio) · superficie de la unidad mayor a 0 | implementadas en el servicio, las entidades y el formulario |
 
 **Dependencias:** el canon (CU 8) y los haberes (CU 9) ya están en `main`, así que el CU 3 (mayor canon) usa `CanonService`.
 

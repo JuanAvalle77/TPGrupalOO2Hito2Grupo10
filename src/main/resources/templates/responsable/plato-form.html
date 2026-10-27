@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout :: head}"></head>
+<body>
+    <nav th:replace="~{layout :: navbar}"></nav>
+    <main class="container py-4">
+        <div class="panel-head"><span class="rol">Responsable</span><h2>Agregar plato</h2></div>
+        <div class="alert alert-danger" th:each="error : ${errores}" th:text="${error.defaultMessage}"></div>
+        <div class="alert alert-info" th:if="${#lists.isEmpty(unidades)}">No tenés unidades de venta a cargo.</div>
+        <form th:action="@{/responsable/platos/nuevo}" th:object="${platoForm}" method="post" class="card p-4" th:if="${!#lists.isEmpty(unidades)}">
+            <div class="form-group" th:if="${unidades.size() > 1}">
+                <label for="unidadId">Unidad</label>
+                <select id="unidadId" class="form-control" th:field="*{unidadId}">
+                    <option value="">Seleccioná una unidad</option>
+                    <option th:each="unidad : ${unidades}" th:value="${unidad.id}" th:text="${unidad.nombreComercial}"></option>
+                </select>
+            </div>
+            <input type="hidden" th:if="${unidades.size() == 1}" th:field="*{unidadId}"/>
+            <div class="form-group"><label for="nombre">Nombre</label><input id="nombre" class="form-control" th:field="*{nombre}"/><small class="text-danger" th:errors="*{nombre}"></small></div>
+            <div class="form-row">
+                <div class="form-group col-md-6"><label for="precioVenta">Precio de venta</label><input id="precioVenta" class="form-control" type="number" step="0.01" min="0.01" th:field="*{precioVenta}"/><small class="text-danger" th:errors="*{precioVenta}"></small></div>
+                <div class="form-group col-md-6"><label for="costoProduccion">Costo de producción</label><input id="costoProduccion" class="form-control" type="number" step="0.01" min="0.01" th:field="*{costoProduccion}"/><small class="text-danger" th:errors="*{costoProduccion}"></small></div>
+            </div>
+            <button type="submit" class="btn btn-dorado">Guardar plato</button>
+            <a th:href="@{/responsable/platos}" class="btn btn-link">Cancelar</a>
+        </form>
+    </main>
+    <footer th:replace="~{layout :: footer}"></footer><div th:replace="~{layout :: scripts}"></div>
+</body>
+</html>

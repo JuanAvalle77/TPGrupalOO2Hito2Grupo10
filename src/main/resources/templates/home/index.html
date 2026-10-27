@@ -10,7 +10,7 @@
             <h1>Epicentro Gourmet</h1>
             <p>Festivales gastronómicos temáticos. Gestioná unidades de venta, personal, pedidos y el rendimiento de cada jornada.</p>
             <a th:href="@{/login}" class="btn btn-dorado" sec:authorize="!isAuthenticated()">Iniciar sesión</a>
-            <!-- TODO (CU Registro de Unidad de Venta con su Responsable): agregar acá el botón a /registro -->
+            <a th:href="@{/registro}" class="btn btn-outline-light ml-2" sec:authorize="!isAuthenticated()">Registrar unidad</a>
         </div>
     </section>
 

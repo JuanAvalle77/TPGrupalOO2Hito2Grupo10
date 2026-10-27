@@ -14,6 +14,18 @@
         <div class="alert alert-success" th:if="${ok != null}" th:text="${ok}">Operación realizada.</div>
         <div class="alert alert-danger" th:if="${error != null}" th:text="${error}">Error.</div>
 
+        <form th:action="@{/responsable/empleados}" th:object="${filtro}" method="get" class="card p-3 mb-4">
+            <h4 class="h5">Filtrar empleados activos</h4>
+            <div class="form-row">
+                <div class="form-group col-md-4"><label for="nombreApellido">Nombre o apellido</label><input id="nombreApellido" class="form-control" th:field="*{nombreApellido}" maxlength="100"/></div>
+                <div class="form-group col-md-2"><label for="dniFiltro">DNI</label><input id="dniFiltro" class="form-control" type="text" th:field="*{dni}" maxlength="8" inputmode="numeric"/></div>
+                <div class="form-group col-md-3"><label for="tipoFiltro">Tipo</label><select id="tipoFiltro" class="form-control" th:field="*{tipo}"><option value="">Todos</option><option th:each="tipo : ${tiposFiltro}" th:value="${tipo}" th:text="${tipo}"></option></select></div>
+                <div class="form-group col-md-3"><label for="detalleFiltro">Turno o rol</label><select id="detalleFiltro" class="form-control" th:field="*{detalle}"><option value="">Todos</option><option th:each="detalle : ${detallesFiltro}" th:value="${detalle}" th:text="${detalle}"></option></select></div>
+            </div>
+            <div class="alert alert-danger py-2" th:each="error : ${filtroErrores}" th:text="${error.defaultMessage}"></div>
+            <div><button type="submit" class="btn btn-dorado">Aplicar filtros</button> <a th:href="@{/responsable/empleados}" class="btn btn-link">Limpiar</a></div>
+        </form>
+
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h4 class="mb-0">Empleados activos</h4>
             <a th:href="@{/responsable/empleados/nuevo}" class="btn btn-dorado">+ Nuevo empleado</a>

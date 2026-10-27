@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout :: head}"></head>
+<body>
+    <nav th:replace="~{layout :: navbar}"></nav>
+    <main class="container py-4">
+        <div class="panel-head"><span class="rol">Administrador</span><h2>Festivales</h2></div>
+        <div class="alert alert-danger" th:if="${error}" th:text="${error}"></div>
+        <div class="row">
+            <div class="col-md-6 col-lg-4 mb-4" th:each="festival : ${festivales}">
+                <a class="cu-card" th:href="@{/admin/festivales/{id}/unidades(id=${festival.id})}">
+                    <span class="estado" th:text="${festival.temporada}">Temporada</span>
+                    <h4 th:text="${festival.nombre}">Festival</h4>
+                    <p th:text="${#temporals.format(festival.fechaInicio, 'dd/MM/yyyy')} + ' - ' + ${#temporals.format(festival.fechaFin, 'dd/MM/yyyy')}">Fechas</p>
+                    <p class="mb-0">Ver unidades de venta</p>
+                </a>
+            </div>
+            <div class="col-12" th:if="${#lists.isEmpty(festivales)}"><p class="text-muted">No hay festivales cargados.</p></div>
+        </div>
+    </main>
+    <footer th:replace="~{layout :: footer}"></footer><div th:replace="~{layout :: scripts}"></div>
+</body>
+</html>

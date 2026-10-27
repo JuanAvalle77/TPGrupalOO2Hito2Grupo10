@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.unla.epicentrogourmet.dtos.EmpleadoForm;
+import com.unla.epicentrogourmet.dtos.FiltroEmpleadosForm;
 import com.unla.epicentrogourmet.entities.Personal;
 import com.unla.epicentrogourmet.entities.UnidadVenta;
 import com.unla.epicentrogourmet.enums.RolCocina;
@@ -43,10 +44,14 @@ public class GestionEmpleadosController {
 	}
 
 	@GetMapping("")
-	public String lista(Model model) {
+	public String lista(@Valid @ModelAttribute("filtro") FiltroEmpleadosForm filtro, BindingResult result, Model model) {
 		List<UnidadVenta> unidades = sesionService.getUnidadesDelResponsable();
-		model.addAttribute("empleados", empleadoService.listar(unidades, true));
+		model.addAttribute("empleados", result.hasErrors() ? List.of()
+				: empleadoService.filtrar(unidades, filtro));
 		model.addAttribute("bajas", empleadoService.listar(unidades, false));
+		model.addAttribute("tiposFiltro", List.of("Cajero", "Cocina"));
+		model.addAttribute("detallesFiltro", List.of("Mañana", "Noche", "Cocinero", "Cocinero ayudante", "Lavaplatos"));
+		model.addAttribute("filtroErrores", result.getFieldErrors());
 		return VISTA_LISTA;
 	}
 

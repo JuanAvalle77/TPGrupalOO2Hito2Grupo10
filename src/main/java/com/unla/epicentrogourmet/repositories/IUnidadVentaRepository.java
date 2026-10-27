@@ -9,6 +9,10 @@ import com.unla.epicentrogourmet.entities.UnidadVenta;
 
 @Repository
 public interface IUnidadVentaRepository extends JpaRepository<UnidadVenta, Long> {
+	boolean existsByCodigo(String codigo);
+
+	/** Unidades asociadas a un festival. */
+	List<UnidadVenta> findByFestivalId(Long festivalId);
 
 	/** Unidades de venta a cargo de un responsable. */
 	List<UnidadVenta> findByResponsableId(Long responsableId);

@@ -13,7 +13,6 @@ import com.unla.epicentrogourmet.entities.Personal;
 
 @Repository
 public interface IPersonalRepository extends JpaRepository<Personal, Long> {
-
 	Optional<Personal> findByDni(int dni);
 
 	Optional<Personal> findByEmailIgnoreCase(String email);

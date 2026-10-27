@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.unla.epicentrogourmet.dtos.EmpleadoDTO;
 import com.unla.epicentrogourmet.dtos.EmpleadoForm;
+import com.unla.epicentrogourmet.dtos.FiltroEmpleadosForm;
 import com.unla.epicentrogourmet.entities.Cajero;
 import com.unla.epicentrogourmet.entities.Cocinero;
 import com.unla.epicentrogourmet.entities.Personal;
@@ -58,6 +59,21 @@ public class EmpleadoService implements IEmpleadoService {
 		}
 		return personalRepository.findEmpleadosDeUnidades(ids(misUnidades), activos).stream()
 				.map(p -> aDTO(p, misUnidades)).toList();
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public List<EmpleadoDTO> filtrar(List<UnidadVenta> misUnidades, FiltroEmpleadosForm filtro) {
+		String nombre = normalizarFiltro(filtro.getNombreApellido());
+		String dni = normalizarFiltro(filtro.getDni());
+		String tipo = normalizarFiltro(filtro.getTipo());
+		String detalle = normalizarFiltro(filtro.getDetalle());
+		return listar(misUnidades, true).stream()
+				.filter(e -> nombre.isEmpty() || e.getNombreCompleto().toLowerCase().contains(nombre))
+				.filter(e -> dni.isEmpty() || String.valueOf(e.getDni()).contains(dni))
+				.filter(e -> tipo.isEmpty() || e.getTipo().equalsIgnoreCase(tipo))
+				.filter(e -> detalle.isEmpty() || e.getDetalle().toLowerCase().contains(detalle))
+				.toList();
 	}
 
 	@Override
@@ -266,6 +282,10 @@ public class EmpleadoService implements IEmpleadoService {
 
 	private String normalizarEmail(String email) {
 		return email.trim().toLowerCase();
+	}
+
+	private String normalizarFiltro(String valor) {
+		return valor == null ? "" : valor.trim().toLowerCase();
 	}
 
 	private String textoDeAlta(Personal empleado, UnidadVenta unidad, String contrasenia) {

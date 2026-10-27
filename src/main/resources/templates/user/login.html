@@ -13,6 +13,7 @@
 
                 <div class="alert alert-danger" th:if="${error != null}">Usuario o contraseña incorrectos.</div>
                 <div class="alert alert-success" th:if="${logout != null}">Cerraste sesión correctamente.</div>
+                <div class="alert alert-success" th:if="${registroExitoso != null}">La unidad y la cuenta de responsable se registraron. Ya podés iniciar sesión.</div>
 
                 <form th:action="@{/loginprocess}" method="post">
                     <div class="form-group">
