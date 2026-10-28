@@ -16,4 +16,6 @@ public interface IUnidadVentaRepository extends JpaRepository<UnidadVenta, Long>
 
 	/** Unidades de venta a cargo de un responsable. */
 	List<UnidadVenta> findByResponsableId(Long responsableId);
+
+	boolean existsByCodigo(String codigo);
 }
