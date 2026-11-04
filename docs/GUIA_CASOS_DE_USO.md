@@ -57,10 +57,11 @@ Ejemplo de referencia ya hecho: la página de inicio (`HomeController` + `Festiv
 
 | Integrante | Casos de uso |
 |---|---|
-| **Juan Avalle** | ABM de empleados + mail · Canon · Haberes · Filtros · Mayor canon · Ver festivales y unidades · Ranking · Reporte de recaudación · Rentabilidad neta · Ver mi información |
+| **Juan Avalle** | ABM de empleados + mail · Canon · Haberes |
 | **Federico Acosta** | Recibo de sueldo en PDF · Dónde trabajo hoy · Cerrar caja |
 | **Santiago Agarzúa** | Registro de unidad · Alta de platos · Plato estrella |
 | **Franco Luzardo** | se dio de baja |
+| **Proyecto base** (se defiende en conjunto) | Filtros · Mayor canon · Ver festivales y unidades · Ranking · Reporte de recaudación · Rentabilidad neta · Ver mi información |
 
 > Las fichas de la sección 4 describen cada caso de uso tal como se planificó. Pueden diferir en detalles del código final.
 

@@ -181,40 +181,42 @@ docs/GUIA_CASOS_DE_USO.md       guía de cada caso de uso
 
 Guía detallada de cada caso de uso (rutas, reglas y cómo verificarlo): [`docs/GUIA_CASOS_DE_USO.md`](docs/GUIA_CASOS_DE_USO.md).
 
-**Estado final:** los **16 casos de uso** del enunciado están implementados en `main`.
+**Estado final:** los **16 casos de uso** del enunciado están implementados en `main`: 9 a nombre de cada integrante y 7 como proyecto base.
 
 | Integrante | Casos de uso | Cantidad |
 |---|---|---|
-| Juan Avalle | ABM de empleados + mail · Canon · Haberes · Filtros · Mayor canon · Ver festivales y unidades · Ranking · Reporte de recaudación · Rentabilidad neta · Ver mi información | 10 |
+| Juan Avalle | ABM de empleados + mail · Canon · Haberes | 3 |
 | Federico Acosta | Recibo de sueldo en PDF · Dónde trabajo hoy · Cerrar caja | 3 |
 | Santiago Agarzúa | Registro de unidad · Alta de platos · Plato estrella | 3 |
 | Franco Luzardo | se dio de baja del trabajo antes de la entrega | 0 |
+| **Proyecto base** (se defiende en conjunto) | Filtros · Mayor canon · Ver festivales y unidades · Ranking · Reporte de recaudación · Rentabilidad neta · Ver mi información | 7 |
 
 | # | Caso de uso | Rol | Responsable | Rama | Dónde está el trabajo |
 |---|---|---|---|---|---|
 | Base | Proyecto Maven, entidades, login por roles, inicio con festivales, script SQL | todos | Juan Avalle | `CUBaseProyectoJuanAvalle` | [PR #1 (repo del Hito 1)](https://github.com/JuanAvalle77/TPGrupalOO2Grupo10/pull/1) |
-| 1 | Ver festivales y unidades de venta de un festival | Admin | Juan Avalle | - | commit directo [`8647efa`](https://github.com/JuanAvalle77/TPGrupalOO2Hito2Grupo10/commit/8647efa1cd50d3aca4bf7ce187eb7ca51d7dcac9) |
-| 2 | Ranking de unidades por recaudación | Admin | Juan Avalle | - | commit directo [`8647efa`](https://github.com/JuanAvalle77/TPGrupalOO2Hito2Grupo10/commit/8647efa1cd50d3aca4bf7ce187eb7ca51d7dcac9) |
-| 3 | Unidades con mayor canon (`ReporteMayoresCanonDTO`) | Admin | Juan Avalle | - | commit directo [`8647efa`](https://github.com/JuanAvalle77/TPGrupalOO2Hito2Grupo10/commit/8647efa1cd50d3aca4bf7ce187eb7ca51d7dcac9) |
+| 1 | Ver festivales y unidades de venta de un festival | Admin | Proyecto base | - | commit directo [`8647efa`](https://github.com/JuanAvalle77/TPGrupalOO2Hito2Grupo10/commit/8647efa1cd50d3aca4bf7ce187eb7ca51d7dcac9) |
+| 2 | Ranking de unidades por recaudación | Admin | Proyecto base | - | commit directo [`8647efa`](https://github.com/JuanAvalle77/TPGrupalOO2Hito2Grupo10/commit/8647efa1cd50d3aca4bf7ce187eb7ca51d7dcac9) |
+| 3 | Unidades con mayor canon (`ReporteMayoresCanonDTO`) | Admin | Proyecto base | - | commit directo [`8647efa`](https://github.com/JuanAvalle77/TPGrupalOO2Hito2Grupo10/commit/8647efa1cd50d3aca4bf7ce187eb7ca51d7dcac9) |
 | 4 | Registro de Unidad de Venta con su Responsable (crea usuario) | Público | Santiago Agarzúa | `CURegistroUnidadSantiagoAgarzua` | [PR #7](https://github.com/JuanAvalle77/TPGrupalOO2Hito2Grupo10/pull/7) (abierto, sin mergear) |
 | 5 | Alta, baja lógica, modificación y reactivación de empleados + **mail** | Responsable | Juan Avalle | `CUABMEmpleadosJuanAvalle` | [PR #3](https://github.com/JuanAvalle77/TPGrupalOO2Hito2Grupo10/pull/3) |
-| 6 | Filtros de empleados por uno o varios atributos (solo activos) | Responsable | Juan Avalle | - | commit directo [`8647efa`](https://github.com/JuanAvalle77/TPGrupalOO2Hito2Grupo10/commit/8647efa1cd50d3aca4bf7ce187eb7ca51d7dcac9) |
+| 6 | Filtros de empleados por uno o varios atributos (solo activos) | Responsable | Proyecto base | - | commit directo [`8647efa`](https://github.com/JuanAvalle77/TPGrupalOO2Hito2Grupo10/commit/8647efa1cd50d3aca4bf7ce187eb7ca51d7dcac9) |
 | 7 | Alta de platos | Responsable | Santiago Agarzúa | `CUAltaPlatosSantiagoAgarzua` | [PR #8](https://github.com/JuanAvalle77/TPGrupalOO2Hito2Grupo10/pull/8) (abierto, sin mergear) |
 | 8 | Cálculo de canon de una unidad | Responsable | Juan Avalle | `CUCalculoCanonJuanAvalle` | [PR #1](https://github.com/JuanAvalle77/TPGrupalOO2Hito2Grupo10/pull/1) |
 | 9 | Liquidación de haberes | Responsable | Juan Avalle | `CULiquidacionHaberesJuanAvalle` | [PR #2](https://github.com/JuanAvalle77/TPGrupalOO2Hito2Grupo10/pull/2) |
-| 10 | Reporte de recaudación de un festival (`ReporteVentaDTO`) | Responsable | Juan Avalle | - | commit directo [`8647efa`](https://github.com/JuanAvalle77/TPGrupalOO2Hito2Grupo10/commit/8647efa1cd50d3aca4bf7ce187eb7ca51d7dcac9) |
-| 11 | Rentabilidad neta de una unidad, día por día (y entre dos fechas) | Responsable | Juan Avalle | - | commit directo [`8647efa`](https://github.com/JuanAvalle77/TPGrupalOO2Hito2Grupo10/commit/8647efa1cd50d3aca4bf7ce187eb7ca51d7dcac9), corregida en [`1a46b10`](https://github.com/JuanAvalle77/TPGrupalOO2Hito2Grupo10/commit/1a46b101cc99b9574e9b535562f15ef014fd3b25) y [`32a0572`](https://github.com/JuanAvalle77/TPGrupalOO2Hito2Grupo10/commit/32a0572021a1a9aa294914106ac7ade728f4d2c0) |
+| 10 | Reporte de recaudación de un festival (`ReporteVentaDTO`) | Responsable | Proyecto base | - | commit directo [`8647efa`](https://github.com/JuanAvalle77/TPGrupalOO2Hito2Grupo10/commit/8647efa1cd50d3aca4bf7ce187eb7ca51d7dcac9) |
+| 11 | Rentabilidad neta de una unidad, día por día (y entre dos fechas) | Responsable | Proyecto base | - | commit directo [`8647efa`](https://github.com/JuanAvalle77/TPGrupalOO2Hito2Grupo10/commit/8647efa1cd50d3aca4bf7ce187eb7ca51d7dcac9), corregida en [`1a46b10`](https://github.com/JuanAvalle77/TPGrupalOO2Hito2Grupo10/commit/1a46b101cc99b9574e9b535562f15ef014fd3b25) y [`32a0572`](https://github.com/JuanAvalle77/TPGrupalOO2Hito2Grupo10/commit/32a0572021a1a9aa294914106ac7ade728f4d2c0) |
 | 12 | Plato estrella (`PlatoDTO`) | Responsable | Santiago Agarzúa | `CUPlatoEstrellaSantiagoAgarzua` | [PR #9](https://github.com/JuanAvalle77/TPGrupalOO2Hito2Grupo10/pull/9) (abierto, sin mergear) |
-| 13 | Ver mi información (festivales y unidades en las que trabajé) | Empleado | Juan Avalle | - | commit directo [`8647efa`](https://github.com/JuanAvalle77/TPGrupalOO2Hito2Grupo10/commit/8647efa1cd50d3aca4bf7ce187eb7ca51d7dcac9) |
+| 13 | Ver mi información (festivales y unidades en las que trabajé) | Empleado | Proyecto base | - | commit directo [`8647efa`](https://github.com/JuanAvalle77/TPGrupalOO2Hito2Grupo10/commit/8647efa1cd50d3aca4bf7ce187eb7ca51d7dcac9) |
 | 14 | Recibo de sueldo en **PDF** | Empleado | Federico Acosta | `CUReciboSueldoFedericoAcosta` | [PR #6](https://github.com/JuanAvalle77/TPGrupalOO2Hito2Grupo10/pull/6) |
 | 15 | Ver en qué festival activo y unidad trabajo hoy | Empleado | Federico Acosta | `CUDondeTrabajoHoyFedericoAcosta` | [PR #5](https://github.com/JuanAvalle77/TPGrupalOO2Hito2Grupo10/pull/5) |
 | 16 | Cerrar caja (cajero) | Empleado | Federico Acosta | `CUCerrarCajaFedericoAcosta` | [PR #4](https://github.com/JuanAvalle77/TPGrupalOO2Hito2Grupo10/pull/4) |
 
 ### Cómo se llegó a este reparto
-- **Franco Luzardo** se dio de baja del trabajo antes de la entrega del Hito 2. Sus casos de uso (1, 2, 10 y 13) los tomó Juan.
-- Los casos de uso restantes (1, 2, 3, 6, 10, 11 y 13) se incorporaron a `main` en un **commit directo** de Juan ([`8647efa`](https://github.com/JuanAvalle77/TPGrupalOO2Hito2Grupo10/commit/8647efa1cd50d3aca4bf7ce187eb7ca51d7dcac9)). El mismo commit incluyó una implementación de los casos 4, 7 y 12, que corresponden a Santiago.
-- **Santiago Agarzúa** entregó los casos 4, 7 y 12 como Pull Requests (#7, #8 y #9) cuando el proyecto ya estaba completo en `main`. Se decidió **no mergearlos** para no reemplazar código ni adaptar el resto de las partes; quedan **abiertos** como registro de su trabajo y esos casos de uso figuran a su nombre.
-- La **rentabilidad neta** se corrigió después del feedback de la defensa: los sueldos y el canon se imputan en proporción a los días evaluados y se calcula si cada día fue rentable. Esos cambios también se subieron directo a `main`.
+- Cada integrante tiene **3 casos de uso** a su nombre, con su Pull Request: Juan (#1, #2 y #3), Federico (#4, #5 y #6) y Santiago (#7, #8 y #9).
+- **Franco Luzardo** se dio de baja del trabajo antes de la entrega del Hito 2. Sus casos de uso (1, 2, 10 y 13) pasaron al proyecto base.
+- Los otros **7 casos de uso** (1, 2, 3, 6, 10, 11 y 13) forman el **proyecto base** y se defienden en conjunto. Se incorporaron a `main` en un **commit directo** de Juan ([`8647efa`](https://github.com/JuanAvalle77/TPGrupalOO2Hito2Grupo10/commit/8647efa1cd50d3aca4bf7ce187eb7ca51d7dcac9)).
+- **Santiago Agarzúa** entregó los casos 4, 7 y 12 como Pull Requests (#7, #8 y #9) cuando el proyecto ya estaba completo en `main`. Ese mismo commit directo incluía una implementación de esos tres casos, así que se decidió **no mergear** los PRs para no reemplazar código ni adaptar el resto de las partes. Quedan **abiertos** como registro de su trabajo y esos casos de uso figuran a su nombre.
+- La **rentabilidad neta** (caso 11) se corrigió después del feedback de la defensa: los sueldos y el canon se imputan en proporción a los días evaluados y se calcula si cada día fue rentable. Esos cambios también se subieron directo a `main`.
 
 ### Requisitos del enunciado
 
