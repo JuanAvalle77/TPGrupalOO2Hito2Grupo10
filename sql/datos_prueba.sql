@@ -140,6 +140,27 @@ INSERT INTO detalles_pedido (id, cantidad, plato_id, pedido_id) VALUES
 (11, 3, 9, 6), (12, 2, 10, 6),
 (13, 10, 11, 7), (14, 6, 12, 7);
 
+-- Ventas diarias: un pedido por dia y por unidad, desde el inicio de cada festival hasta hoy
+-- (o hasta su fin, si ya termino). Con estas ventas la rentabilidad neta resulta coherente con
+-- los sueldos y el canon, que se imputan en proporcion a los dias evaluados.
+INSERT INTO pedido (fecha, festival_id, unidad_venta_id)
+WITH RECURSIVE dias (n) AS (SELECT 0 UNION ALL SELECT n + 1 FROM dias WHERE n < 60)
+SELECT DATE_ADD(f.fecha_inicio, INTERVAL d.n DAY), f.id, u.id
+FROM unidad_venta u
+JOIN festival f ON f.id = u.festival_id
+JOIN dias d ON DATE_ADD(f.fecha_inicio, INTERVAL d.n DAY) <= LEAST(f.fecha_fin, CURDATE());
+
+-- Items de esos pedidos: una cantidad base por plato (segun lo que vende cada uno) mas una
+-- pequenia variacion para que los dias no sean todos iguales.
+INSERT INTO detalles_pedido (cantidad, plato_id, pedido_id)
+SELECT CASE pl.id WHEN 1 THEN 5 WHEN 2 THEN 4 WHEN 3 THEN 4 WHEN 4 THEN 20 WHEN 5 THEN 15 WHEN 6 THEN 10
+                  WHEN 7 THEN 5 WHEN 8 THEN 3 WHEN 9 THEN 4 WHEN 10 THEN 3 WHEN 11 THEN 15 WHEN 12 THEN 12
+                  ELSE 2 END + MOD(p.id, 3),
+       pl.id, p.id
+FROM pedido p
+JOIN plato pl ON pl.unidad_venta_id = p.unidad_venta_id
+WHERE NOT EXISTS (SELECT 1 FROM detalles_pedido dp WHERE dp.pedido_id = p.id);
+
 -- Cierre de caja de ejemplo (Lucia, ayer, en El Fueguito: 5 x 3500 + 2 x 4200)
 INSERT INTO cierre_caja (id, fecha, total_recaudado, cajero_id, unidad_venta_id) VALUES
 (1, DATE_SUB(CURDATE(), INTERVAL 1 DAY), 25900, 2, 1);

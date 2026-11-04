@@ -59,11 +59,17 @@ public class ReportesResponsableService implements IReportesResponsableService {
 		UnidadVenta unidad = unidadesPermitidas.stream().filter(u -> u.getId().equals(unidadId)).findFirst()
 				.orElseThrow(() -> new IllegalArgumentException("Esa unidad no está a tu cargo"));
 		Festival festival = unidad.getFestival();
-		LocalDate inicio = desde == null ? festival.getFechaInicio() : desde;
-		LocalDate fin = hasta == null ? festival.getFechaFin() : hasta;
 		if ((desde == null) != (hasta == null)) {
-			throw new IllegalArgumentException("Indicá las dos fechas o dejá ambas vacías para consultar todo el festival");
+			throw new IllegalArgumentException("Indicá las dos fechas o dejá ambas vacías para consultar los días transcurridos del festival");
 		}
+		LocalDate hoy = LocalDate.now();
+		if (desde == null && hoy.isBefore(festival.getFechaInicio())) {
+			throw new IllegalArgumentException("El festival todavía no empezó: no hay ventas ni costos para calcular");
+		}
+		// Sin fechas se evalua desde el inicio hasta hoy (o hasta el fin, si el festival ya termino):
+		// asi las ventas y los costos corresponden siempre a los mismos dias.
+		LocalDate inicio = desde == null ? festival.getFechaInicio() : desde;
+		LocalDate fin = hasta == null ? (hoy.isBefore(festival.getFechaFin()) ? hoy : festival.getFechaFin()) : hasta;
 		if (fin.isBefore(inicio)) {
 			throw new IllegalArgumentException("La fecha hasta no puede ser anterior a la fecha desde");
 		}
@@ -76,12 +82,16 @@ public class ReportesResponsableService implements IReportesResponsableService {
 				.filter(p -> !p.getFecha().isBefore(inicio) && !p.getFecha().isAfter(fin)).toList();
 		double ventas = pedidos.stream().mapToDouble(Pedido::calcularTotal).sum();
 		double costoPlatos = pedidos.stream().mapToDouble(Pedido::calcularCostoPlatos).sum();
+		// Costos fijos proporcionales a los dias: sueldos y canon son del festival completo,
+		// asi que al periodo evaluado le toca (dias del periodo / dias del festival).
 		long diasRango = ChronoUnit.DAYS.between(inicio, fin) + 1;
-		double proporcion = (double) diasRango / festival.getDuracionEnDias();
+		long diasFestival = festival.getDuracionEnDias();
+		double proporcion = (double) diasRango / diasFestival;
 		double sueldos = liquidacionService.liquidarUnidad(unidad).getTotalUnidad() * proporcion;
 		double canon = canonService.calcularCanon(unidad) * proporcion;
 		return new RentabilidadDTO(unidad.getNombreComercial(), festival.getNombre(), inicio, fin, ventas,
-				costoPlatos, sueldos, canon, ventas - costoPlatos - sueldos - canon);
+				costoPlatos, sueldos, canon, ventas - costoPlatos - sueldos - canon, diasRango, diasFestival,
+				proporcion);
 	}
 
 	@Override

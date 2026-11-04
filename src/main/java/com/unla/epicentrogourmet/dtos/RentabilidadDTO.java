@@ -5,7 +5,10 @@ import java.time.LocalDate;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-/** Desglose de rentabilidad neta, no se persiste. */
+/**
+ * Desglose de rentabilidad neta, no se persiste. Los costos fijos (sueldos y canon) vienen
+ * ya prorrateados: costo total x (dias considerados / dias del festival).
+ */
 @Getter
 @AllArgsConstructor
 public class RentabilidadDTO {
@@ -18,4 +21,10 @@ public class RentabilidadDTO {
 	private final double sueldos;
 	private final double canon;
 	private final double rentabilidadNeta;
+	/** Dias del periodo evaluado. */
+	private final long diasConsiderados;
+	/** Duracion total del festival, en dias. */
+	private final long diasFestival;
+	/** Fraccion de los costos fijos que se imputa al periodo (0 a 1). */
+	private final double proporcion;
 }

@@ -85,7 +85,7 @@ class GestionEmpleadosControllerTest {
 	@Test
 	@WithMockUser(roles = "RESPONSABLE")
 	void laListaMuestraActivosYDadosDeBaja() throws Exception {
-		when(empleadoService.listar(any(), eq(true))).thenReturn(List.of(dto(2L, "Gomez, Lucia")));
+		when(empleadoService.filtrar(any(), any())).thenReturn(List.of(dto(2L, "Gomez, Lucia")));
 		when(empleadoService.listar(any(), eq(false))).thenReturn(List.of(dto(11L, "Lopez, Nahuel")));
 
 		mockMvc.perform(get("/responsable/empleados")).andExpect(status().isOk())
