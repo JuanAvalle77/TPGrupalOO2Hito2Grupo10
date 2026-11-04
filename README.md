@@ -141,7 +141,7 @@ Cuando el responsable da de alta a un empleado, el sistema le manda un mail con 
 | | `/responsable/empleados` | Lista y filtros de empleados activos · alta (`/nuevo`), modificación (`/{id}/editar`), baja lógica y reactivación |
 | | `/responsable/platos` | Menú y alta de platos de la unidad |
 | | `/responsable/reporte-recaudacion` | Recaudación de un festival |
-| | `/responsable/rentabilidad` | Rentabilidad neta de los días transcurridos del festival o de un rango de fechas; sueldos y canon se imputan en proporción a los días |
+| | `/responsable/rentabilidad` | Rentabilidad neta de los días transcurridos del festival o de un rango de fechas; sueldos y canon se imputan en proporción a los días, con el resultado de cada día y si fue rentable |
 | | `/responsable/plato-estrella` | Plato más vendido de una unidad |
 | Empleado | `/empleado` | Panel del empleado |
 | | `/empleado/mi-informacion` | Festivales y unidades asignados al empleado |

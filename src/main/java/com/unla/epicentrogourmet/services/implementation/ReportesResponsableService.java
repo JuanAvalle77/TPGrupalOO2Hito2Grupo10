@@ -2,6 +2,7 @@ package com.unla.epicentrogourmet.services.implementation;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -14,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.unla.epicentrogourmet.dtos.PlatoDTO;
 import com.unla.epicentrogourmet.dtos.RentabilidadDTO;
+import com.unla.epicentrogourmet.dtos.RentabilidadDiaDTO;
 import com.unla.epicentrogourmet.dtos.ReporteVentaDTO;
 import com.unla.epicentrogourmet.entities.DetallesPedido;
 import com.unla.epicentrogourmet.entities.Festival;
@@ -80,18 +82,29 @@ public class ReportesResponsableService implements IReportesResponsableService {
 		List<Pedido> pedidos = pedidoRepository.findByFestivalId(festival.getId()).stream()
 				.filter(p -> p.getUnidadVenta().getId().equals(unidad.getId()))
 				.filter(p -> !p.getFecha().isBefore(inicio) && !p.getFecha().isAfter(fin)).toList();
-		double ventas = pedidos.stream().mapToDouble(Pedido::calcularTotal).sum();
-		double costoPlatos = pedidos.stream().mapToDouble(Pedido::calcularCostoPlatos).sum();
-		// Costos fijos proporcionales a los dias: sueldos y canon son del festival completo,
-		// asi que al periodo evaluado le toca (dias del periodo / dias del festival).
-		long diasRango = ChronoUnit.DAYS.between(inicio, fin) + 1;
+		// Costos fijos proporcionales a los dias: sueldos y canon son del festival completo, asi
+		// que a cada dia le toca (costo total / dias del festival). Se calcula si cada dia fue rentable.
 		long diasFestival = festival.getDuracionEnDias();
+		double sueldoDiario = liquidacionService.liquidarUnidad(unidad).getTotalUnidad() / diasFestival;
+		double canonDiario = canonService.calcularCanon(unidad) / diasFestival;
+		List<RentabilidadDiaDTO> dias = new ArrayList<>();
+		for (LocalDate dia = inicio; !dia.isAfter(fin); dia = dia.plusDays(1)) {
+			final LocalDate fecha = dia;
+			List<Pedido> delDia = pedidos.stream().filter(p -> p.getFecha().equals(fecha)).toList();
+			double ventasDia = delDia.stream().mapToDouble(Pedido::calcularTotal).sum();
+			double platosDia = delDia.stream().mapToDouble(Pedido::calcularCostoPlatos).sum();
+			dias.add(new RentabilidadDiaDTO(fecha, ventasDia, platosDia, sueldoDiario, canonDiario,
+					ventasDia - platosDia - sueldoDiario - canonDiario));
+		}
+		double ventas = dias.stream().mapToDouble(RentabilidadDiaDTO::getVentas).sum();
+		double costoPlatos = dias.stream().mapToDouble(RentabilidadDiaDTO::getCostoPlatos).sum();
+		long diasRango = dias.size();
 		double proporcion = (double) diasRango / diasFestival;
-		double sueldos = liquidacionService.liquidarUnidad(unidad).getTotalUnidad() * proporcion;
-		double canon = canonService.calcularCanon(unidad) * proporcion;
+		double sueldos = sueldoDiario * diasRango;
+		double canon = canonDiario * diasRango;
 		return new RentabilidadDTO(unidad.getNombreComercial(), festival.getNombre(), inicio, fin, ventas,
 				costoPlatos, sueldos, canon, ventas - costoPlatos - sueldos - canon, diasRango, diasFestival,
-				proporcion);
+				proporcion, dias);
 	}
 
 	@Override

@@ -27,6 +27,23 @@
                 <tr><th>Canon (proporcional a los días)</th><td th:text="${#numbers.formatDecimal(rentabilidad.canon, 1, 'POINT', 2, 'COMMA')}">$0</td></tr>
                 <tr class="table-active"><th>Rentabilidad neta</th><td><strong th:text="${#numbers.formatDecimal(rentabilidad.rentabilidadNeta, 1, 'POINT', 2, 'COMMA')}">$0</strong></td></tr>
             </tbody></table>
+            <p class="mb-3">Días rentables: <strong th:text="${rentabilidad.diasRentables} + ' de ' + ${rentabilidad.diasConsiderados}">3 de 4</strong>
+                <span class="text-muted">(un día es rentable si sus ventas cubren los platos, y los sueldos y el canon que le tocan)</span></p>
+            <h4 class="h6">Resultado de cada día</h4>
+            <div class="table-responsive"><table class="table table-sm table-epicentro">
+                <thead><tr><th>Día</th><th class="text-right">Ventas</th><th class="text-right">Platos</th><th class="text-right">Sueldos del día</th><th class="text-right">Canon del día</th><th class="text-right">Resultado</th><th>¿Rentable?</th></tr></thead>
+                <tbody>
+                    <tr th:each="d : ${rentabilidad.dias}" th:classappend="${d.rentable} ? '' : 'table-danger'">
+                        <td th:text="${#temporals.format(d.fecha, 'dd/MM/yyyy')}">01/01/2026</td>
+                        <td class="text-right" th:text="${#numbers.formatDecimal(d.ventas, 1, 'POINT', 2, 'COMMA')}">0</td>
+                        <td class="text-right" th:text="${#numbers.formatDecimal(d.costoPlatos, 1, 'POINT', 2, 'COMMA')}">0</td>
+                        <td class="text-right" th:text="${#numbers.formatDecimal(d.sueldos, 1, 'POINT', 2, 'COMMA')}">0</td>
+                        <td class="text-right" th:text="${#numbers.formatDecimal(d.canon, 1, 'POINT', 2, 'COMMA')}">0</td>
+                        <td class="text-right"><strong th:text="${#numbers.formatDecimal(d.resultado, 1, 'POINT', 2, 'COMMA')}">0</strong></td>
+                        <td th:text="${d.rentable} ? 'Sí' : 'No'">Sí</td>
+                    </tr>
+                </tbody>
+            </table></div>
         </div>
     </main>
     <footer th:replace="~{layout :: footer}"></footer><div th:replace="~{layout :: scripts}"></div>

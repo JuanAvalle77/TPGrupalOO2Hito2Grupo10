@@ -1,6 +1,7 @@
 package com.unla.epicentrogourmet.dtos;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -27,4 +28,10 @@ public class RentabilidadDTO {
 	private final long diasFestival;
 	/** Fraccion de los costos fijos que se imputa al periodo (0 a 1). */
 	private final double proporcion;
+	/** Resultado de cada dia del periodo, en orden. */
+	private final List<RentabilidadDiaDTO> dias;
+
+	public long getDiasRentables() {
+		return dias.stream().filter(RentabilidadDiaDTO::isRentable).count();
+	}
 }

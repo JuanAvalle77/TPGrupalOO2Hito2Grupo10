@@ -155,6 +155,38 @@ class RentabilidadServiceTest {
 	}
 
 	@Test
+	void seCalculaSiCadaDiaFueRentable() {
+		LocalDate inicio = festival.getFechaInicio();
+		// dia 1: ventas 100.000 y platos 40.000. Dia 2: sin ventas. Dia 3: ventas 200.000 y platos 80.000
+		conPedidos(pedido(inicio), pedido(inicio.plusDays(2)), pedido(inicio.plusDays(2)));
+		double costoDiario = (SUELDOS_FESTIVAL + CANON_FESTIVAL) / 13; // 10.500
+
+		RentabilidadDTO r = servicio.rentabilidad(1L, inicio, inicio.plusDays(2), List.of(unidad));
+
+		assertEquals(3, r.getDias().size());
+		assertEquals(inicio, r.getDias().get(0).getFecha());
+		assertEquals(100_000 - 40_000 - costoDiario, r.getDias().get(0).getResultado(), DELTA);
+		assertTrue(r.getDias().get(0).isRentable());
+		assertEquals(-costoDiario, r.getDias().get(1).getResultado(), DELTA); // sin ventas igual pesan los costos
+		assertTrue(!r.getDias().get(1).isRentable());
+		assertEquals(200_000 - 80_000 - costoDiario, r.getDias().get(2).getResultado(), DELTA);
+		assertTrue(r.getDias().get(2).isRentable());
+		assertEquals(2, r.getDiasRentables());
+	}
+
+	@Test
+	void laSumaDeLosResultadosDiariosEsLaRentabilidadNeta() {
+		LocalDate inicio = festival.getFechaInicio();
+		conPedidos(pedido(inicio), pedido(inicio.plusDays(3)), pedido(hoy));
+
+		RentabilidadDTO r = servicio.rentabilidad(1L, null, null, List.of(unidad));
+
+		double suma = r.getDias().stream().mapToDouble(d -> d.getResultado()).sum();
+		assertEquals(r.getDiasConsiderados(), r.getDias().size());
+		assertEquals(r.getRentabilidadNeta(), suma, DELTA);
+	}
+
+	@Test
 	void unFestivalQueTodaviaNoEmpezoNoSeCalcula() {
 		festival.setFechaInicio(hoy.plusDays(10));
 		festival.setFechaFin(hoy.plusDays(22));
