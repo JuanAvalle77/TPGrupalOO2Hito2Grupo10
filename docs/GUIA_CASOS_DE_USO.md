@@ -53,16 +53,16 @@ Ejemplo de referencia ya hecho: la página de inicio (`HomeController` + `Festiv
 
 ## 3. Reparto
 
-| Integrante | Casos de uso (PRs) |
+**Estado final:** los 16 casos de uso están implementados en `main`. Franco Luzardo se dio de baja del trabajo antes de la entrega; Santiago Agarzúa entregó los suyos como Pull Requests (#7, #8 y #9) cuando el proyecto ya estaba completo, y quedan abiertos sin mergear. El detalle y los links están en el [README](../README.md#casos-de-uso-implementados-y-responsables).
+
+| Integrante | Casos de uso |
 |---|---|
-| **Juan Avalle** | **Individuales:** Cálculo de canon · Liquidación de haberes · **Grupo:** ABM de empleados + mail · Unidades con mayor canon (DTO) · **Opcionales:** Rentabilidad neta · Filtros de empleados · Reporte de recaudación · Plato estrella · Ver mi información |
-| **Santiago Agarzúa** | **Individuales:** Registro de unidad con responsable · Alta de platos |
-| **Franco Luzardo** | **Individuales:** Ver festivales y unidades · Ranking de unidades |
-| **Federico Acosta** | **Individuales:** Dónde trabajo hoy · Cerrar caja · **Grupo:** Recibo de sueldo en PDF |
+| **Juan Avalle** | ABM de empleados + mail · Canon · Haberes · Filtros · Mayor canon · Ver festivales y unidades · Ranking · Reporte de recaudación · Rentabilidad neta · Ver mi información |
+| **Federico Acosta** | Recibo de sueldo en PDF · Dónde trabajo hoy · Cerrar caja |
+| **Santiago Agarzúa** | Registro de unidad · Alta de platos · Plato estrella |
+| **Franco Luzardo** | se dio de baja |
 
-**Orden recomendado:** Juan mergea primero *canon* y *liquidación de haberes* (los usan otros). Mientras tanto todos pueden avanzar con lo que no depende de eso.
-
-**Alcance:** la consigna pide **2 casos de uso individuales por integrante** (que no sean los del grupo) más los del grupo: 1 mail (ABM de empleados), 1 PDF (recibo) y 1 DTO de reporte (mayor canon). Son **11 casos de uso obligatorios**. Los otros 5 que lista el enunciado (rentabilidad neta, filtros, reporte de recaudación, plato estrella y ver mi información) son **opcionales**: se hacen solo si sobra tiempo. Cada integrante tiene además 2 validaciones de carga.
+> Las fichas de la sección 4 describen cada caso de uso tal como se planificó. Pueden diferir en detalles del código final.
 
 ---
 
@@ -93,29 +93,29 @@ Ejemplo de referencia ya hecho: la página de inicio (`HomeController` + `Festiv
 - **Crear:** `LiquidacionService.calcularSueldo(Personal, Festival)` — **lo usa Federico** para el recibo en PDF, así que mantener esa firma.
 - **Verificación:** *Valentina Ortiz* (lavaplatos) en el festival 2 (38 días) = **225.000** · *Ana Torres* (cajera, ingreso 2024-02-01) en el festival 2 = **165.000**.
 
-**CU Rentabilidad neta (y entre dos fechas)** · *(opcional)* · rama `CURentabilidadNetaJuanAvalle` · Responsable
+**CU Rentabilidad neta (y entre dos fechas)** · rama `CURentabilidadNetaJuanAvalle` · Responsable
 - **Qué hace:** ganancia de **una unidad en un festival** = `total de pedidos − costo de producción de los platos − sueldos del personal − canon`. Segunda parte: lo mismo **limitado a pedidos entre dos fechas**.
 - **Cómo:** usa `Pedido.calcularTotal()`, `Pedido.calcularCostoPlatos()`, `LiquidacionService` y `CanonService`. Rutas `/responsable/rentabilidad` y `/responsable/rentabilidad?desde=&hasta=`.
 - **Decisión a documentar:** entre fechas, prorratear sueldos y canon por `días del rango / días del festival` (anotarlo en el PR).
 
-**CU Plato estrella** · *(opcional)* · rama `CUPlatoEstrellaJuanAvalle` · Responsable · *(DTO de reporte)*
+**CU Plato estrella** · rama `CUPlatoEstrellaJuanAvalle` · Responsable · *(DTO de reporte)*
 - **Qué hace:** dada una unidad y un festival, devuelve el plato que más se pidió. Crear `dtos/PlatoDTO` (nombre, precio de venta, cantidad de pedidos en los que aparece, unidades vendidas).
 - **Criterio (documentarlo en el PR):** el plato con más **unidades vendidas** (suma de `DetallesPedido.cantidad`); la cantidad de pedidos queda como dato y como desempate.
 - **Cómo:** consulta agrupando `DetallesPedido` por plato para esa unidad y festival, ordenando descendente y tomando el primero (`LIMIT 1` o `findFirst`). Ruta `/responsable/plato-estrella`.
 - **Verificación:** *El Fueguito*, festival 1 → **Choripan** (8 unidades en 2 pedidos; Papas Fritas: 6 unidades en 2 pedidos).
 
-**CU Filtros de empleados** · *(opcional)* · rama `CUFiltrosEmpleadosJuanAvalle` · Responsable
+**CU Filtros de empleados** · rama `CUFiltrosEmpleadosJuanAvalle` · Responsable
 - **Qué hace:** en la lista de empleados, filtrar por uno o varios atributos (nombre/apellido, DNI, tipo, turno o rol de cocina) **solo entre los activos**.
 - **Cómo:** `GET /responsable/empleados?apellido=&dni=&tipo=` — armar la consulta con `@Query` con parámetros opcionales (`(:apellido is null or lower(p.apellido) like lower(concat('%', :apellido, '%')))`) y `activo = true`, siempre acotada a la unidad del responsable.
 - **Listo cuando:** combinando filtros devuelve el subconjunto correcto y nunca muestra dados de baja.
 - **Validaciones de carga:** al menos una en el filtro (por ejemplo, el DNI debe ser numérico y el texto no puede pasar de 100 caracteres).
 
-**CU Reporte de recaudación** · *(opcional)* · rama `CUReporteRecaudacionJuanAvalle` · Responsable · *(DTO de reporte)*
+**CU Reporte de recaudación** · rama `CUReporteRecaudacionJuanAvalle` · Responsable · *(DTO de reporte)*
 - **Qué hace:** dado un festival, la recaudación total. Crear `dtos/ReporteVentaDTO` (festival, cantidad de pedidos, recaudación total).
 - **Ruta:** `/responsable/reporte-recaudacion?festivalId=1`.
 - **Verificación** (festival 1, todo el festival): **78.900**.
 
-**CU Ver mi información (empleado)** · *(opcional)* · rama `CUMiInformacionJuanAvalle` · Empleado
+**CU Ver mi información (empleado)** · rama `CUMiInformacionJuanAvalle` · Empleado
 - **Qué hace:** el empleado logueado ve los festivales y unidades en las que trabajó.
 - **Ruta:** `/empleado/mi-informacion`. Usar `SesionService.getPersonalActual().getUnidades()` y de cada unidad su `getFestival()`.
 - **Verificación:** `valentina.ortiz@…` ve dos filas (festival 1 y festival 2).
