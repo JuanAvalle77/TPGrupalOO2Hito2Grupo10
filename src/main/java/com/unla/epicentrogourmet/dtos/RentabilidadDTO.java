@@ -30,6 +30,8 @@ public class RentabilidadDTO {
 	private final double proporcion;
 	/** Resultado de cada dia del periodo, en orden. */
 	private final List<RentabilidadDiaDTO> dias;
+	/** true si el rango pedido llegaba a dias que todavia no pasaron y se evaluo solo hasta hoy. */
+	private final boolean recortadoAHoy;
 
 	public long getDiasRentables() {
 		return dias.stream().filter(RentabilidadDiaDTO::isRentable).count();

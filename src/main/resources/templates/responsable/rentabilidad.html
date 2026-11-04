@@ -16,6 +16,7 @@
                 <div class="form-group col-md-2"><button type="submit" class="btn btn-dorado">Calcular</button></div>
             </div>
         </form>
+        <div class="alert alert-info" th:if="${rentabilidad != null and rentabilidad.recortadoAHoy}">El rango llegaba hasta una fecha que todavía no pasó: se evaluaron <strong>solo los días transcurridos</strong> (hasta hoy), porque a los días futuros no les corresponde cargar costos.</div>
         <div class="card p-4" th:if="${rentabilidad != null}">
             <h3 class="h5" th:text="${rentabilidad.unidad} + ' · ' + ${rentabilidad.festival}">Unidad · Festival</h3>
             <p>Período: <strong th:text="${#temporals.format(rentabilidad.desde, 'dd/MM/yyyy')} + ' al ' + ${#temporals.format(rentabilidad.hasta, 'dd/MM/yyyy')}">Fechas</strong>

@@ -78,17 +78,24 @@ public class ReportesResponsableService implements IReportesResponsableService {
 		if (inicio.isBefore(festival.getFechaInicio()) || fin.isAfter(festival.getFechaFin())) {
 			throw new IllegalArgumentException("El rango debe estar dentro del período del festival");
 		}
+		if (inicio.isAfter(hoy)) {
+			throw new IllegalArgumentException("Ese período todavía no ocurrió: elegí días que ya pasaron");
+		}
+		// Los dias que todavia no pasaron no se evaluan: no tienen ventas posibles y no corresponde
+		// cargarles costos (si no, un rango que llega hasta el fin del festival daria siempre negativo).
+		final boolean recortadoAHoy = fin.isAfter(hoy);
+		final LocalDate finEvaluado = recortadoAHoy ? hoy : fin;
 
 		List<Pedido> pedidos = pedidoRepository.findByFestivalId(festival.getId()).stream()
 				.filter(p -> p.getUnidadVenta().getId().equals(unidad.getId()))
-				.filter(p -> !p.getFecha().isBefore(inicio) && !p.getFecha().isAfter(fin)).toList();
+				.filter(p -> !p.getFecha().isBefore(inicio) && !p.getFecha().isAfter(finEvaluado)).toList();
 		// Costos fijos proporcionales a los dias: sueldos y canon son del festival completo, asi
 		// que a cada dia le toca (costo total / dias del festival). Se calcula si cada dia fue rentable.
 		long diasFestival = festival.getDuracionEnDias();
 		double sueldoDiario = liquidacionService.liquidarUnidad(unidad).getTotalUnidad() / diasFestival;
 		double canonDiario = canonService.calcularCanon(unidad) / diasFestival;
 		List<RentabilidadDiaDTO> dias = new ArrayList<>();
-		for (LocalDate dia = inicio; !dia.isAfter(fin); dia = dia.plusDays(1)) {
+		for (LocalDate dia = inicio; !dia.isAfter(finEvaluado); dia = dia.plusDays(1)) {
 			final LocalDate fecha = dia;
 			List<Pedido> delDia = pedidos.stream().filter(p -> p.getFecha().equals(fecha)).toList();
 			double ventasDia = delDia.stream().mapToDouble(Pedido::calcularTotal).sum();
@@ -102,9 +109,9 @@ public class ReportesResponsableService implements IReportesResponsableService {
 		double proporcion = (double) diasRango / diasFestival;
 		double sueldos = sueldoDiario * diasRango;
 		double canon = canonDiario * diasRango;
-		return new RentabilidadDTO(unidad.getNombreComercial(), festival.getNombre(), inicio, fin, ventas,
+		return new RentabilidadDTO(unidad.getNombreComercial(), festival.getNombre(), inicio, finEvaluado, ventas,
 				costoPlatos, sueldos, canon, ventas - costoPlatos - sueldos - canon, diasRango, diasFestival,
-				proporcion, dias);
+				proporcion, dias, recortadoAHoy);
 	}
 
 	@Override

@@ -144,6 +144,8 @@ class RentabilidadServiceTest {
 
 	@Test
 	void dosRangosConsecutivosSumanElCostoDelFestivalCompleto() {
+		festival.setFechaInicio(hoy.minusDays(20));
+		festival.setFechaFin(hoy.minusDays(8)); // festival terminado: todos sus dias ya pasaron
 		LocalDate inicio = festival.getFechaInicio();
 		conPedidos();
 
@@ -184,6 +186,37 @@ class RentabilidadServiceTest {
 		double suma = r.getDias().stream().mapToDouble(d -> d.getResultado()).sum();
 		assertEquals(r.getDiasConsiderados(), r.getDias().size());
 		assertEquals(r.getRentabilidadNeta(), suma, DELTA);
+	}
+
+	@Test
+	void unRangoQueLlegaAlFinDelFestivalSoloEvaluaLosDiasQueYaPasaron() {
+		conPedidos(pedido(festival.getFechaInicio()));
+
+		// se pide el festival completo (13 dias) pero hoy es el dia 5: los 8 dias futuros no cuentan
+		RentabilidadDTO r = servicio.rentabilidad(1L, festival.getFechaInicio(), festival.getFechaFin(), List.of(unidad));
+
+		assertTrue(r.isRecortadoAHoy());
+		assertEquals(hoy, r.getHasta());
+		assertEquals(5, r.getDiasConsiderados());
+		assertEquals(5, r.getDias().size());
+		assertEquals(SUELDOS_FESTIVAL * 5 / 13, r.getSueldos(), DELTA);
+		assertEquals(CANON_FESTIVAL * 5 / 13, r.getCanon(), DELTA);
+	}
+
+	@Test
+	void unRangoQueTerminaHoyOAntesNoSeRecorta() {
+		conPedidos();
+
+		RentabilidadDTO r = servicio.rentabilidad(1L, festival.getFechaInicio(), hoy, List.of(unidad));
+
+		assertTrue(!r.isRecortadoAHoy());
+		assertEquals(5, r.getDiasConsiderados());
+	}
+
+	@Test
+	void unRangoQueTodaviaNoOcurrioSeRechaza() {
+		assertThrows(IllegalArgumentException.class,
+				() -> servicio.rentabilidad(1L, hoy.plusDays(1), hoy.plusDays(3), List.of(unidad)));
 	}
 
 	@Test
